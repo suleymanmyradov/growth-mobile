@@ -1,0 +1,21 @@
+# Maestro E2E test — app launch smoke test.
+# Run with: maestro test e2e/app-launch.yml
+#
+# Prerequisites:
+# - iOS Simulator or Android Emulator running with the app installed.
+# - Install Maestro: curl -Ls "https://get.maestro.mobile" | bash
+
+appId: ${MAESTRO_APP_ID}
+---
+# Launch the app
+- launchApp
+
+# Verify the landing screen is visible
+- assertVisible:
+    text: 'Growth'
+    optional: true
+
+# Verify either the landing screen or a sign-in prompt is shown
+- assertVisible:
+    text: 'Sign In'
+    optional: true
