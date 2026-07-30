@@ -6,6 +6,9 @@ module.exports = {
   setupFiles: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    // lucide-react-native ships ESM .mjs that jest-expo's transform doesn't
+    // match; map it to a stub so icon imports render as plain views in tests.
+    '^lucide-react-native$': '<rootDir>/jest.stubs/lucide-react-native.js',
   },
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
 };

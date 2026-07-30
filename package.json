@@ -3,6 +3,9 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@expo-google-fonts/ibm-plex-mono": "0.4.1",
+    "@expo-google-fonts/instrument-sans": "0.4.2",
+    "@expo-google-fonts/newsreader": "0.4.1",
     "@expo/ui": "~57.0.7",
     "@gorhom/bottom-sheet": "^5.2.14",
     "@hookform/resolvers": "^5.5.7",
@@ -58,6 +61,7 @@
     "@types/react": "~19.2.2",
     "eslint": "^9",
     "eslint-config-expo": "^57.0.0",
+    "eslint-plugin-i18next": "^6.1.5",
     "jest-expo": "^57.0.2",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.9.6",
