@@ -78,3 +78,29 @@ export const personalizationEndpoints = {
   onboardingHabits: '/personalization/onboarding-habits',
   coachingProfile: '/personalization/coaching-profile',
 } as const;
+
+// ─── Activity ─────────────────────────────────────────────────────────────────
+
+export const activityEndpoints = {
+  list: '/activity',
+} as const;
+
+// ─── Weekly Review ────────────────────────────────────────────────────────────
+
+export const weeklyReviewEndpoints = {
+  list: '/weekly-reviews',
+  current: '/weekly-reviews/current',
+  generate: '/weekly-reviews/generate',
+  generateStream: '/weekly-reviews/generate-stream',
+  detail: (weekStart: string) => `/weekly-reviews/${weekStart}`,
+} as const;
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+export const notificationEndpoints = {
+  list: '/notifications',
+  unreadCount: '/notifications/unread-count',
+  markRead: (id: string) => `/notifications/${id}/read`,
+  markAllRead: '/notifications/read-all',
+  preferences: '/notification-preferences',
+} as const;

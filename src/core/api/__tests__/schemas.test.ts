@@ -1,19 +1,25 @@
 /**
  * Tests for shared Zod schemas at API boundaries.
  */
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 import {
+  ActivitySchema,
   AuthResponseSchema,
   CategorySchema,
   CheckInSchema,
   CreateCheckInRequestSchema,
   CreateHabitRequestSchema,
+  GenerateOnboardingHabitsRequestSchema,
   GoalSchema,
   HabitSchema,
+  NotificationSchema,
+  NotificationsResponseSchema,
   ProfileSchema,
   SettingsSchema,
-  GenerateOnboardingHabitsRequestSchema,
+  UnreadNotificationCountResponseSchema,
+  WeeklyReviewResponseSchema,
+  WeeklyReviewSchema,
 } from '@/core/api/schemas';
 
 describe('AuthResponseSchema', () => {
@@ -273,5 +279,129 @@ describe('GenerateOnboardingHabitsRequestSchema', () => {
     expect(() =>
       GenerateOnboardingHabitsRequestSchema.parse({ goalTitle: '', dailyMinutes: 30 }),
     ).toThrow();
+  });
+});
+
+describe('ActivitySchema', () => {
+  it('parses a valid activity', () => {
+    const parsed = ActivitySchema.parse({
+      id: 'activity-1',
+      itemType: 'habit_completed',
+      title: 'Habit Completed',
+      description: 'You completed Morning Exercise',
+      userId: 'user-1',
+      createdAt: '2024-01-15T08:00:00Z',
+    });
+    expect(parsed.itemType).toBe('habit_completed');
+  });
+
+  it('accepts optional metadata', () => {
+    const parsed = ActivitySchema.parse({
+      id: 'activity-1',
+      itemType: 'habit_completed',
+      title: 'Habit Completed',
+      description: '',
+      metadata: '{"habitId":"h1"}',
+      userId: 'user-1',
+      createdAt: '2024-01-15T08:00:00Z',
+    });
+    expect(parsed.metadata).toBe('{"habitId":"h1"}');
+  });
+});
+
+describe('WeeklyReviewSchema', () => {
+  const validReview = {
+    id: 'wr-1',
+    userId: 'user-1',
+    weekStart: '2024-01-15',
+    weekEnd: '2024-01-21',
+    totalHabits: 3,
+    completedCheckIns: 12,
+    missedCheckIns: 4,
+    completionRate: 0.75,
+    moodSummary: { great: 2 },
+    energySummary: { high: 1 },
+    habitBreakdown: [
+      {
+        habitId: 'h1',
+        habitName: 'Read',
+        totalCheckIns: 7,
+        completedCount: 5,
+        missedCount: 2,
+        completionRate: 0.71,
+      },
+    ],
+    suggestedAdjustments: [],
+    nextWeekPlan: {
+      focus: 'Read more',
+      commitments: ['Read 10 pages daily'],
+      risks: ['Evening fatigue'],
+      recoveryActions: ['Read in morning'],
+    },
+    generatedAt: '2024-01-21T08:00:00Z',
+  };
+
+  it('parses a valid weekly review', () => {
+    const parsed = WeeklyReviewSchema.parse(validReview);
+    expect(parsed.completionRate).toBe(0.75);
+    expect(parsed.habitBreakdown).toHaveLength(1);
+  });
+
+  it('accepts optional aiSummary, bestDay, hardestDay, topBlocker', () => {
+    const parsed = WeeklyReviewSchema.parse({
+      ...validReview,
+      aiSummary: 'Great week!',
+      bestDay: 'Monday',
+      hardestDay: 'Friday',
+      topBlocker: 'Time',
+    });
+    expect(parsed.aiSummary).toBe('Great week!');
+  });
+
+  it('rejects completionRate outside [0,1]', () => {
+    expect(() => WeeklyReviewSchema.parse({ ...validReview, completionRate: 1.5 })).toThrow();
+  });
+
+  it('WeeklyReviewResponseSchema wraps data', () => {
+    const parsed = WeeklyReviewResponseSchema.parse({ data: validReview });
+    expect(parsed.data.id).toBe('wr-1');
+  });
+});
+
+describe('NotificationSchema', () => {
+  it('parses a valid notification', () => {
+    const parsed = NotificationSchema.parse({
+      id: 'notif-1',
+      title: 'Reminder',
+      message: 'Do your habit',
+      itemType: 'habit_reminder',
+      read: false,
+      userId: 'user-1',
+      createdAt: '2024-01-15T08:00:00Z',
+    });
+    expect(parsed.read).toBe(false);
+  });
+
+  it('NotificationsResponseSchema wraps data + page', () => {
+    const parsed = NotificationsResponseSchema.parse({
+      data: [
+        {
+          id: 'notif-1',
+          title: 'Reminder',
+          message: 'Do your habit',
+          itemType: 'habit_reminder',
+          read: false,
+          userId: 'user-1',
+          createdAt: '2024-01-15T08:00:00Z',
+        },
+      ],
+      page: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
+    expect(parsed.data).toHaveLength(1);
+  });
+
+  it('UnreadNotificationCountResponseSchema parses count', () => {
+    const parsed = UnreadNotificationCountResponseSchema.parse({ count: 3 });
+    expect(parsed.count).toBe(3);
   });
 });

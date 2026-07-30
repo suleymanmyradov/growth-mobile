@@ -7,6 +7,15 @@
  *
  * This module defines the allowed destinations and maps them to typed route
  * paths. Any destination not in the allowlist is rejected.
+ *
+ * Two layers of gating:
+ * 1. `ALLOWED_DESTINATIONS` — the full set of planned destinations per the
+ *    backend push contract. This acts as a tracker; `validateDestination`
+ *    accepts any of these so the caller can log/track unimplemented ones.
+ * 2. `destinationToRoute` — gates the actual routing to routes that exist
+ *    under `app/`. Returns null for unimplemented routes so the caller falls
+ *    back to a safe default (e.g. home tab) instead of landing on +not-found.
+ *    When you implement a route file under `app/`, enable its destination here.
  */
 
 export type DeepLinkDestination =
@@ -18,6 +27,11 @@ export type DeepLinkDestination =
   | 'activity'
   | 'notifications';
 
+/**
+ * Full set of planned destinations per the backend push contract. Kept as a
+ * tracker so `validateDestination` recognises all of them; `destinationToRoute`
+ * gates which ones can actually be routed to.
+ */
 const ALLOWED_DESTINATIONS: ReadonlySet<DeepLinkDestination> = new Set([
   'habit-detail',
   'goal-detail',
@@ -41,8 +55,18 @@ export function validateDestination(dest: string): DeepLinkDestination | null {
 
 /**
  * Maps a validated destination + resource ID to a typed Expo Router route path.
- * Returns null if the destination is invalid or the resource ID is missing
- * when required.
+ * Returns null if the destination is invalid, the required resource ID is
+ * missing/invalid, or the target route is not yet implemented under `app/`.
+ *
+ * Callers should fall back to a safe default (the Today tab) when this returns
+ * null. See `mobile.md` §6 "Target navigation" for the route set.
+ *
+ * Phase D route migration: the old `Home/Explore/Habits/Coach/Profile` tabs are
+ * now `Today/Plan/Coach/Library/Me`. Legacy destinations are re-pointed to the
+ * new IA. `weekly-review` and `activity` both route to the Progress stack
+ * screen (pushed from Today). Detail routes that still lack a per-id screen
+ * fall back to their owning tab/list screen when no id is supplied, and return
+ * null when an id is supplied but the detail screen is not implemented.
  */
 export function destinationToRoute(
   destination: DeepLinkDestination,
@@ -50,19 +74,30 @@ export function destinationToRoute(
 ): string | null {
   switch (destination) {
     case 'habit-detail':
-      return resourceId ? `/habits/${resourceId}` : '/habits';
+      // Plan tab hosts habits; /habits/[id] detail screen is not yet implemented.
+      return resourceId ? null : '/(app)/(tabs)/plan';
     case 'goal-detail':
-      return resourceId ? `/goals/${resourceId}` : '/goals';
+      // Goals fold into Plan (Phase E); the standalone goals stack route was removed.
+      return resourceId ? null : '/(app)/(tabs)/plan';
     case 'article-detail':
-      return resourceId ? `/article/${resourceId}` : null;
+      // /article/[id] exists as a thin wrapper; validate the id before routing.
+      return resourceId && isValidUUID(resourceId)
+        ? `/(app)/article/${encodeURIComponent(resourceId)}`
+        : null;
     case 'conversation':
-      return resourceId ? `/conversation/${resourceId}` : '/conversation';
+      // /conversation/[conversationId] exists as a thin wrapper.
+      return resourceId && isValidUUID(resourceId)
+        ? `/(app)/conversation/${encodeURIComponent(resourceId)}`
+        : null;
     case 'weekly-review':
-      return '/weekly-review';
+      // Progress stack screen hosts weekly review summaries.
+      return '/(app)/progress';
     case 'activity':
-      return '/activity';
+      // Progress stack screen hosts recent activity.
+      return '/(app)/progress';
     case 'notifications':
-      return '/notifications';
+      // Notifications stack screen (presented as a sheet).
+      return '/(app)/notifications';
     default:
       return null;
   }

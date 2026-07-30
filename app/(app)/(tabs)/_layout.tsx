@@ -1,28 +1,34 @@
-import { Tabs } from 'expo-router';
-import { Home, Compass, CheckCircle, MessageCircle, User } from 'lucide-react-native';
 import { useTheme } from '@/design-system/theme';
+import { Tabs } from 'expo-router';
+import { Circle, Library, ListChecks, MessageCircle, User } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 
 /**
- * Tab navigator — Home, Explore, Habits, Coach, Profile.
+ * Tab navigator — Today, Plan, Coach, Library, Me (Paper IA).
  *
- * Per AGENTS.md screen mapping:
- * - Home tab: article feed, category filtering, plan adjustments
- * - Explore tab: featured content and habit/goal templates
- * - Habits tab: list, streaks, CRUD, daily check-in
- * - Coach tab: AI coaching conversations
- * - Profile tab: profile and settings
+ * Per `mobile.md` §6: the five tabs are Today, Plan, Coach, Library, Me.
+ * Progress is pushed from Today (not a tab). Recommended Lucide concepts:
+ * Circle/Today, ListChecks/Plan, MessageCircle/Coach, Library/Library, User/Me.
+ *
+ * Paper tab bar: canonical semantic colors, hairline top border, no elevation.
+ * `headerShown: false` — each tab screen renders its own header via the `Screen`
+ * primitive so titles stay consistent across tabs and pushed stack screens.
  */
 export default function TabLayout() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.secondaryText,
+        tabBarInactiveTintColor: colors.mutedForeground,
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
+          borderTopWidth: 1,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         headerShown: false,
       }}
@@ -30,35 +36,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+          title: t('tabs.today'),
+          tabBarIcon: ({ color, size }) => <Circle color={color} size={size} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="plan"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, size }) => <Compass color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="habits"
-        options={{
-          title: 'Habits',
-          tabBarIcon: ({ color, size }) => <CheckCircle color={color} size={size} />,
+          title: t('tabs.plan'),
+          tabBarIcon: ({ color, size }) => <ListChecks color={color} size={size} />,
         }}
       />
       <Tabs.Screen
         name="coach"
         options={{
-          title: 'Coach',
+          title: t('tabs.coach'),
           tabBarIcon: ({ color, size }) => <MessageCircle color={color} size={size} />,
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="library"
         options={{
-          title: 'Profile',
+          title: t('tabs.library'),
+          tabBarIcon: ({ color, size }) => <Library color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="me"
+        options={{
+          title: t('tabs.me'),
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />

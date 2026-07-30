@@ -1,5 +1,6 @@
 import { useTheme } from '@/design-system/theme';
 import { Link } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
  */
 export default function LandingScreen() {
   const { colors, typography } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -16,7 +18,7 @@ export default function LandingScreen() {
         <Text
           style={[styles.title, { color: colors.primaryText, fontSize: typography.fontSize.xxl }]}
         >
-          Growth
+          {t('common.appName')}
         </Text>
         <Text
           style={[
@@ -24,27 +26,36 @@ export default function LandingScreen() {
             { color: colors.secondaryText, fontSize: typography.fontSize.lg },
           ]}
         >
-          Build better habits, one day at a time.
+          {t('common.tagline')}
         </Text>
 
         <Link href="/(public)/sign-in" asChild>
-          <Pressable style={[styles.button, { backgroundColor: colors.primary, borderRadius: 8 }]}>
-            <Text style={[styles.buttonText, { color: colors.background }]}>Sign In</Text>
+          <Pressable
+            style={StyleSheet.flatten([
+              styles.button,
+              { backgroundColor: colors.primary, borderRadius: 8 },
+            ])}
+          >
+            <Text style={[styles.buttonText, { color: colors.background }]}>
+              {t('auth.signIn')}
+            </Text>
           </Pressable>
         </Link>
 
         <Link href="/(public)/register" asChild>
           <Pressable
-            style={[
+            style={StyleSheet.flatten([
               styles.button,
               styles.secondaryButton,
               {
                 borderColor: colors.border,
                 borderRadius: 8,
               },
-            ]}
+            ])}
           >
-            <Text style={[styles.buttonText, { color: colors.primaryText }]}>Create Account</Text>
+            <Text style={[styles.buttonText, { color: colors.primaryText }]}>
+              {t('auth.createAccount')}
+            </Text>
           </Pressable>
         </Link>
       </View>

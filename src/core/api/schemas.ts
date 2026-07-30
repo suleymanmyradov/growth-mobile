@@ -340,3 +340,146 @@ export const GenerateOnboardingHabitsResponseSchema = ApiResponseSchema(
 export type GenerateOnboardingHabitsResponse = z.infer<
   typeof GenerateOnboardingHabitsResponseSchema
 >;
+
+// ─── Activity ─────────────────────────────────────────────────────────────────
+
+export const ActivitySchema = z.object({
+  id: z.string(),
+  itemType: z.string(),
+  title: z.string(),
+  description: z.string(),
+  metadata: z.string().optional(),
+  userId: z.string(),
+  createdAt: z.string(),
+});
+
+export type Activity = z.infer<typeof ActivitySchema>;
+
+export const ActivityResponseSchema = ApiResponseSchema(z.array(ActivitySchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type ActivityResponse = z.infer<typeof ActivityResponseSchema>;
+
+// ─── Weekly Review ────────────────────────────────────────────────────────────
+
+export const WeeklyReviewHabitBreakdownSchema = z.object({
+  habitId: z.string(),
+  habitName: z.string(),
+  category: z.string().optional(),
+  totalCheckIns: z.number().int().nonnegative(),
+  completedCount: z.number().int().nonnegative(),
+  missedCount: z.number().int().nonnegative(),
+  completionRate: z.number().min(0).max(1),
+  lastCheckInAt: z.string().optional(),
+});
+
+export type WeeklyReviewHabitBreakdown = z.infer<typeof WeeklyReviewHabitBreakdownSchema>;
+
+export const WeeklyReviewAdjustmentSchema = z.object({
+  habitId: z.string().optional(),
+  habitName: z.string(),
+  adjustmentType: z.string(),
+  reason: z.string(),
+  suggestion: z.string(),
+});
+
+export type WeeklyReviewAdjustment = z.infer<typeof WeeklyReviewAdjustmentSchema>;
+
+export const WeeklyReviewNextWeekPlanSchema = z.object({
+  focus: z.string(),
+  commitments: z.array(z.string()),
+  risks: z.array(z.string()),
+  recoveryActions: z.array(z.string()),
+});
+
+export type WeeklyReviewNextWeekPlan = z.infer<typeof WeeklyReviewNextWeekPlanSchema>;
+
+export const WeeklyReviewSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  weekStart: z.string(),
+  weekEnd: z.string(),
+  totalHabits: z.number().int().nonnegative(),
+  completedCheckIns: z.number().int().nonnegative(),
+  missedCheckIns: z.number().int().nonnegative(),
+  completionRate: z.number().min(0).max(1),
+  bestDay: z.string().optional(),
+  hardestDay: z.string().optional(),
+  topBlocker: z.string().optional(),
+  moodSummary: z.record(z.string(), z.number().int().nonnegative()),
+  energySummary: z.record(z.string(), z.number().int().nonnegative()),
+  habitBreakdown: z.array(WeeklyReviewHabitBreakdownSchema),
+  aiSummary: z.string().optional(),
+  suggestedAdjustments: z.array(WeeklyReviewAdjustmentSchema),
+  nextWeekPlan: WeeklyReviewNextWeekPlanSchema,
+  generatedAt: z.string(),
+});
+
+export type WeeklyReview = z.infer<typeof WeeklyReviewSchema>;
+
+export const WeeklyReviewResponseSchema = ApiResponseSchema(WeeklyReviewSchema);
+
+export type WeeklyReviewResponse = z.infer<typeof WeeklyReviewResponseSchema>;
+
+export const WeeklyReviewsResponseSchema = ApiResponseSchema(z.array(WeeklyReviewSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type WeeklyReviewsResponse = z.infer<typeof WeeklyReviewsResponseSchema>;
+
+export const GenerateWeeklyReviewRequestSchema = z.object({
+  weekStart: z.string().optional(),
+  forceRegenerate: z.boolean().optional(),
+});
+
+export type GenerateWeeklyReviewRequest = z.infer<typeof GenerateWeeklyReviewRequestSchema>;
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+export const NotificationSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  message: z.string(),
+  itemType: z.string(),
+  read: z.boolean(),
+  userId: z.string(),
+  createdAt: z.string(),
+});
+
+export type Notification = z.infer<typeof NotificationSchema>;
+
+export const NotificationsResponseSchema = ApiResponseSchema(z.array(NotificationSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type NotificationsResponse = z.infer<typeof NotificationsResponseSchema>;
+
+export const UnreadNotificationCountResponseSchema = z.object({
+  count: z.number().int().nonnegative(),
+});
+
+export type UnreadNotificationCountResponse = z.infer<typeof UnreadNotificationCountResponseSchema>;
+
+export const NotificationPreferencesSchema = z.object({
+  emailEnabled: z.boolean(),
+  pushEnabled: z.boolean(),
+  habitRemindersEnabled: z.boolean(),
+  goalRemindersEnabled: z.boolean(),
+});
+
+export type NotificationPreferences = z.infer<typeof NotificationPreferencesSchema>;
+
+export const NotificationPreferencesResponseSchema = z.object({
+  preferences: NotificationPreferencesSchema,
+});
+
+export type NotificationPreferencesResponse = z.infer<typeof NotificationPreferencesResponseSchema>;
+
+export const UpdateNotificationPreferencesRequestSchema = z.object({
+  preferences: NotificationPreferencesSchema,
+});
+
+export type UpdateNotificationPreferencesRequest = z.infer<
+  typeof UpdateNotificationPreferencesRequestSchema
+>;

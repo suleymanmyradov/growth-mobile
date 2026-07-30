@@ -182,7 +182,8 @@ export function ProfileScreen() {
             </View>
             {profile?.emailVerified ? (
               <ThemedText variant="caption" style={{ color: colors.success }}>
-                ✓ {t('profile.emailVerified')}
+                {'✓ '}
+                {t('profile.emailVerified')}
               </ThemedText>
             ) : null}
             {profile?.createdAt ? (
@@ -209,7 +210,7 @@ export function ProfileScreen() {
         {/* Navigation links */}
         <Card>
           <View style={{ gap: spacing.sm }}>
-            <Link href="/(app)/goals" asChild>
+            <Link href="/(app)/(tabs)/plan" asChild>
               <Pressable
                 style={styles.navRow}
                 accessibilityRole="button"

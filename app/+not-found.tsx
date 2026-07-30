@@ -1,13 +1,15 @@
-import { Link, Stack } from 'expo-router';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useTheme } from '@/design-system/theme';
+import { Link, Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function NotFoundScreen() {
   const { colors, typography } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Stack.Screen options={{ title: 'Not Found' }} />
+      <Stack.Screen options={{ title: t('notFound.headerTitle') }} />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text
           style={{
@@ -16,7 +18,7 @@ export default function NotFoundScreen() {
             fontWeight: '700',
           }}
         >
-          404
+          {t('notFound.title')}
         </Text>
         <Text
           style={{
@@ -25,11 +27,15 @@ export default function NotFoundScreen() {
             marginBottom: 24,
           }}
         >
-          This screen doesn&apos;t exist.
+          {t('notFound.message')}
         </Text>
         <Link href="/" asChild>
-          <Pressable style={[styles.button, { backgroundColor: colors.primary }]}>
-            <Text style={{ color: colors.background, fontWeight: '600' }}>Go Home</Text>
+          <Pressable
+            style={StyleSheet.flatten([styles.button, { backgroundColor: colors.primary }])}
+          >
+            <Text style={{ color: colors.background, fontWeight: '600' }}>
+              {t('notFound.goHome')}
+            </Text>
           </Pressable>
         </Link>
       </View>

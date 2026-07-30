@@ -1,26 +1,18 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@/design-system/theme';
+import { EmptyState, Screen } from '@/design-system';
+import { useTranslation } from 'react-i18next';
 
-export default function CoachScreen() {
-  const { colors, typography } = useTheme();
+/**
+ * Coach tab route (thin wrapper).
+ *
+ * Phase D: shell placeholder. The conversation list/new conversation surface
+ * is built in Phase H. This route file stays thin and contains no business
+ * logic.
+ */
+export default function CoachRoute() {
+  const { t } = useTranslation();
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.content}>
-        <Text
-          style={{ color: colors.primaryText, fontSize: typography.fontSize.xl, fontWeight: '700' }}
-        >
-          ucoach
-        </Text>
-        <Text style={{ color: colors.secondaryText, fontSize: typography.fontSize.md }}>
-          Coming in a later phase.
-        </Text>
-      </View>
-    </SafeAreaView>
+    <Screen>
+      <EmptyState title={t('tabs.coach')} subtitle={t('common.comingLater')} />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  content: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 },
-});

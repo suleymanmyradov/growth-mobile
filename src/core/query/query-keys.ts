@@ -56,3 +56,21 @@ export const billingKeys = {
   all: ['billing'] as const,
   overview: () => [...billingKeys.all, 'overview'] as const,
 };
+
+export const weeklyReviewKeys = {
+  all: ['weeklyReviews'] as const,
+  lists: () => [...weeklyReviewKeys.all, 'list'] as const,
+  list: (params?: { page?: number; limit?: number }) =>
+    [...weeklyReviewKeys.lists(), params ?? {}] as const,
+  current: () => [...weeklyReviewKeys.all, 'current'] as const,
+  details: () => [...weeklyReviewKeys.all, 'detail'] as const,
+  detail: (weekStart: string) => [...weeklyReviewKeys.details(), weekStart] as const,
+};
+
+export const notificationKeys = {
+  all: ['notifications'] as const,
+  list: (params?: { page?: number; limit?: number }) =>
+    [...notificationKeys.all, 'list', params ?? {}] as const,
+  unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
+  preferences: () => [...notificationKeys.all, 'preferences'] as const,
+};

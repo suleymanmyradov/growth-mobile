@@ -1,15 +1,18 @@
 /**
  * Tests for query-key factories.
  */
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 import {
-  habitKeys,
-  goalKeys,
-  checkInKeys,
+  activityKeys,
   categoryKeys,
+  checkInKeys,
+  goalKeys,
+  habitKeys,
+  notificationKeys,
   profileKeys,
   settingsKeys,
+  weeklyReviewKeys,
 } from '@/core/query/query-keys';
 
 describe('habitKeys', () => {
@@ -77,5 +80,55 @@ describe('profileKeys', () => {
 describe('settingsKeys', () => {
   it('produces get key', () => {
     expect(settingsKeys.get()).toEqual(['settings']);
+  });
+});
+
+describe('activityKeys', () => {
+  it('produces stable all key', () => {
+    expect(activityKeys.all).toEqual(['activities']);
+  });
+
+  it('produces list keys with params', () => {
+    expect(activityKeys.list({ page: 1, limit: 10 })).toEqual([
+      'activities',
+      'list',
+      { page: 1, limit: 10 },
+    ]);
+  });
+});
+
+describe('weeklyReviewKeys', () => {
+  it('produces stable all key', () => {
+    expect(weeklyReviewKeys.all).toEqual(['weeklyReviews']);
+  });
+
+  it('produces current key', () => {
+    expect(weeklyReviewKeys.current()).toEqual(['weeklyReviews', 'current']);
+  });
+
+  it('produces detail key by weekStart', () => {
+    expect(weeklyReviewKeys.detail('2024-01-15')).toEqual([
+      'weeklyReviews',
+      'detail',
+      '2024-01-15',
+    ]);
+  });
+
+  it('produces list keys with params', () => {
+    expect(weeklyReviewKeys.list({ page: 1 })).toEqual(['weeklyReviews', 'list', { page: 1 }]);
+  });
+});
+
+describe('notificationKeys', () => {
+  it('produces stable all key', () => {
+    expect(notificationKeys.all).toEqual(['notifications']);
+  });
+
+  it('produces unreadCount key', () => {
+    expect(notificationKeys.unreadCount()).toEqual(['notifications', 'unreadCount']);
+  });
+
+  it('produces preferences key', () => {
+    expect(notificationKeys.preferences()).toEqual(['notifications', 'preferences']);
   });
 });
