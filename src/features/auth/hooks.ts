@@ -8,6 +8,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 
+import { apiRequest } from '@/core/api/client';
+import { settingsEndpoints } from '@/core/api/endpoints';
+import { SettingsResponseSchema } from '@/core/api/schemas';
 import { useSessionStore } from '@/core/auth/session';
 import { NoopAnalytics, type Analytics } from '@/core/telemetry/analytics';
 import { setSentryUser } from '@/core/telemetry/sentry';
@@ -59,21 +62,33 @@ export function authErrorKey(code: string): string | null {
 }
 
 /**
- * Updates the session store from a profile.
+ * Fetches onboarding status from settings. Uses core API primitives directly
+ * (not the settings feature) to respect the AGENTS.md rule that features must
+ * not import other features. Returns false on failure — the route guard will
+ * send the user to onboarding, which is the safe default.
  */
-function setSessionFromProfile(user: {
-  id: string;
-  email: string;
-  fullName: string;
-  emailVerified?: boolean;
-}): void {
+async function fetchOnboardingCompleted(): Promise<boolean> {
+  try {
+    const response = await apiRequest<unknown>({ method: 'GET', url: settingsEndpoints.get });
+    const settings = SettingsResponseSchema.parse(response);
+    return settings.data.onboardingCompleted;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Updates the session store from a profile and onboarding status.
+ */
+function setSessionFromProfile(
+  user: { id: string; email: string; fullName: string; emailVerified?: boolean },
+  onboardingCompleted: boolean,
+): void {
   useSessionStore.getState().setUser({
     id: user.id,
     email: user.email,
     fullName: user.fullName,
-    // emailVerified is not the same as onboardingCompleted; the settings query
-    // determines onboarding status. Default to false until settings load.
-    onboardingCompleted: false,
+    onboardingCompleted,
   });
   setSentryUser(user.id);
   analytics.identify(user.id);
@@ -83,13 +98,19 @@ export function useLogin() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: LoginRequest) => login(data),
-    onSuccess: (data) => {
-      setSessionFromProfile(data.user);
+    mutationFn: async (data: LoginRequest) => {
+      const authResponse = await login(data);
+      // Fetch onboarding status before navigating so the route guard and
+      // proactive navigation agree — otherwise the guard bounces onboarded
+      // users into onboarding because setSessionFromProfile defaulted to false.
+      const onboardingCompleted = await fetchOnboardingCompleted();
+      return { authResponse, onboardingCompleted };
+    },
+    onSuccess: ({ authResponse, onboardingCompleted }) => {
+      setSessionFromProfile(authResponse.user, onboardingCompleted);
       analytics.track('auth_login_succeeded');
-      // Redirect based on onboarding status — the route guard handles this,
-      // but we proactively navigate to avoid a flash.
-      router.replace('/(app)/(tabs)');
+      // Navigate based on real onboarding status to avoid a flash.
+      router.replace(onboardingCompleted ? '/(app)/(tabs)' : '/(onboarding)');
     },
     onError: () => {
       analytics.track('auth_login_failed');
@@ -113,11 +134,16 @@ export function useVerifyEmail() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: (data: VerifyEmailRequest) => verifyEmail(data),
-    onSuccess: (data) => {
-      setSessionFromProfile(data.user);
-      // New users go through onboarding; the route guard handles the redirect.
-      router.replace('/(onboarding)');
+    mutationFn: async (data: VerifyEmailRequest) => {
+      const authResponse = await verifyEmail(data);
+      // Fetch onboarding status — a re-verifying user who already completed
+      // onboarding should not be sent back through it.
+      const onboardingCompleted = await fetchOnboardingCompleted();
+      return { authResponse, onboardingCompleted };
+    },
+    onSuccess: ({ authResponse, onboardingCompleted }) => {
+      setSessionFromProfile(authResponse.user, onboardingCompleted);
+      router.replace(onboardingCompleted ? '/(app)/(tabs)' : '/(onboarding)');
     },
   });
 }

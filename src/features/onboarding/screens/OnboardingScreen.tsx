@@ -441,10 +441,16 @@ export function OnboardingScreen() {
                 >
                   <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
                     <ThemedText variant="caption" style={{ fontWeight: '600' }}>
-                      {t('onboarding.yourPlan')}:{' '}
+                      {t('onboarding.yourPlan')}
+                      {': '}
                     </ThemedText>
-                    {data.goalTitle} · {data.dailyMinutes} min/day ·{' '}
-                    {styleLabels[data.accountabilityStyle]} · {data.checkInTime}
+                    {data.goalTitle}
+                    {' · '}
+                    {t('onboarding.minutesPerDay', { minutes: data.dailyMinutes })}
+                    {' · '}
+                    {styleLabels[data.accountabilityStyle]}
+                    {' · '}
+                    {data.checkInTime}
                   </ThemedText>
                 </View>
 

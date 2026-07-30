@@ -1,13 +1,16 @@
-import axios from 'axios';
-import { apiBaseUrl } from '../config/env';
+import { getApiClient } from './client';
 import { fromAxiosError } from './errors';
-import { tokenManager } from '../auth/token-manager';
 
 /**
  * Multipart form-data adapter for file uploads.
  *
  * Used for `POST /files/upload` and `POST /personalization/transcribe`
  * which are custom transport routes not covered by the standard JSON client.
+ *
+ * Routes through the shared authenticated client (`getApiClient()`) so uploads
+ * get the same 401 refresh interceptor and `X-Device-Id` header as JSON
+ * requests. Per AGENTS.md: one shared authenticated client; no feature-local
+ * Axios instances.
  *
  * On native, file URIs are passed directly to Axios — React Native's
  * FormData supports `uri` fields natively.
@@ -34,6 +37,12 @@ export interface UploadOptions {
 
 /**
  * Uploads a file as multipart form-data.
+ *
+ * Uses the shared authenticated client so the request gets:
+ * - `Authorization: Bearer <token>` (attached by the request interceptor).
+ * - `X-Device-Id` (attached by the request interceptor if set).
+ * - 401 single-flight refresh (handled by the response interceptor).
+ *
  * Returns the parsed JSON response.
  */
 export async function uploadFile<T>(opts: UploadOptions): Promise<T> {
@@ -53,19 +62,20 @@ export async function uploadFile<T>(opts: UploadOptions): Promise<T> {
     }
   }
 
-  const token = tokenManager.getAccessToken();
-
   try {
-    const response = await axios.post<T>(`${apiBaseUrl()}${opts.path}`, formData, {
+    const response = await getApiClient().post<T>(opts.path, formData, {
+      // Override the client's default `application/json` so the platform sets
+      // the multipart boundary correctly.
       headers: {
         'Content-Type': 'multipart/form-data',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       timeout: opts.timeout ?? 60_000, // 60s default for uploads
       signal: opts.signal,
     });
     return response.data;
   } catch (error) {
+    // fromAxiosError is idempotent — passes through if already an ApiError
+    // (the response interceptor converts 401/network errors to ApiError).
     throw fromAxiosError(error);
   }
 }

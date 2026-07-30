@@ -13,6 +13,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ApiError } from '@/core/api/errors';
 import { useSessionStore } from '@/core/auth/session';
@@ -29,6 +30,7 @@ export function useGenerateOnboardingHabits() {
   const setError = useOnboardingStore((s) => s.setError);
   const setHabitSuggestions = useOnboardingStore((s) => s.setHabitSuggestions);
   const generatingRef = useRef(false);
+  const { t } = useTranslation();
 
   const generate = async (data: OnboardingData): Promise<void> => {
     if (generatingRef.current) return;
@@ -55,18 +57,21 @@ export function useGenerateOnboardingHabits() {
       // Fallback suggestions if AI generation fails.
       const fallback = [
         {
-          name: `Work on ${data.goalTitle} for ${Math.round(data.dailyMinutes / 3)} minutes`,
-          description: 'Set a timer and focus exclusively on this task.',
+          name: t('onboarding.fallbackHabit1Name', {
+            goal: data.goalTitle,
+            minutes: Math.round(data.dailyMinutes / 3),
+          }),
+          description: t('onboarding.fallbackHabit1Description'),
           selected: true,
         },
         {
-          name: 'Review your plan for tomorrow',
-          description: 'Spend 5 minutes each evening reviewing what you will do next.',
+          name: t('onboarding.fallbackHabit2Name'),
+          description: t('onboarding.fallbackHabit2Description'),
           selected: true,
         },
         {
-          name: 'Track your progress',
-          description: 'Write one sentence about what you accomplished today.',
+          name: t('onboarding.fallbackHabit3Name'),
+          description: t('onboarding.fallbackHabit3Description'),
           selected: true,
         },
       ];
@@ -87,6 +92,7 @@ export function useSubmitOnboarding() {
   const setError = useOnboardingStore((s) => s.setError);
   const setUser = useSessionStore((s) => s.setUser);
   const submittingRef = useRef(false);
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data: OnboardingData) => {
@@ -146,7 +152,7 @@ export function useSubmitOnboarding() {
       if (error instanceof ApiError) {
         setError(error.message);
       } else {
-        setError('Something went wrong. Please try again.');
+        setError(t('onboarding.errorSubmit'));
       }
     },
   });
