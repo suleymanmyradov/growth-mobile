@@ -18,9 +18,9 @@ export function Spinner({ label, size = 'small', fullScreen = false }: SpinnerPr
 
   return (
     <View style={[styles.container, fullScreen && styles.fullScreen, { gap: spacing.sm }]}>
-      <ActivityIndicator color={colors.primary} size={size} />
+      <ActivityIndicator color={colors.accent} size={size} />
       {label ? (
-        <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+        <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
           {label}
         </ThemedText>
       ) : null}

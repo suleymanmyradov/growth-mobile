@@ -1,14 +1,18 @@
 /**
- * Button component with semantic variants and theme-aware colors.
+ * Button component with Paper semantic variants.
  *
- * - Minimum 44×44 touch target (accessibility).
- * - `loading` state disables interaction and shows a spinner.
- * - `disabled` state reduces opacity.
- * - Accessibility label, role, and hint supported via props.
+ * Paper rules (`mobile.md` §7, §5.3):
+ * - Medium buttons are 44 high, large 52. Small 36 only inside a ≥44 parent row.
+ * - Press feedback: opacity on iOS, ripple on Android (`instant` 80 ms).
+ * - `primary` uses the sage accent (the Paper action color), not the ink
+ *   `primary` token, because sage is the single accent for primary actions.
+ * - `loading` shows a spinner and disables interaction; `disabled` reduces
+ *   opacity. Visual color is never the only state indicator.
  */
 import type { ReactNode } from 'react';
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   type TextProps,
@@ -16,6 +20,7 @@ import {
 } from 'react-native';
 
 import { useTheme } from '../theme/theme';
+import { useAndroidRipple } from '../theme/use-press-feedback';
 import { ThemedText } from './ThemedText';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
@@ -46,37 +51,35 @@ export function Button({
   ...rest
 }: ButtonProps): ReactNode {
   const { colors, spacing, radius, typography } = useTheme();
-
   const isDisabled = disabled || loading;
 
   const variantStyles: Record<ButtonVariant, { bg: string; text: string; border: string }> = {
-    primary: { bg: colors.primary, text: colors.background, border: 'transparent' },
-    secondary: { bg: colors.surface, text: colors.primaryText, border: colors.border },
-    outline: { bg: 'transparent', text: colors.primary, border: colors.primary },
-    ghost: { bg: 'transparent', text: colors.primary, border: 'transparent' },
-    destructive: { bg: colors.error, text: '#FFFFFF', border: 'transparent' },
+    // Sage accent is the Paper primary action color.
+    primary: { bg: colors.accent, text: colors.accentForeground, border: 'transparent' },
+    secondary: { bg: colors.surface, text: colors.foreground, border: colors.border },
+    outline: { bg: 'transparent', text: colors.accent, border: colors.accent },
+    ghost: { bg: 'transparent', text: colors.foreground, border: 'transparent' },
+    destructive: {
+      bg: colors.destructive,
+      text: colors.destructiveForeground,
+      border: 'transparent',
+    },
   };
 
-  const sizeStyles = {
-    sm: {
-      paddingVertical: spacing.sm,
-      paddingHorizontal: spacing.md,
-      fontSize: typography.fontSize.sm,
-    },
-    md: {
-      paddingVertical: spacing.md,
-      paddingHorizontal: spacing.lg,
-      fontSize: typography.fontSize.md,
-    },
-    lg: {
-      paddingVertical: spacing.lg,
-      paddingHorizontal: spacing.xl,
-      fontSize: typography.fontSize.lg,
-    },
+  const sizeStyles: Record<
+    ButtonSize,
+    { pv: number; ph: number; fontSize: number; minHeight: number }
+  > = {
+    sm: { pv: spacing.sm, ph: spacing.md, fontSize: typography.fontSize.sm, minHeight: 36 },
+    md: { pv: spacing.md, ph: spacing.lg, fontSize: typography.fontSize.md, minHeight: 44 },
+    lg: { pv: spacing.lg, ph: spacing.xl, fontSize: typography.fontSize.md, minHeight: 52 },
   };
 
   const vs = variantStyles[variant];
   const ss = sizeStyles[size];
+  const ripple = useAndroidRipple(
+    vs.border === 'transparent' ? `${colors.foreground}14` : vs.border,
+  );
 
   return (
     <Pressable
@@ -86,19 +89,21 @@ export function Button({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: isDisabled, busy: loading }}
-      style={[
+      style={({ pressed }) => [
         styles.base,
         {
           backgroundColor: vs.bg,
           borderColor: vs.border,
           borderWidth: vs.border === 'transparent' ? 0 : 1,
-          borderRadius: radius.md,
-          paddingVertical: ss.paddingVertical,
-          paddingHorizontal: ss.paddingHorizontal,
-          opacity: isDisabled ? 0.5 : 1,
+          borderRadius: radius.field,
+          paddingVertical: ss.pv,
+          paddingHorizontal: ss.ph,
+          minHeight: ss.minHeight,
+          opacity: isDisabled ? 0.5 : pressed && Platform.OS === 'ios' ? 0.6 : 1,
           alignSelf: fullWidth ? 'stretch' : 'auto',
         },
       ]}
+      {...ripple}
       {...rest}
     >
       {loading ? (
@@ -123,7 +128,6 @@ const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 44, // Minimum touch target
     flexDirection: 'row',
   },
 });

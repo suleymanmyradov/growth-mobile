@@ -2,6 +2,10 @@
  * Screen — a full-screen wrapper with safe-area insets, background color,
  * optional header (title + optional back action), and scroll support.
  *
+ * Paper rules (`mobile.md` §7/§5.3): screen gutter 20 (`spacing.xl`), canonical
+ * semantic colors, 44-unit back target. Refresh/list-host/keyboard-safe and
+ * offline banner are extended in later phases.
+ *
  * Route files should use this to keep screens thin and consistent.
  */
 import { ArrowLeft } from 'lucide-react-native';
@@ -32,7 +36,7 @@ export function Screen({
   scrollable = false,
   style,
 }: ScreenProps): ReactNode {
-  const { colors, spacing, typography } = useTheme();
+  const { colors, spacing } = useTheme();
   const { t } = useTranslation();
   const hasHeader = title || onBack || headerRight;
 
@@ -46,7 +50,7 @@ export function Screen({
           style={[
             styles.header,
             {
-              paddingHorizontal: spacing.md,
+              paddingHorizontal: spacing.xl,
               paddingVertical: spacing.sm,
               borderBottomColor: colors.border,
               borderBottomWidth: StyleSheet.hairlineWidth,
@@ -62,20 +66,16 @@ export function Screen({
                 hitSlop={8}
                 style={styles.backButton}
               >
-                <ArrowLeft color={colors.primaryText} size={24} />
+                <ArrowLeft color={colors.foreground} size={24} />
               </Pressable>
             ) : null}
             {title ? (
               <View style={styles.headerTitle}>
-                <ThemedText
-                  variant="heading"
-                  style={{ fontSize: typography.fontSize.lg }}
-                  numberOfLines={1}
-                >
+                <ThemedText variant="sectionTitle" numberOfLines={1}>
                   {title}
                 </ThemedText>
                 {subtitle ? (
-                  <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+                  <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
                     {subtitle}
                   </ThemedText>
                 ) : null}

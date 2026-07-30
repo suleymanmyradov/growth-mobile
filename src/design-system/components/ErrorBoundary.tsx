@@ -4,6 +4,7 @@
  */
 import { router } from 'expo-router';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Theme } from '../theme/theme';
@@ -53,20 +54,23 @@ const styles = StyleSheet.create({
  * active theme for colors so it blends with the rest of the app.
  */
 function DefaultFallback({ error, theme }: { error: Error; theme: Theme }): ReactNode {
+  const { t } = useTranslation();
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       testID="error-boundary-fallback"
     >
-      <Text style={[styles.title, { color: theme.colors.error }]}>Something went wrong</Text>
+      <Text style={[styles.title, { color: theme.colors.error }]}>{t('errorBoundary.title')}</Text>
       <Text style={[styles.message, { color: theme.colors.secondaryText }]}>{error.message}</Text>
       <Pressable
         style={[styles.reloadButton, { backgroundColor: theme.colors.primary }]}
         onPress={() => router.reload()}
         accessibilityRole="button"
-        accessibilityLabel="Reload"
+        accessibilityLabel={t('errorBoundary.reload')}
       >
-        <Text style={[styles.reloadText, { color: theme.colors.background }]}>Reload</Text>
+        <Text style={[styles.reloadText, { color: theme.colors.background }]}>
+          {t('errorBoundary.reload')}
+        </Text>
       </Pressable>
     </View>
   );

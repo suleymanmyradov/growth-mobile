@@ -1,10 +1,10 @@
 /**
  * ErrorState — centered error icon, message, and retry action.
  */
-import type { ReactNode } from 'react';
 import { AlertCircle } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../theme/theme';
 import { Button } from './Button';
@@ -23,12 +23,12 @@ export function ErrorState({ message, onRetry, retryLabel, icon }: ErrorStatePro
 
   return (
     <View style={[styles.container, { gap: spacing.md }]}>
-      <View>{icon ?? <AlertCircle color={colors.error} size={48} />}</View>
-      <ThemedText variant="heading" style={{ textAlign: 'center', color: colors.error }}>
+      <View>{icon ?? <AlertCircle color={colors.destructive} size={48} />}</View>
+      <ThemedText variant="sectionTitle" style={{ textAlign: 'center', color: colors.destructive }}>
         {t('common.errorGeneric')}
       </ThemedText>
       {message ? (
-        <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+        <ThemedText variant="body" style={{ color: colors.mutedForeground, textAlign: 'center' }}>
           {message}
         </ThemedText>
       ) : null}

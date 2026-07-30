@@ -1,5 +1,9 @@
 /**
  * Badge — a small pill-shaped label for categories, tags, and status indicators.
+ *
+ * Paper (`mobile.md` §7): pill radius, label-sized text. The `warning` variant
+ * is retained as a temporary alias (Paper has no warning color); it maps to the
+ * destructive token until its callers migrate.
  */
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -14,7 +18,7 @@ export type BadgeProps = {
 };
 
 export function Badge({ children, color, variant = 'default' }: BadgeProps): ReactNode {
-  const { colors, radius, typography } = useTheme();
+  const { colors, radius } = useTheme();
 
   const variantColor =
     variant === 'success'
@@ -22,28 +26,22 @@ export function Badge({ children, color, variant = 'default' }: BadgeProps): Rea
       : variant === 'warning'
         ? colors.warning
         : variant === 'error'
-          ? colors.error
-          : (color ?? colors.primary);
+          ? colors.destructive
+          : (color ?? colors.accent);
 
   return (
     <View
       style={[
         styles.badge,
         {
-          backgroundColor: `${variantColor}1A`, // ~10% opacity
-          borderRadius: radius.full,
+          backgroundColor: `${variantColor}1A`, // ~10% opacity tint
+          borderRadius: radius.pill,
           paddingHorizontal: 8,
           paddingVertical: 2,
         },
       ]}
     >
-      <ThemedText
-        style={{
-          color: variantColor,
-          fontSize: typography.fontSize.xs,
-          fontWeight: typography.fontWeight.medium,
-        }}
-      >
+      <ThemedText variant="label" style={{ color: variantColor }}>
         {children}
       </ThemedText>
     </View>

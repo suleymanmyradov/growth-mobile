@@ -18,15 +18,27 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
+import { setInstallationId } from '@/core/api/client';
+import type { ProfileResponse, SettingsResponse } from '@/core/api/schemas';
 import { getQueryClient } from '@/core/query';
 import { setSentryUser } from '@/core/telemetry/sentry';
-import { configureInstallationId, getCurrentUser } from '@/features/auth';
-import { getSettings } from '@/features/settings';
 import { getOrCreateInstallationId } from './installation';
 import { useSessionStore } from './session';
 import { tokenManager } from './token-manager';
 
-export function useSessionRestore(): void {
+/**
+ * Callbacks supplied by the app layer. The app layer owns the wiring between
+ * core session restore and the feature-owned API functions, so core never
+ * imports features (per AGENTS.md dependency-direction rule).
+ */
+export interface SessionRestoreCallbacks {
+  /** Validates the persisted session by fetching /profile/me. */
+  fetchProfile: () => Promise<ProfileResponse>;
+  /** Fetches settings to determine onboarding status. */
+  fetchSettings: () => Promise<SettingsResponse>;
+}
+
+export function useSessionRestore(callbacks: SessionRestoreCallbacks): void {
   const setUser = useSessionStore((s) => s.setUser);
   const setHydrated = useSessionStore((s) => s.setHydrated);
   const clear = useSessionStore((s) => s.clear);
@@ -37,11 +49,13 @@ export function useSessionRestore(): void {
     if (hasRestored.current) return;
     hasRestored.current = true;
 
+    const { fetchProfile, fetchSettings } = callbacks;
+
     (async () => {
       // 1. Configure the installation ID for X-Device-Id on login/register.
       try {
         const installationId = await getOrCreateInstallationId();
-        configureInstallationId(installationId);
+        setInstallationId(installationId);
       } catch {
         // Non-fatal — login/register will still work without X-Device-Id.
       }
@@ -56,13 +70,13 @@ export function useSessionRestore(): void {
       // 3. Validate with /profile/me. The HTTP client's 401 interceptor will
       //    attempt a token refresh if the access token is expired.
       try {
-        const profileResponse = await getCurrentUser();
+        const profileResponse = await fetchProfile();
         const profile = profileResponse.data;
 
         // 4. Fetch settings to determine onboarding status.
         let onboardingCompleted = false;
         try {
-          const settingsResponse = await getSettings();
+          const settingsResponse = await fetchSettings();
           onboardingCompleted = settingsResponse.data.onboardingCompleted;
         } catch {
           // Settings fetch failure is non-fatal — default to incomplete onboarding.
@@ -85,7 +99,7 @@ export function useSessionRestore(): void {
         setHydrated(true);
       }
     })();
-  }, [setUser, setHydrated, clear, activeQueryClient]);
+  }, [setUser, setHydrated, clear, activeQueryClient, callbacks]);
 }
 
 /**

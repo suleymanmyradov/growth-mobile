@@ -21,7 +21,92 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "networkError": "Network error. Please check your connection.",
     "noData": "Nothing here yet.",
-    "optional": "Optional"
+    "optional": "Optional",
+    "comingLater": "Coming in a later phase."
+  },
+  "tabs": {
+    "today": "Today",
+    "plan": "Plan",
+    "coach": "Coach",
+    "library": "Library",
+    "me": "Me"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "reload": "Reload"
+  },
+  "notFound": {
+    "headerTitle": "Not Found",
+    "title": "404",
+    "message": "This screen doesn't exist.",
+    "goHome": "Go to Today"
+  },
+  "today": {
+    "checkInHeading": "Check in",
+    "goalsHeading": "Goals",
+    "coachInsight": "Coach insight",
+    "coachPlaceholderTitle": "Your coach is ready",
+    "coachPlaceholderBody": "Get a personalized nudge based on your week. Tap below to start a conversation.",
+    "talkToCoach": "Talk to coach",
+    "noHabitsTitle": "No habits for today",
+    "noHabitsBody": "Add your first habit to start building a streak.",
+    "addFirstHabit": "Add a habit",
+    "expandNote": "Expand note",
+    "collapseNote": "Collapse note",
+    "openGoal": "Open goal {{title}}",
+    "percent": "{{percent}}%"
+  },
+  "progress": {
+    "weekLabel": "This week",
+    "checkInsCompleted": "Check-ins completed",
+    "consistency": "Consistency",
+    "missed": "{{count}} missed",
+    "coachInterpretation": "Coach interpretation",
+    "perHabit": "Per habit",
+    "checkInsOf": "{{completed}} of {{total}} check-ins",
+    "recentActivity": "Recent activity",
+    "noActivity": "No recent activity.",
+    "lastUpdated": "Last updated {{time}}",
+    "noReviewTitle": "No weekly review yet",
+    "noReviewBody": "Generate your first weekly review to see how your week went.",
+    "generate": "Generate review",
+    "regenerate": "Regenerate"
+  },
+  "plan": {
+    "counts": "{{goals}} goals · {{habits}} habits",
+    "filterAll": "All",
+    "filterActive": "Active",
+    "filterCompleted": "Completed",
+    "goalsSection": "Goals",
+    "untiedSection": "Not tied to a goal",
+    "linkGoal": "Link a goal",
+    "linkGoalBody": "Link \"{{habit}}\" to a goal so it counts toward its progress.",
+    "linkToGoal": "Link to {{title}}",
+    "noGoalsToLink": "Create a goal first to link habits to it.",
+    "noGoalsTitle": "No goals yet",
+    "noGoalsBody": "Set a goal and link habits to it to track progress.",
+    "emptyTitle": "Nothing planned yet",
+    "emptyBody": "Create a habit or goal to start building your plan.",
+    "create": "Create",
+    "createChoice": "What do you want to create?"
+  },
+  "screens": {
+    "progress": {
+      "title": "Progress",
+      "subtitle": "Weekly review and recent activity."
+    },
+    "article": {
+      "title": "Article"
+    },
+    "conversation": {
+      "title": "Conversation"
+    },
+    "paywall": {
+      "title": "Upgrade"
+    },
+    "notifications": {
+      "title": "Notifications"
+    }
   },
   "auth": {
     "signIn": "Sign In",
@@ -135,7 +220,14 @@
     "startMyPlan": "Start my plan",
     "starting": "Starting...",
     "changeLaterNote": "You can change all of these preferences later in Settings.",
-    "errorSubmit": "Something went wrong. Please try again."
+    "errorSubmit": "Something went wrong. Please try again.",
+    "fallbackHabit1Name": "Work on {{goal}} for {{minutes}} minutes",
+    "fallbackHabit1Description": "Set a timer and focus exclusively on this task.",
+    "fallbackHabit2Name": "Review your plan for tomorrow",
+    "fallbackHabit2Description": "Spend 5 minutes each evening reviewing what you will do next.",
+    "fallbackHabit3Name": "Track your progress",
+    "fallbackHabit3Description": "Write one sentence about what you accomplished today.",
+    "minutesPerDay": "{{minutes}} min/day"
   },
   "habits": {
     "title": "Habits",

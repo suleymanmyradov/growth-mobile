@@ -20,11 +20,11 @@ export function EmptyState({ icon, title, subtitle, action }: EmptyStateProps): 
   return (
     <View style={[styles.container, { gap: spacing.md }]}>
       {icon ? <View>{icon}</View> : null}
-      <ThemedText variant="heading" style={{ textAlign: 'center' }}>
+      <ThemedText variant="sectionTitle" style={{ textAlign: 'center' }}>
         {title}
       </ThemedText>
       {subtitle ? (
-        <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+        <ThemedText variant="body" style={{ color: colors.mutedForeground, textAlign: 'center' }}>
           {subtitle}
         </ThemedText>
       ) : null}

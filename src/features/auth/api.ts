@@ -12,7 +12,7 @@
  * - `X-Device-Id` is attached on login/register after creating a random
  *   installation ID.
  */
-import { apiRequest, getBareClient, setInstallationId } from '@/core/api/client';
+import { apiRequest, getBareClient } from '@/core/api/client';
 import { authEndpoints, profileEndpoints } from '@/core/api/endpoints';
 import {
   AuthResponseSchema,
@@ -140,12 +140,4 @@ export async function getCurrentUser(): Promise<ProfileResponse> {
     url: profileEndpoints.me,
   });
   return ProfileResponseSchema.parse(response);
-}
-
-/**
- * Sets the installation ID on the shared HTTP client. Must be called once at
- * app startup before any login/register request.
- */
-export function configureInstallationId(id: string): void {
-  setInstallationId(id);
 }

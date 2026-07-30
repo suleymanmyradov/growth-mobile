@@ -1,5 +1,9 @@
 /**
- * Card — a raised surface with border, radius, and optional padding.
+ * Card — an in-flow surface with a hairline border.
+ *
+ * Paper rule (`mobile.md` §4/§7): in-flow cards use a one-unit semantic border,
+ * radius 12 (`radius.card`), and NO shadow/elevation. Only sheets and the Plan
+ * floating action button are raised surfaces.
  */
 import type { ReactNode } from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
@@ -22,8 +26,8 @@ export function Card({ padded = true, style, children, ...rest }: CardProps): Re
           backgroundColor: colors.surface,
           borderColor: colors.border,
           borderWidth: 1,
-          borderRadius: radius.lg,
-          padding: padded ? spacing.md : 0,
+          borderRadius: radius.card,
+          padding: padded ? spacing.lg : 0,
         },
         style,
       ]}

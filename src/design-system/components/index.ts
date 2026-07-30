@@ -1,12 +1,18 @@
 /**
  * Barrel export for design-system components.
  */
+export { Avatar } from './Avatar';
+export type { AvatarProps } from './Avatar';
 export { Badge } from './Badge';
 export type { BadgeProps } from './Badge';
 export { Button } from './Button';
 export type { ButtonProps, ButtonSize, ButtonVariant } from './Button';
 export { Card } from './Card';
 export type { CardProps } from './Card';
+export { CheckInControl } from './CheckInControl';
+export type { CheckInControlProps, CheckInState } from './CheckInControl';
+export { Chip } from './Chip';
+export type { ChipProps } from './Chip';
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps } from './EmptyState';
 export { ErrorBoundary } from './ErrorBoundary';
@@ -15,11 +21,27 @@ export { ErrorState } from './ErrorState';
 export type { ErrorStateProps } from './ErrorState';
 export { Input } from './Input';
 export type { InputProps } from './Input';
+export { ListRow } from './ListRow';
+export type { ListRowProps } from './ListRow';
+export { ProgressBar } from './ProgressBar';
+export type { ProgressBarProps } from './ProgressBar';
 export { Screen } from './Screen';
 export type { ScreenProps } from './Screen';
+export { SectionLabel } from './SectionLabel';
+export type { SectionLabelProps } from './SectionLabel';
+export { SegmentedTabs } from './SegmentedTabs';
+export type { Segment, SegmentedTabsProps } from './SegmentedTabs';
+export { Sheet } from './Sheet';
+export type { SheetProps } from './Sheet';
+export { Skeleton } from './Skeleton';
+export type { SkeletonProps } from './Skeleton';
 export { Spinner } from './Spinner';
 export type { SpinnerProps } from './Spinner';
+export { StreakBar } from './StreakBar';
+export type { StreakBarProps } from './StreakBar';
 export { ThemedText } from './ThemedText';
 export type { ThemedTextProps, ThemedTextVariant } from './ThemedText';
 export { ThemedView } from './ThemedView';
 export type { ThemedViewProps } from './ThemedView';
+export { Toast } from './Toast';
+export type { ToastProps, ToastVariant } from './Toast';
