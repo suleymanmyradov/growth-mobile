@@ -206,7 +206,7 @@ Each feature may contain `api/`, `components/`, `hooks/`, `screens/`, `schemas/`
 - `(public)`: sign in, register, check email, verify email, forgot password, reset password.
 - `(onboarding)`: seven-step onboarding flow; authenticated users with incomplete onboarding only.
 - `(app)`: authenticated application.
-- `(app)/(tabs)`: Home, Explore, Habits, Coach, Profile.
+- `(app)/(tabs)`: Today, Plan, Coach, Library, Me. The approved Paper redesign and migration sequence are in `mobile.md`.
 
 Use Expo Router protected routes at group boundaries. The authenticated profile and settings determine whether the user enters onboarding or the app. A route guard is defense-in-depth only; authorization remains a backend responsibility.
 
@@ -214,18 +214,18 @@ Use Expo Router protected routes at group boundaries. The authenticated profile 
 
 | Web experience               | Native destination                                                      |
 | ---------------------------- | ----------------------------------------------------------------------- |
-| `/`                          | Home tab: article feed, category filtering, plan adjustments            |
-| `/explore`                   | Explore tab: featured content and habit/goal templates                  |
-| `/habits`                    | Habits tab: list, streaks, CRUD, daily check-in                         |
+| `/`                          | Today tab: coach insight, daily check-ins, compact goal progress        |
+| `/explore`                   | Library tab, Explore segment                                            |
+| `/habits`                    | Plan tab: habits nested under goals                                     |
 | `/ai-coach`                  | Coach tab: conversation list/new conversation                           |
 | `/ai-coach/[conversationId]` | Conversation stack screen                                               |
-| `/profile`                   | Profile tab                                                             |
-| `/goals`                     | Goals stack screen                                                      |
-| `/weekly-review`             | Weekly review stack screen                                              |
+| `/profile`                   | Me tab: profile and settings                                            |
+| `/goals`                     | Plan tab or compatible goals destination                                |
+| `/weekly-review`             | Progress stack screen                                                   |
 | `/article/[id]`              | Article detail stack screen                                             |
-| `/search`                    | Search stack/modal screen                                               |
-| `/saved`                     | Saved stack screen                                                      |
-| `/activity`                  | Activity stack screen                                                   |
+| `/search`                    | Library search                                                          |
+| `/saved`                     | Library tab, Saved segment                                              |
+| `/activity`                  | Progress stack screen                                                   |
 | Web notification side panel  | Notifications stack screen/sheet                                        |
 | `/settings`                  | Settings stack screen                                                   |
 | `/report`                    | Report stack screen                                                     |
@@ -246,7 +246,7 @@ Reuse concepts and platform-neutral logic deliberately; do not mechanically copy
 - React Query key conventions, mutation invalidation, and optimistic update ideas from `../frontend/src/hooks/`.
 - Zustand onboarding state shape and non-sensitive UI state.
 - Constants and pure date/category formatting utilities after removing browser assumptions.
-- The semantic design language: primary, calm, growth, energy, success, destructive, light/dark themes.
+- Product semantics and behavior, but visual tokens follow the approved Paper palette in `mobile.md`, not the web frontend’s older multi-accent palette.
 - User-visible copy after moving it into i18n resources.
 
 ### Must be rewritten for native
@@ -377,12 +377,12 @@ Billing is a release blocker until product IDs, RevenueCat project configuration
 
 ## Design system and UI rules
 
-Translate the existing Apple-inspired semantic design into typed native tokens:
+Implement the approved native Paper design in `Mobile Redesign (standalone).html` according to `mobile.md`:
 
-- Semantic colors: background, surface/card, foreground, muted, border, primary, destructive, calm, growth, energy, success, and chart colors.
+- Semantic colors use a warm background/surface/foreground/muted foundation, one sage accent/success color, and destructive color. Remove the older calm/growth/energy/chart palette after migrating consumers.
 - Light and dark themes come from one token schema; do not use raw colors in feature code.
-- Use the existing type intent: Plus Jakarta Sans for body, Fraunces for display, JetBrains Mono where semantically appropriate, loaded with `expo-font`.
-- Use a spacing scale, typography scale, radius scale, elevation/shadow tokens, opacity, icon sizes, and minimum touch target tokens.
+- Use Instrument Sans for body, Newsreader for display, and IBM Plex Mono for numeric/technical metadata, loaded with `expo-font` using verified SDK 57-compatible assets/packages.
+- Use the Paper spacing, typography, radius, duration, opacity, icon-size, and minimum-touch-target tokens specified in `mobile.md`.
 - Feature code consumes semantic tokens, never platform-specific CSS names or hardcoded hex values.
 - Use native safe-area handling, keyboard avoidance, haptics where meaningful, pull-to-refresh, and platform-appropriate sheets/menus.
 - Use system controls when they provide better accessibility and behavior.
@@ -482,11 +482,12 @@ Exit: a new user can register, verify, onboard, create and check in a habit, man
 
 ### Phase 3 — content and engagement
 
-- Home feed, category filters, plan-adjustment cards.
-- Explore, featured content, habit/goal templates.
-- Article detail markdown, image caching, like/share/save.
-- Saved items, global search, activity feed.
-- In-app notification list/unread/read-all and notification preferences.
+- Today composition: coach insight, daily habit check-ins, compact goal progress, and Progress entry.
+- Plan composition: habits nested under the goals they serve, plus untied habits and CRUD sheets.
+- Library: Explore, Saved, Templates, People where supported, and search.
+- Article detail markdown, image caching, like/share/save, reader size, and reading-position restoration.
+- Progress combines weekly-review summaries and recent activity without merging domain ownership.
+- In-app notification sheet/unread/read-all and notification preferences.
 - Image avatar selection, compression, upload, and retry.
 
 Exit: content and engagement behavior has parity with supported web behavior, including deep links and offline-readable cached content.
