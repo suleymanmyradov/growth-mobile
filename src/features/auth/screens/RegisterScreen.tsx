@@ -3,6 +3,9 @@
  *
  * On success, navigates to the check-email screen (the backend sends a
  * verification email and does not return tokens).
+ *
+ * Paper (`mobile.md` §8.8): onboardingTitle variant, sage accent, accessible
+ * show/hide password, keyboard avoidance, 48-unit inputs, inline validation.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useRouter } from 'expo-router';
@@ -13,9 +16,12 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { ApiError } from '@/core/api/errors';
-import { Button, Card, Input, Screen, ThemedText } from '@/design-system';
+import { Button, Card, Input, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 
+import { AuthHeader } from '../components/AuthHeader';
+import { AuthShell } from '../components/AuthShell';
+import { PasswordInput } from '../components/PasswordInput';
 import { authErrorKey, useRegister } from '../hooks';
 import { RegisterRequestSchema, type RegisterRequest } from '../schemas';
 
@@ -53,124 +59,114 @@ export function RegisterScreen() {
   };
 
   return (
-    <Screen scrollable>
-      <View style={[styles.container, { padding: spacing.lg }]}>
-        <View style={styles.header}>
-          <View style={[styles.iconWrap, { backgroundColor: `${colors.primary}1A` }]}>
-            <UserPlus color={colors.primary} size={28} />
-          </View>
-          <ThemedText variant="heading" style={{ fontSize: 24 }}>
-            {t('auth.createAccount')}
-          </ThemedText>
-          <ThemedText variant="body" style={{ color: colors.secondaryText }}>
-            {t('auth.registerSubtitle')}
-          </ThemedText>
-        </View>
+    <AuthShell>
+      <AuthHeader
+        icon={UserPlus}
+        title={t('auth.createAccount')}
+        subtitle={t('auth.registerSubtitle')}
+      />
 
-        <Card>
-          <View style={{ gap: spacing.md }}>
-            <Controller
-              control={control}
-              name="fullName"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label={t('auth.fullName')}
-                  placeholder={t('auth.fullNamePlaceholder')}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.fullName?.message ? t('validation.fullNameRequired') : undefined}
-                  accessibilityLabel={t('auth.fullName')}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="username"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label={t('auth.username')}
-                  placeholder={t('auth.usernamePlaceholder')}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.username?.message ? t('validation.usernameInvalid') : undefined}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel={t('auth.username')}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label={t('auth.email')}
-                  placeholder={t('auth.emailPlaceholder')}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.email?.message ? t('validation.emailInvalid') : undefined}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel={t('auth.email')}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label={t('auth.password')}
-                  placeholder={t('auth.passwordPlaceholder')}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.password?.message ? t('validation.passwordTooShort') : undefined}
-                  secureTextEntry
-                  accessibilityLabel={t('auth.password')}
-                  hint="Min 8 chars, 1 uppercase, 1 number, 1 special character"
-                />
-              )}
-            />
+      <Card>
+        <View style={{ gap: spacing.md }}>
+          <Controller
+            control={control}
+            name="fullName"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label={t('auth.fullName')}
+                placeholder={t('auth.fullNamePlaceholder')}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.fullName?.message ? t('validation.fullNameRequired') : undefined}
+                accessibilityLabel={t('auth.fullName')}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="username"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label={t('auth.username')}
+                placeholder={t('auth.usernamePlaceholder')}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.username?.message ? t('validation.usernameInvalid') : undefined}
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel={t('auth.username')}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label={t('auth.email')}
+                placeholder={t('auth.emailPlaceholder')}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.email?.message ? t('validation.emailInvalid') : undefined}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel={t('auth.email')}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <PasswordInput
+                showLabel={t('auth.showPassword')}
+                hideLabel={t('auth.hidePassword')}
+                label={t('auth.password')}
+                placeholder={t('auth.passwordPlaceholder')}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.password?.message ? t('validation.passwordTooShort') : undefined}
+                accessibilityLabel={t('auth.password')}
+                hint={t('auth.passwordHint')}
+              />
+            )}
+          />
 
-            {serverError ? (
-              <ThemedText style={{ color: colors.error, fontSize: 14 }}>{serverError}</ThemedText>
-            ) : null}
-
-            <Button fullWidth loading={register.isPending} onPress={handleSubmit(onSubmit)}>
-              {register.isPending ? t('auth.registering') : t('auth.createAccount')}
-            </Button>
-          </View>
-        </Card>
-
-        <View style={styles.footer}>
-          <ThemedText variant="body" style={{ color: colors.secondaryText }}>
-            {t('auth.alreadyHaveAccount')}{' '}
-          </ThemedText>
-          <Link href="/(public)/sign-in">
-            <ThemedText style={{ color: colors.primary, fontWeight: '600' }}>
-              {t('auth.signIn')}
+          {serverError ? (
+            <ThemedText
+              variant="bodySmall"
+              style={{ color: colors.destructive }}
+              accessibilityRole="alert"
+            >
+              {serverError}
             </ThemedText>
-          </Link>
+          ) : null}
+
+          <Button fullWidth loading={register.isPending} onPress={handleSubmit(onSubmit)}>
+            {register.isPending ? t('auth.registering') : t('auth.createAccount')}
+          </Button>
         </View>
+      </Card>
+
+      <View style={styles.footer}>
+        <ThemedText variant="body" style={{ color: colors.mutedForeground }}>
+          {t('auth.alreadyHaveAccount')}{' '}
+        </ThemedText>
+        <Link href="/(public)/sign-in">
+          <ThemedText variant="label" style={{ color: colors.accent }}>
+            {t('auth.signIn')}
+          </ThemedText>
+        </Link>
       </View>
-    </Screen>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center' },
-  header: { alignItems: 'center', gap: 8, marginBottom: 24 },
-  iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 16 },
+  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
 });

@@ -1,98 +1,54 @@
+import { Button, Screen, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
 
 /**
- * Landing screen — entry point for unauthenticated users.
- * Shows links to sign in and register.
+ * Welcome screen — entry point for unauthenticated users.
+ *
+ * Paper (`mobile.md` §8.8): brand display title ("Small things, kept.") using
+ * the `welcomeTitle` semantic variant (38/44), a short subtitle, a primary
+ * "Get started" action leading to register, and a secondary "I already have an
+ * account" action leading to sign in. Centered, full-screen, no header.
  */
 export default function LandingScreen() {
-  const { colors, typography } = useTheme();
+  const { colors, spacing } = useTheme();
   const { t } = useTranslation();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.content}>
-        <Text
-          style={[styles.title, { color: colors.primaryText, fontSize: typography.fontSize.xxl }]}
-        >
-          {t('common.appName')}
-        </Text>
-        <Text
-          style={[
-            styles.subtitle,
-            { color: colors.secondaryText, fontSize: typography.fontSize.lg },
-          ]}
-        >
-          {t('common.tagline')}
-        </Text>
+    <Screen>
+      <View style={[styles.container, { paddingHorizontal: spacing.xxl, gap: spacing.xxl }]}>
+        <View style={{ gap: spacing.sm }}>
+          <ThemedText variant="welcomeTitle" style={{ textAlign: 'center' }}>
+            {t('auth.welcomeTitle')}
+          </ThemedText>
+          <ThemedText variant="body" style={{ color: colors.mutedForeground, textAlign: 'center' }}>
+            {t('auth.welcomeSubtitle')}
+          </ThemedText>
+        </View>
 
-        <Link href="/(public)/sign-in" asChild>
-          <Pressable
-            style={StyleSheet.flatten([
-              styles.button,
-              { backgroundColor: colors.primary, borderRadius: 8 },
-            ])}
-          >
-            <Text style={[styles.buttonText, { color: colors.background }]}>
-              {t('auth.signIn')}
-            </Text>
-          </Pressable>
-        </Link>
-
-        <Link href="/(public)/register" asChild>
-          <Pressable
-            style={StyleSheet.flatten([
-              styles.button,
-              styles.secondaryButton,
-              {
-                borderColor: colors.border,
-                borderRadius: 8,
-              },
-            ])}
-          >
-            <Text style={[styles.buttonText, { color: colors.primaryText }]}>
-              {t('auth.createAccount')}
-            </Text>
-          </Pressable>
-        </Link>
+        <View style={{ gap: spacing.sm, width: '100%' }}>
+          <Link href="/(public)/register" asChild>
+            <Button fullWidth size="lg" accessibilityLabel={t('auth.getStarted')}>
+              {t('auth.getStarted')}
+            </Button>
+          </Link>
+          <Link href="/(public)/sign-in" asChild>
+            <Button variant="ghost" fullWidth accessibilityLabel={t('auth.haveAccount')}>
+              {t('auth.haveAccount')}
+            </Button>
+          </Link>
+        </View>
       </View>
-    </SafeAreaView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    gap: 16,
-  },
-  title: {
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  subtitle: {
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  button: {
-    width: '100%',
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    justifyContent: 'space-between',
+    paddingVertical: 56,
   },
 });

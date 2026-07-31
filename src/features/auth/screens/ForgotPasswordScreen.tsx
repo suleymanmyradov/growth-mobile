@@ -1,5 +1,8 @@
 /**
  * Forgot-password screen — email entry to request a reset link.
+ *
+ * Paper (`mobile.md` §8.8): onboardingTitle variant, sage accent, muted
+ * secondary text, keyboard avoidance, 48-unit inputs.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'expo-router';
@@ -9,9 +12,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Card, Input, Screen, ThemedText } from '@/design-system';
+import { Button, Card, Input, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 
+import { AuthHeader } from '../components/AuthHeader';
+import { AuthShell } from '../components/AuthShell';
 import { useForgotPassword } from '../hooks';
 import { ForgotPasswordRequestSchema, type ForgotPasswordRequest } from '../schemas';
 
@@ -36,15 +41,20 @@ export function ForgotPasswordScreen() {
 
   if (sent) {
     return (
-      <Screen>
-        <View style={[styles.container, { padding: spacing.lg, gap: spacing.md }]}>
-          <View style={[styles.iconWrap, { backgroundColor: `${colors.primary}1A` }]}>
-            <KeyRound color={colors.primary} size={48} />
+      <AuthShell>
+        <View style={{ alignItems: 'center', gap: spacing.md }}>
+          <View
+            style={[
+              styles.iconWrap,
+              { backgroundColor: colors.successSoft, borderRadius: spacing.lg },
+            ]}
+          >
+            <KeyRound color={colors.accent} size={48} />
           </View>
-          <ThemedText variant="heading" style={{ fontSize: 24, textAlign: 'center' }}>
+          <ThemedText variant="onboardingTitle" style={{ textAlign: 'center' }}>
             {t('auth.checkEmail')}
           </ThemedText>
-          <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+          <ThemedText variant="body" style={{ color: colors.mutedForeground, textAlign: 'center' }}>
             {t('auth.forgotPasswordSuccess')}
           </ThemedText>
           <Link href="/(public)/sign-in" asChild>
@@ -53,70 +63,57 @@ export function ForgotPasswordScreen() {
             </Button>
           </Link>
         </View>
-      </Screen>
+      </AuthShell>
     );
   }
 
   return (
-    <Screen scrollable>
-      <View style={[styles.container, { padding: spacing.lg }]}>
-        <View style={styles.header}>
-          <View style={[styles.iconWrap, { backgroundColor: `${colors.primary}1A` }]}>
-            <KeyRound color={colors.primary} size={28} />
-          </View>
-          <ThemedText variant="heading" style={{ fontSize: 24 }}>
-            {t('auth.forgotPasswordTitle')}
-          </ThemedText>
-          <ThemedText variant="body" style={{ color: colors.secondaryText }}>
-            {t('auth.forgotPasswordSubtitle')}
-          </ThemedText>
+    <AuthShell>
+      <AuthHeader
+        icon={KeyRound}
+        title={t('auth.forgotPasswordTitle')}
+        subtitle={t('auth.forgotPasswordSubtitle')}
+      />
+
+      <Card>
+        <View style={{ gap: spacing.md }}>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                label={t('auth.email')}
+                placeholder={t('auth.emailPlaceholder')}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={errors.email?.message ? t('validation.emailInvalid') : undefined}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel={t('auth.email')}
+              />
+            )}
+          />
+          <Button fullWidth loading={forgotPassword.isPending} onPress={handleSubmit(onSubmit)}>
+            {forgotPassword.isPending ? t('auth.sendingResetLink') : t('auth.forgotPasswordTitle')}
+          </Button>
         </View>
+      </Card>
 
-        <Card>
-          <View style={{ gap: spacing.md }}>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label={t('auth.email')}
-                  placeholder={t('auth.emailPlaceholder')}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.email?.message ? t('validation.emailInvalid') : undefined}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel={t('auth.email')}
-                />
-              )}
-            />
-            <Button fullWidth loading={forgotPassword.isPending} onPress={handleSubmit(onSubmit)}>
-              {forgotPassword.isPending
-                ? t('auth.sendingResetLink')
-                : t('auth.forgotPasswordTitle')}
-            </Button>
-          </View>
-        </Card>
-
-        <Link href="/(public)/sign-in">
-          <ThemedText style={{ color: colors.primary, textAlign: 'center', marginTop: 16 }}>
-            {t('auth.backToSignIn')}
-          </ThemedText>
-        </Link>
-      </View>
-    </Screen>
+      <Link href="/(public)/sign-in">
+        <ThemedText variant="label" style={{ color: colors.accent, textAlign: 'center' }}>
+          {t('auth.backToSignIn')}
+        </ThemedText>
+      </Link>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center' },
-  header: { alignItems: 'center', gap: 8, marginBottom: 24 },
   iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+    width: 80,
+    height: 80,
     alignItems: 'center',
     justifyContent: 'center',
   },

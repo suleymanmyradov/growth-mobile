@@ -72,11 +72,41 @@ export const settingsEndpoints = {
   update: '/settings',
 } as const;
 
-// ─── Personalization / Onboarding ─────────────────────────────────────────────
+// ─── Personalization / Onboarding / Coaching ──────────────────────────────────
 
 export const personalizationEndpoints = {
   onboardingHabits: '/personalization/onboarding-habits',
   coachingProfile: '/personalization/coaching-profile',
+  coachingProfilePreferences: '/personalization/coaching-profile/preferences',
+  context: '/personalization/context',
+  coaching: '/personalization/coaching',
+  // SSE stream (POST, text/event-stream) — handled by the SSE client, not axios.
+  coachingStream: '/personalization/coaching-stream',
+  planAdjustments: '/personalization/plan-adjustments',
+  // Custom multipart transport (POST multipart → JSON).
+  transcribe: '/personalization/transcribe',
+  // Custom multipart + SSE transport (POST multipart → text/event-stream).
+  voiceTurn: '/personalization/voice-turn',
+} as const;
+
+// ─── Conversations ────────────────────────────────────────────────────────────
+
+export const conversationEndpoints = {
+  list: '/conversations',
+  start: '/conversations',
+  detail: (id: string) => `/conversations/${id}`,
+  messages: (id: string) => `/conversations/${id}/messages`,
+  archive: (id: string) => `/conversations/${id}/archive`,
+  unarchive: (id: string) => `/conversations/${id}/unarchive`,
+} as const;
+
+// ─── Billing ──────────────────────────────────────────────────────────────────
+
+export const billingEndpoints = {
+  overview: '/billing/overview',
+  checkout: '/billing/checkout',
+  portal: '/billing/portal',
+  upgradeEvents: '/billing/upgrade-events',
 } as const;
 
 // ─── Activity ─────────────────────────────────────────────────────────────────
@@ -103,4 +133,44 @@ export const notificationEndpoints = {
   markRead: (id: string) => `/notifications/${id}/read`,
   markAllRead: '/notifications/read-all',
   preferences: '/notification-preferences',
+} as const;
+
+// ─── Push device registration ──────────────────────────────────────────────────
+
+export const deviceEndpoints = {
+  register: (installationId: string) => `/devices/${encodeURIComponent(installationId)}`,
+  unregister: (installationId: string) => `/devices/${encodeURIComponent(installationId)}`,
+} as const;
+
+// ─── Articles ─────────────────────────────────────────────────────────────────
+
+export const articleEndpoints = {
+  list: '/articles',
+  detail: (id: string) => `/articles/${id}`,
+  featured: '/articles/featured',
+  author: (authorId: string) => `/articles/author/${authorId}`,
+  like: (id: string) => `/articles/${id}/like`,
+  share: (id: string) => `/articles/${id}/share`,
+} as const;
+
+// ─── Saved items ──────────────────────────────────────────────────────────────
+
+export const savedEndpoints = {
+  list: '/saved',
+  listDetailed: '/saved/detailed',
+  save: '/saved',
+  remove: (id: string) => `/saved/${id}`,
+} as const;
+
+// ─── Search ───────────────────────────────────────────────────────────────────
+
+export const searchEndpoints = {
+  search: '/search',
+} as const;
+
+// ─── Templates ────────────────────────────────────────────────────────────────
+
+export const templateEndpoints = {
+  habitTemplates: '/habit-templates',
+  goalTemplates: '/goal-templates',
 } as const;

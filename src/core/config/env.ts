@@ -33,6 +33,16 @@ const envSchema = z.object({
   EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY: z.string().default(''),
   EXPO_PUBLIC_REVENUECAT_PROJECT_ID: z.string().default(''),
 
+  // Legal links (validated destinations for the paywall; empty disables).
+  EXPO_PUBLIC_TERMS_URL: z
+    .string()
+    .default('')
+    .refine((v) => v === '' || z.string().url().safeParse(v).success, 'Invalid URL'),
+  EXPO_PUBLIC_PRIVACY_URL: z
+    .string()
+    .default('')
+    .refine((v) => v === '' || z.string().url().safeParse(v).success, 'Invalid URL'),
+
   // EAS project ID (PLACEHOLDER — pending organizational decisions).
   EXPO_PUBLIC_EAS_PROJECT_ID: z.string().default('PLACEHOLDER_EAS_PROJECT_ID'),
 });

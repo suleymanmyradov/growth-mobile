@@ -13,7 +13,7 @@ export default function NotFoundScreen() {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text
           style={{
-            color: colors.primaryText,
+            color: colors.foreground,
             fontSize: typography.fontSize.xxl,
             fontWeight: '700',
           }}
@@ -22,7 +22,7 @@ export default function NotFoundScreen() {
         </Text>
         <Text
           style={{
-            color: colors.secondaryText,
+            color: colors.mutedForeground,
             fontSize: typography.fontSize.md,
             marginBottom: 24,
           }}

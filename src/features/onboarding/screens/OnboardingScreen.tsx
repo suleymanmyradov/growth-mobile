@@ -11,13 +11,27 @@
  * 7. AI habit suggestions (generate on enter, submit on finish)
  *
  * Submission is duplicate-safe via a ref guard in the submission hook.
+ *
+ * Paper (`mobile.md` §8.8): one logical step per screen, back action, a single
+ * progress line, `n/7` step count, persistent Continue action. Step titles use
+ * the `onboardingTitle` variant (30/38). Auth/onboarding gutter is 24. Keyboard
+ * avoidance is handled by the scroll view. All seven contract-required fields
+ * are preserved — changing the step contract requires an approved product/
+ * backend change.
  */
 import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react-native';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
-import { Button, Card, Input, Screen, Spinner, ThemedText } from '@/design-system';
+import { Button, Input, ProgressBar, Screen, Spinner, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useCategories } from '@/features/categories';
 
@@ -33,7 +47,7 @@ import {
 
 export function OnboardingScreen() {
   const { t } = useTranslation();
-  const { colors, spacing, radius, typography } = useTheme();
+  const { colors, spacing, radius } = useTheme();
 
   const step = useOnboardingStore((s) => s.step);
   const data = useOnboardingStore((s) => s.data);
@@ -94,41 +108,41 @@ export function OnboardingScreen() {
     submit.mutate(data);
   };
 
-  return (
-    <Screen>
-      <View style={[styles.container, { padding: spacing.lg }]}>
-        {/* Progress bar */}
-        <View style={styles.progressBar}>
-          {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-            <View
-              key={i}
-              style={[
-                styles.progressSegment,
-                {
-                  backgroundColor: i <= step - 1 ? colors.primary : colors.border,
-                  borderRadius: radius.full,
-                },
-              ]}
-            />
-          ))}
-        </View>
-        <ThemedText
-          variant="caption"
-          style={{ color: colors.secondaryText, marginBottom: spacing.md }}
-        >
-          {t('onboarding.stepOf', { step, total: TOTAL_STEPS })}
-        </ThemedText>
+  const progressValue = (step - 1) / (TOTAL_STEPS - 1);
 
-        <Card style={{ flex: 1 }}>
+  return (
+    <Screen onBack={step > 1 ? prevStep : undefined}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: 24,
+            paddingVertical: spacing.lg,
+            flexGrow: 1,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Progress line + step count */}
+          <ProgressBar value={progressValue} style={{ marginBottom: spacing.sm }} />
+          <ThemedText
+            variant="meta"
+            style={{ color: colors.mutedForeground, marginBottom: spacing.lg }}
+          >
+            {t('onboarding.stepOf', { step, total: TOTAL_STEPS })}
+          </ThemedText>
+
           <View style={{ gap: spacing.md, flex: 1 }}>
             {/* Step 1: Goal title + category */}
             {step === 1 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step1Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step1Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step1Subtitle')}
                   </ThemedText>
                 </View>
@@ -145,7 +159,7 @@ export function OnboardingScreen() {
                   </ThemedText>
                   <View style={styles.optionGrid}>
                     {categories.length === 0 ? (
-                      <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+                      <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
                         {t('onboarding.loadingCategories')}
                       </ThemedText>
                     ) : (
@@ -169,10 +183,11 @@ export function OnboardingScreen() {
             {step === 2 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step2Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step2Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step2Subtitle')}
                   </ThemedText>
                 </View>
@@ -192,10 +207,11 @@ export function OnboardingScreen() {
             {step === 3 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step3Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step3Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step3Subtitle')}
                   </ThemedText>
                 </View>
@@ -239,10 +255,11 @@ export function OnboardingScreen() {
             {step === 4 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step4Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step4Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step4Subtitle')}
                   </ThemedText>
                 </View>
@@ -265,10 +282,11 @@ export function OnboardingScreen() {
             {step === 5 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step5Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step5Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step5Subtitle')}
                   </ThemedText>
                 </View>
@@ -282,14 +300,12 @@ export function OnboardingScreen() {
                       style={[
                         {
                           borderWidth: 1,
-                          borderRadius: radius.lg,
+                          borderRadius: radius.card,
                           padding: spacing.md,
                           borderColor:
-                            data.accountabilityStyle === style ? colors.primary : colors.border,
+                            data.accountabilityStyle === style ? colors.accent : colors.border,
                           backgroundColor:
-                            data.accountabilityStyle === style
-                              ? `${colors.primary}1A`
-                              : 'transparent',
+                            data.accountabilityStyle === style ? colors.successSoft : 'transparent',
                         },
                       ]}
                     >
@@ -304,19 +320,19 @@ export function OnboardingScreen() {
                           {styleLabels[style]}
                         </ThemedText>
                         {data.accountabilityStyle === style && (
-                          <Check color={colors.primary} size={16} />
+                          <Check color={colors.accent} size={16} />
                         )}
                       </View>
                       <ThemedText
                         variant="caption"
-                        style={{ color: colors.secondaryText, marginBottom: 8 }}
+                        style={{ color: colors.mutedForeground, marginBottom: 8 }}
                       >
                         {styleDescs[style]}
                       </ThemedText>
                       <ThemedText
                         variant="caption"
                         style={{
-                          color: colors.secondaryText,
+                          color: colors.mutedForeground,
                           fontStyle: 'italic',
                           borderTopColor: colors.border,
                           borderTopWidth: StyleSheet.hairlineWidth,
@@ -335,10 +351,11 @@ export function OnboardingScreen() {
             {step === 6 && (
               <View style={{ gap: spacing.md }}>
                 <View>
-                  <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                    {t('onboarding.step6Title')}
-                  </ThemedText>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText, marginTop: 4 }}>
+                  <ThemedText variant="onboardingTitle">{t('onboarding.step6Title')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, marginTop: spacing.xs }}
+                  >
                     {t('onboarding.step6Subtitle')}
                   </ThemedText>
                 </View>
@@ -366,12 +383,10 @@ export function OnboardingScreen() {
                   <View
                     style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}
                   >
-                    <Sparkles color={colors.primary} size={20} />
-                    <ThemedText variant="heading" style={{ fontSize: 22 }}>
-                      {t('onboarding.step7Title')}
-                    </ThemedText>
+                    <Sparkles color={colors.accent} size={20} />
+                    <ThemedText variant="onboardingTitle">{t('onboarding.step7Title')}</ThemedText>
                   </View>
-                  <ThemedText variant="body" style={{ color: colors.secondaryText }}>
+                  <ThemedText variant="body" style={{ color: colors.mutedForeground }}>
                     {t('onboarding.step7Subtitle')}
                   </ThemedText>
                 </View>
@@ -389,10 +404,10 @@ export function OnboardingScreen() {
                         style={[
                           {
                             borderWidth: 1,
-                            borderRadius: radius.lg,
+                            borderRadius: radius.card,
                             padding: spacing.md,
-                            borderColor: habit.selected ? colors.primary : colors.border,
-                            backgroundColor: habit.selected ? `${colors.primary}1A` : 'transparent',
+                            borderColor: habit.selected ? colors.accent : colors.border,
+                            backgroundColor: habit.selected ? colors.successSoft : 'transparent',
                             opacity: habit.selected ? 1 : 0.6,
                           },
                         ]}
@@ -405,15 +420,17 @@ export function OnboardingScreen() {
                                 height: 20,
                                 borderWidth: 1,
                                 borderRadius: 4,
-                                borderColor: habit.selected ? colors.primary : colors.secondaryText,
-                                backgroundColor: habit.selected ? colors.primary : 'transparent',
+                                borderColor: habit.selected
+                                  ? colors.accent
+                                  : colors.mutedForeground,
+                                backgroundColor: habit.selected ? colors.accent : 'transparent',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 marginTop: 2,
                               },
                             ]}
                           >
-                            {habit.selected && <Check color={colors.background} size={14} />}
+                            {habit.selected && <Check color={colors.accentForeground} size={14} />}
                           </View>
                           <View style={{ flex: 1 }}>
                             <ThemedText variant="label" style={{ fontWeight: '600' }}>
@@ -421,7 +438,7 @@ export function OnboardingScreen() {
                             </ThemedText>
                             <ThemedText
                               variant="caption"
-                              style={{ color: colors.secondaryText, marginTop: 2 }}
+                              style={{ color: colors.mutedForeground, marginTop: 2 }}
                             >
                               {habit.description}
                             </ThemedText>
@@ -434,12 +451,12 @@ export function OnboardingScreen() {
 
                 <View
                   style={{
-                    backgroundColor: colors.surface,
-                    borderRadius: radius.md,
+                    backgroundColor: colors.muted,
+                    borderRadius: radius.field,
                     padding: spacing.sm,
                   }}
                 >
-                  <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+                  <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
                     <ThemedText variant="caption" style={{ fontWeight: '600' }}>
                       {t('onboarding.yourPlan')}
                       {': '}
@@ -454,7 +471,15 @@ export function OnboardingScreen() {
                   </ThemedText>
                 </View>
 
-                {error ? <ThemedText style={{ color: colors.error }}>{error}</ThemedText> : null}
+                {error ? (
+                  <ThemedText
+                    variant="bodySmall"
+                    style={{ color: colors.destructive }}
+                    accessibilityRole="alert"
+                  >
+                    {error}
+                  </ThemedText>
+                ) : null}
               </View>
             )}
 
@@ -466,7 +491,7 @@ export function OnboardingScreen() {
                 onPress={prevStep}
                 disabled={step === 1 || submit.isPending || loadingHabits}
               >
-                <ArrowLeft color={colors.primaryText} size={16} /> {t('common.back')}
+                <ArrowLeft color={colors.foreground} size={16} /> {t('common.back')}
               </Button>
 
               {step < TOTAL_STEPS ? (
@@ -475,7 +500,7 @@ export function OnboardingScreen() {
                   disabled={!canProceed() || loadingHabits}
                   loading={loadingHabits}
                 >
-                  {t('common.continue')} <ArrowRight color={colors.background} size={16} />
+                  {t('common.continue')} <ArrowRight color={colors.accentForeground} size={16} />
                 </Button>
               ) : (
                 <Button
@@ -484,25 +509,24 @@ export function OnboardingScreen() {
                   loading={submit.isPending}
                 >
                   {submit.isPending ? t('onboarding.starting') : t('onboarding.startMyPlan')}{' '}
-                  <Check color={colors.background} size={16} />
+                  <Check color={colors.accentForeground} size={16} />
                 </Button>
               )}
             </View>
           </View>
-        </Card>
 
-        <ThemedText
-          variant="caption"
-          style={{
-            color: colors.secondaryText,
-            textAlign: 'center',
-            marginTop: spacing.md,
-            fontSize: typography.fontSize.xs,
-          }}
-        >
-          {t('onboarding.changeLaterNote')}
-        </ThemedText>
-      </View>
+          <ThemedText
+            variant="caption"
+            style={{
+              color: colors.mutedForeground,
+              textAlign: 'center',
+              marginTop: spacing.md,
+            }}
+          >
+            {t('onboarding.changeLaterNote')}
+          </ThemedText>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -510,10 +534,12 @@ export function OnboardingScreen() {
 // ─── Reusable option chips ───────────────────────────────────────────────────
 
 type ColorTokens = {
-  primary: string;
+  accent: string;
   border: string;
   background: string;
-  primaryText: string;
+  foreground: string;
+  mutedForeground: string;
+  successSoft: string;
 };
 
 function OptionChip({
@@ -528,7 +554,7 @@ function OptionChip({
   selected: boolean;
   onPress: () => void;
   colors: ColorTokens;
-  radius: { md: number; lg: number };
+  radius: { field: number; card: number };
   compact?: boolean;
 }) {
   return (
@@ -536,22 +562,22 @@ function OptionChip({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={{ selected }}
       style={[
         {
           borderWidth: 1,
-          borderRadius: radius.md,
+          borderRadius: radius.field,
           paddingVertical: compact ? 8 : 10,
           paddingHorizontal: 12,
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? `${colors.primary}1A` : 'transparent',
+          borderColor: selected ? colors.accent : colors.border,
+          backgroundColor: selected ? colors.successSoft : 'transparent',
         },
       ]}
     >
       <ThemedText
+        variant="label"
         style={{
-          fontSize: 13,
-          fontWeight: '500',
-          color: selected ? colors.primary : colors.primaryText,
+          color: selected ? colors.accent : colors.foreground,
           textAlign: 'center',
         }}
       >
@@ -572,29 +598,29 @@ function OptionRow({
   selected: boolean;
   onPress: () => void;
   colors: ColorTokens;
-  radius: { md: number; lg: number };
+  radius: { field: number; card: number };
 }) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={{ selected }}
       style={[
         {
           borderWidth: 1,
-          borderRadius: radius.md,
+          borderRadius: radius.field,
           paddingVertical: 12,
           paddingHorizontal: 16,
-          borderColor: selected ? colors.primary : colors.border,
-          backgroundColor: selected ? `${colors.primary}1A` : 'transparent',
+          borderColor: selected ? colors.accent : colors.border,
+          backgroundColor: selected ? colors.successSoft : 'transparent',
         },
       ]}
     >
       <ThemedText
+        variant="label"
         style={{
-          fontSize: 14,
-          fontWeight: '500',
-          color: selected ? colors.primary : colors.primaryText,
+          color: selected ? colors.accent : colors.foreground,
         }}
       >
         {label}
@@ -604,9 +630,6 @@ function OptionRow({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  progressBar: { flexDirection: 'row', gap: 4, marginBottom: 8 },
-  progressSegment: { flex: 1, height: 4 },
   optionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   timeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   nav: {

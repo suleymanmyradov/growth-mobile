@@ -26,6 +26,8 @@ export type InputProps = TextInputProps & {
   error?: string;
   hint?: string;
   containerStyle?: ViewProps['style'];
+  /** Optional trailing affordance rendered inside the field (e.g. show/hide password). */
+  trailing?: ReactNode;
 };
 
 export function Input({
@@ -33,6 +35,7 @@ export function Input({
   error,
   hint,
   containerStyle,
+  trailing,
   style,
   accessibilityLabel,
   ...rest
@@ -50,35 +53,43 @@ export function Input({
           {label}
         </ThemedText>
       ) : null}
-      <TextInput
-        accessibilityLabel={accessibilityLabel ?? label}
-        accessibilityHint={hint}
-        accessibilityValue={{ text: rest.value ?? '' }}
-        placeholderTextColor={colors.mutedForeground}
-        onFocus={(e) => {
-          setFocused(true);
-          rest.onFocus?.(e);
-        }}
-        onBlur={(e) => {
-          setFocused(false);
-          rest.onBlur?.(e);
-        }}
-        style={[
-          styles.input,
-          {
-            color: colors.foreground,
-            backgroundColor: colors.surface,
-            borderColor: ringColor,
-            borderWidth: focused || hasError ? 2 : 1,
-            borderRadius: radius.field,
-            paddingHorizontal: spacing.md,
-            fontSize: typography.fontSize.md,
-            minHeight: 48,
-          },
-          style,
-        ]}
-        {...rest}
-      />
+      <View style={styles.fieldWrap}>
+        <TextInput
+          accessibilityLabel={accessibilityLabel ?? label}
+          accessibilityHint={hint}
+          accessibilityValue={{ text: rest.value ?? '' }}
+          placeholderTextColor={colors.mutedForeground}
+          onFocus={(e) => {
+            setFocused(true);
+            rest.onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            setFocused(false);
+            rest.onBlur?.(e);
+          }}
+          style={[
+            styles.input,
+            {
+              color: colors.foreground,
+              backgroundColor: colors.surface,
+              borderColor: ringColor,
+              borderWidth: focused || hasError ? 2 : 1,
+              borderRadius: radius.field,
+              paddingHorizontal: spacing.md,
+              fontSize: typography.fontSize.md,
+              minHeight: 48,
+            },
+            trailing ? { paddingRight: 48 } : null,
+            style,
+          ]}
+          {...rest}
+        />
+        {trailing ? (
+          <View style={styles.trailing} pointerEvents="box-none">
+            {trailing}
+          </View>
+        ) : null}
+      </View>
       {hasError ? (
         <Text style={[styles.message, { color: colors.destructive, marginTop: spacing.xs }]}>
           {error}
@@ -94,5 +105,13 @@ export function Input({
 
 const styles = StyleSheet.create({
   input: {},
+  fieldWrap: { position: 'relative' },
+  trailing: {
+    position: 'absolute',
+    right: 6,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
   message: { fontSize: 12, lineHeight: 16 },
 });

@@ -672,3 +672,211 @@ Phase C is complete. The verification gate passes with 138 tests (17 new).
 - `jest.stubs/lucide-react-native.js` — stubs the ESM-only icon package so component tests don't need to transform `.mjs`. Registered in `jest.config.js` `moduleNameMapper`.
 - `eslint.config.js` — test files now disable `i18next/no-literal-string` (test fixtures aren't user-facing).
 - `primitives.test.tsx` — 17 tests covering Chip, SegmentedTabs, ListRow, ProgressBar, StreakBar, CheckInControl (parameterized states), SectionLabel, Avatar, Skeleton.
+
+### 13.6 Phase D completion — route migration and shell
+
+Phase D is complete. The verification gate passes (typecheck, lint, test, format:check).
+
+**Tab IA migration**
+
+- Migrated tabs from `Home/Explore/Habits/Coach/Profile` to `Today/Plan/Coach/Library/Me`.
+- New tab files: `index.tsx` (Today), `plan.tsx`, `coach.tsx`, `library.tsx`, `me.tsx`.
+- Deleted obsolete duplicate tab files: `explore.tsx`, `habits.tsx`, `profile.tsx`.
+
+**New stack/modal routes (thin wrappers)**
+
+- `progress.tsx` (pushed from Today), `article/[id].tsx`, `conversation/[conversationId].tsx`, `paywall.tsx` (modal), `notifications.tsx` (form sheet).
+
+**Deep-link re-pointing**
+
+- `habit-detail`/`goal-detail` → `/(app)/(tabs)/plan` (canonical home for habits and goals in the new IA; no per-id detail screen exists).
+- `article-detail`/`conversation` → new screens with UUID validation.
+- `weekly-review`/`activity` → `/(app)/progress`.
+- `notifications` → `/(app)/notifications`.
+
+**i18n**: tabs renamed to `today/plan/coach/library/me`; added `screens.*` titles; `notFound.goHome` → "Go to Today".
+
+**Icons**: Lucide — `Circle`/Today, `ListChecks`/Plan, `MessageCircle`/Coach, `Library`/Library, `User`/Me.
+
+**Pending (device)**: tab geometry, dark mode appearance, sheet presentation — requires a development build.
+
+### 13.7 Phase E completion — Today, Plan, and Progress
+
+Phase E is complete. The verification gate passes with 175 tests (33 new).
+
+**API foundation (`src/core/api/`)**
+
+- `schemas.ts`: `Activity`, `WeeklyReview` (+ breakdown/adjustment/nextWeekPlan), `Notification`, `NotificationPreferences`, `UnreadNotificationCountResponse`.
+- `endpoints.ts`: `activityEndpoints`, `weeklyReviewEndpoints`, `notificationEndpoints`.
+- `query-keys.ts`: `weeklyReviewKeys`, `notificationKeys`.
+
+**New feature API modules**
+
+- `features/weekly-review/` (list, current, generate, detail; streaming deferred to Phase H).
+- `features/activity/` (listActivity).
+- `features/notifications/` (list, unreadCount, markRead, markAllRead with optimistic updates).
+
+**Today composition (`features/home/`)**
+
+- `TodayScreen`: date eyebrow (mono, collapses on scroll), Today title, Progress action + notification bell with unread badge, coach insight card (placeholder until Phase H), check-in section with one-tap optimistic check-in/syncing/failure states, compact goal progress cards, pull-to-refresh, skeleton/empty/error states.
+- Components: `TodayHabitRow`, `TodayGoalCard`, `CoachInsightCard`.
+- Pure helper: `deriveCheckInState` (failed > done > syncing > rest).
+
+**Plan recomposition (`features/plan/`)**
+
+- `PlanScreen`: goal/habit counts, All/Active/Completed filters (Paused deferred — no backend contract), goals with nested habits via `relatedHabitIds`, untied habits section with "Link a goal" affordance, 56-unit sage FAB opening a create-choice sheet, full-screen habit/goal forms.
+- `LinkGoalSheet`: links untied habits to goals via the real `relatedHabitIds` contract field.
+- Pure helpers (`grouping.ts`): `getTiedHabitIds`, `getUntiedHabits`, `getHabitsForGoal`, `filterGoalsByLifecycle`.
+
+**Progress (`features/progress/`)**
+
+- `ProgressScreen`: week label, check-in total, consistency metric, per-habit breakdown, coach interpretation (from `weeklyReview.aiSummary` only — never fabricated), recent activity, regenerate action, skeleton/empty/error/refresh/last-updated states.
+
+**Route changes**: `index.tsx` → TodayScreen, `plan.tsx` → PlanScreen, `progress.tsx` → ProgressScreen; removed `goals.tsx` and its stack screen.
+
+**Key decisions**: Paused filter deferred (no backend state); no per-habit undo (no delete-check-in contract); coach insight placeholder deferred to Phase H; grouping and check-in state logic extracted to testable pure modules.
+
+**Pending (device)**: collapsing header animation, FAB/sheet presentation, check-in tap feedback, dark mode — requires a development build.
+
+### 13.8 Phase F completion — Library and article reader
+
+Phase F is complete. The verification gate passes with 221 tests (32 new).
+
+**API layer**
+
+- `schemas.ts`: `ArticleCategory`, `Article`, `ArticleResponse`, `ArticlesResponse`, `LikeArticleResponse`, `ShareArticleResponse`, `SavedItemType`, `SavedItem`, `SavedItemDetailed`, `SearchResult`, `SearchResponse`, `HabitTemplateItem`, `GoalTemplateItem`.
+- `endpoints.ts`: `articleEndpoints`, `savedEndpoints`, `searchEndpoints`, `templateEndpoints`.
+- `query-keys.ts`: `articleKeys`, `savedKeys`, `searchKeys`, `templateKeys`.
+
+**Feature modules**
+
+- `features/articles/`: api, hooks, `markdown-style.ts` (pure style map), `reader-preferences.ts` (KV storage for reader size + scroll positions), `screens/ArticleReader.tsx`.
+- `features/saved/`: api, hooks.
+- `features/search/`: api, hooks (`useDebouncedQuery` with stale-result prevention).
+- `features/templates/`: api, hooks.
+- `features/library/`: components (`ArticleRow`, `FeaturedArticleCard`, `SavedRow`, `SearchBar`, `TemplateCard`), `screens/LibraryScreen.tsx`.
+
+**Routes**: `library.tsx` → LibraryScreen; `article/[id].tsx` → ArticleReader.
+
+**Key decisions**: People segment deferred (no backend contract for people search); search uses 300ms debounce with React Query and disabled `keepPreviousData`; ArticleReader uses `react-native-markdown-display` (no WebView); reader size (small/medium/large) persisted as non-secret KV preference; scroll position per article persisted for restoration; markdown style map is a pure function testable without a render tree.
+
+**Pending (device)**: reader scroll-position restoration, markdown rendering on iOS/Android, search debounce UX — requires a development build.
+
+### 13.9 Phase G completion — Me, auth, and onboarding
+
+Phase G is complete. The verification gate passes with 230 tests (9 new).
+
+**Me composition (`features/me/`)**
+
+- `MeScreen`: profile header, summary cards (trustworthy metrics via `deriveMeSummary`), sections (Coaching, Reminders with native Switch, Appearance with theme SegmentedTabs, Plan & data with logout/delete account). Inline edit-profile mode with keyboard avoidance.
+
+**Auth components**
+
+- `AuthShell` (keyboard-avoiding, 24-unit gutter), `AuthHeader` (onboardingTitle, sage-tinted icon), `PasswordInput` (accessible show/hide toggle).
+- Added `trailing` prop to design-system `Input` for in-field affordances (e.g., show/hide password).
+
+**Auth screens restyled**: SignIn, Register, ForgotPassword, ResetPassword, CheckEmail, VerifyEmail — all use `onboardingTitle` variant, sage accent, semantic colors, show/hide password, keyboard avoidance.
+
+**Welcome screen** (`app/(public)/index.tsx`): `welcomeTitle` variant ("Small things, kept."), primary Get started, secondary existing-account action.
+
+**Onboarding**: removed Card wrapper, added `onboardingTitle` step titles, single `ProgressBar` progress line, header back action, gutter 24, keyboard avoidance. All 7 contract steps/fields preserved.
+
+**Route cleanup**: Me tab renders `MeScreen`; removed `app/(app)/settings.tsx`, `SettingsScreen`, `ProfileScreen`.
+
+**i18n**: added `auth.*` (welcomeTitle, getStarted, haveAccount, showPassword, hidePassword, passwordHint) and `me.*` section.
+
+**Tests**: `src/features/me/__tests__/summary.test.ts` (pure helper), `src/design-system/components/__tests__/Input.test.tsx` (trailing prop behavior).
+
+**Pending (device)**: theme switch + relaunch, keyboard avoidance, 200% text, screen reader — requires a development build.
+
+### 13.10 Phase H completion — Coach and voice
+
+Phase H is complete. The verification gate passes with 282 tests (52 new).
+
+**API layer**
+
+- `schemas.ts`: `Conversation`, `ConversationMessage`, `StartConversationResponse`, `ListConversationsResponse`, `GetMessagesResponse`, `AppendMessageResponse`, `GeneratePersonalizedCoachingRequest`, `Plan`, `UserSubscription`, `Entitlements`, `BillingOverviewResponse`.
+- `endpoints.ts`: `conversationEndpoints`, `billingEndpoints`, expanded `personalizationEndpoints` (coaching-stream, transcribe, voice-turn, context, coaching).
+- `query-keys.ts`: `conversationKeys`.
+- `sse-client.ts`: authenticated SSE POST stream helper using `expo/fetch` with bearer token, AbortSignal, timeout, error parsing.
+- `errors.ts`: `fromFetchError`, `parseJsonApiError`.
+
+**Feature modules**
+
+- `features/billing/` (new): minimal read-only module for entitlements/usage banner.
+- `features/ai-coach/` (new):
+  - api: conversation CRUD, streaming coaching (SSE), voice turn (multipart+SSE), transcription.
+  - `streaming.ts`: pure SSE event reducers for coaching-stream and voice-turn.
+  - `voice-state.ts`: pure voice recorder state machine (idle→permission→recording→recorded/error).
+  - `voice-stream.ts`: multipart+SSE stream opener for voice-turn.
+  - `useVoiceRecorder.ts`: `expo-audio` wrapper with permission handling, interruption cleanup on app backgrounding.
+  - hooks: conversation queries/mutations, `useStreamCoaching`, `useVoiceTurn`, `useTranscribeAudio`.
+  - components: `EntitlementBanner`, `ConversationRow`, `MessageBubble`, `Composer`, `VoiceBars`.
+  - screens: `CoachScreen` (tab), `ConversationScreen`, `VoiceScreen`.
+
+**Routes**: `coach.tsx` → CoachScreen; `conversation/[conversationId].tsx` → ConversationScreen; `conversation/voice.tsx` → VoiceScreen.
+
+**Key decisions**: used `expo/fetch` for SSE streams with bearer auth (no feature-local HTTP clients); streaming hooks use pure reducers for testable SSE event handling; voice recording uses `expo-audio` with a pure state machine and interruption cleanup; domain boundaries respected (ai-coach imports only public hooks from billing); no logging of stream content, transcripts, coaching content, or audio.
+
+**Pending (device)**: streaming UX, voice recording on iOS/Android, keyboard behavior, dark mode, interruption handling — requires a development build.
+
+**Known deferred item**: the Today coach insight card (`features/home/components/CoachInsightCard.tsx`) still renders a contract-safe placeholder. Wiring real per-day insight data from the backend is a future enhancement; the placeholder is intentionally non-fabricated and renders a "Talk to coach" affordance. This is not a blocker for Phase H's own scope (Coach tab + voice), but is recorded here for transparency.
+
+### 13.11 Phase I completion — notifications and subscriptions
+
+Phase I is complete. The verification gate passes (typecheck, lint, test, format:check).
+
+**Notifications**
+
+- Added notification preferences and device registration to `features/notifications/api.ts` and `hooks.ts`.
+- `notification-destination.ts` — pure routing helper mapping notification `itemType` to a validated `DeepLinkDestination` (e.g., `habit_reminder` → `habit-detail`). Never accepts arbitrary URLs.
+- `push-registration.ts` — best-effort Expo push token registration using `expo-notifications`. No-ops on simulators, missing EAS project ID, or network failure. Tokens are never logged.
+- `NotificationsScreen.tsx` — FlashList, unread/read styling (accent dot + stronger text), "Mark all read" header action, allowlisted navigation via `notificationToRoute()`, skeleton/empty/error states.
+- `useRegisterPushTokenOnMount` wired in `_layout.tsx` to register push tokens when authenticated.
+
+**Billing/Paywall**
+
+- `revenuecat.ts` — typed adapter wrapping `react-native-purchases` with `PaywallPackage` view models, offerings/purchase/restore, typed `PurchaseOutcome` (canceled/pending/failed/purchased). No-ops when RevenueCat API keys are not configured.
+- `entitlement-reconciliation.ts` — pure state machine (loading, unavailable, idle, purchasing, pending, canceled, failed, restored, reconciling, reconciled). A purchase callback never unlocks access directly; backend must confirm via `getBillingOverview` first.
+- Extended billing hooks: `useOfferings`, `usePurchasePackage`, `useRestorePurchases`, `useTrackUpgradeEvent`, `useReconcileEntitlement`.
+- `PaywallScreen.tsx` — RevenueCat offerings, validated `reason` param (allowlist), feature list, package selection, restore purchase, Terms/Privacy links, all reconciliation states.
+- Legal URL env vars: `EXPO_PUBLIC_TERMS_URL`, `EXPO_PUBLIC_PRIVACY_URL` (empty defaults disable links).
+
+**API/schema additions**: `CreateCheckoutSessionRequest/Response`, `CreateCustomerPortalSessionResponse`, `TrackUpgradeEventRequest/Response`, `RegisterDeviceRequest`, `UnregisterDeviceRequest`; `deviceEndpoints.register/unregister`; `billingKeys.offerings()`.
+
+**Tests**: `notification-destination.test.ts` (14), `entitlement-reconciliation.test.ts` (16), schema validation tests, query-keys test.
+
+**Pending (org/device)**: sandbox testing on real devices requires RevenueCat products configured in App Store/Play Store; push delivery verification requires Expo project ID and APNs/FCM credentials. Both depend on Phase 0 organizational decisions in `docs/app-identity-environment-matrix.md`.
+
+### 13.12 Phase J completion — cleanup and hardening
+
+Phase J is complete at the code level. The verification gate passes (typecheck, lint, 340 tests, format:check, expo-doctor 20/20).
+
+**Compatibility color alias removal**
+
+- Migrated 8 alias consumers to canonical Paper tokens: `Badge.tsx` (`warning` → `destructive`), `ErrorBoundary.tsx` (`error` → `destructive`, `secondaryText` → `mutedForeground`), `HabitsScreen.tsx`, `HabitForm.tsx`, `HabitCard.tsx`, `GoalForm.tsx`, `GoalCard.tsx`, `app/+not-found.tsx`.
+- Removed aliases (`error`, `secondaryText`, `primaryText`, `warning`, `warningForeground`) from `ColorTokens` type and light/dark color objects.
+- `tokens.test.ts` updated to assert aliases are **absent** (guards against re-introduction).
+
+**Ad hoc typography migration**
+
+- `GoalCard.tsx`, `HabitCard.tsx`: category chips and check-in/completion buttons use `label` variant; titles use `cardTitle`.
+- `GoalForm.tsx`, `HabitForm.tsx`: category chips use `label` variant.
+- `OnboardingScreen.tsx`: selection chips use `label` variant.
+- `MeScreen.tsx`: display name uses `cardTitle` (removed `fontSize: 20` override).
+
+**Dependency hygiene**
+
+- Installed missing `expo-asset` peer dependency (required by `expo-audio`).
+- Aligned all Expo SDK packages to SDK 57 expected versions via `expo install --fix` (react-native-gesture-handler 3.x → ~2.32.0, @types/jest 30 → 29.5.14, plus patch drift across expo/expo-router/react-native/etc.).
+- Added `resolutions.expo-constants` to deduplicate nested expo-constants installs.
+- `expo-doctor` now passes 20/20 checks.
+
+**Badge warning variant note**: with `colors.warning` removed, `Badge` variant `warning` now maps to `colors.destructive`. Paper has no warning equivalent; a warning badge reads as an error badge. This is intentional per the Paper palette but should be revisited if a distinct warning treatment is needed.
+
+**Pending (org/device — not code blockers)**
+
+- Maestro E2E journeys: `e2e/app-launch.yml` is a smoke test only. The 7 required critical journeys (sign-in→check-in→undo→Progress, Plan habit/goal linking, Library search→save→article, Coach stream→stop→resume, notification destination, paywall/restore sandbox, theme switch + relaunch, offline cached read) require device builds to author and verify.
+- Visual acceptance matrix: screenshot captures across iOS/Android sizes × light/dark × default/200% text × loaded/skeleton/empty/error/offline/pending, plus keyboard and reduced-motion states — requires device builds.
+- Device profiling for performance optimization — requires device builds.
+- Phase 0 organizational blockers in `docs/app-identity-environment-matrix.md` remain open (app identifiers, deep-link hosts, env matrix, EAS signing, analytics consent). These block release-config work (app.config.ts real values, eas.json, OAuth redirects, push credentials, RevenueCat products) but not the code-level work above.

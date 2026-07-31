@@ -8,13 +8,9 @@
  * Semantic names decouple component code from concrete color values so the
  * palette can be swapped per system color scheme without touching components.
  *
- * Temporary back-compat aliases (removed in Phase J once consumers migrate):
- * - `error` mirrors `destructive`.
- * - `secondaryText` mirrors `mutedForeground`.
- * - `primaryText` mirrors `foreground`.
- * - `warning` / `warningForeground` have no Paper equivalent; they alias
- *   `destructive` / `destructiveForeground` as an interim value so the two
- *   remaining callers compile while they are migrated to Paper semantics.
+ * Phase J removed the temporary back-compat aliases (`error`, `secondaryText`,
+ * `primaryText`, `warning`, `warningForeground`) once all consumers migrated to
+ * the Paper semantic tokens (`destructive`, `mutedForeground`, `foreground`).
  *
  * The older `calm*`, `growth*`, `energy*`, and `chart1`–`chart5` tokens had no
  * feature consumers at the Phase A baseline, so they are dropped from the
@@ -49,10 +45,6 @@ export type ColorTokens = {
   accent: string;
   /** Foreground on `accent`. */
   accentForeground: string;
-  /** High-contrast text. Temporary alias of `foreground`. */
-  primaryText: string;
-  /** Lower-contrast text. Temporary alias of `mutedForeground`. */
-  secondaryText: string;
   /** Hairline borders and dividers. */
   border: string;
   /** Input field borders. */
@@ -63,18 +55,12 @@ export type ColorTokens = {
   destructive: string;
   /** Foreground on `destructive`. */
   destructiveForeground: string;
-  /** Temporary alias of `destructive` for existing feature code. */
-  error: string;
   /** Success and positive feedback states. Same sage as `accent`. */
   success: string;
   /** Foreground on `success`. Same as `accentForeground`. */
   successForeground: string;
   /** Soft success fill for tinted backgrounds. */
   successSoft: string;
-  /** Temporary cautionary alias; no Paper equivalent. Aliases `destructive`. */
-  warning: string;
-  /** Foreground on `warning`. Temporary alias of `destructiveForeground`. */
-  warningForeground: string;
   /** Semi-transparent scrim used behind modals and sheets. */
   overlay: string;
 };
@@ -94,19 +80,14 @@ export const lightColors: ColorTokens = {
   mutedForeground: '#6E6A63',
   accent: '#4F6B57',
   accentForeground: '#F6F4EF',
-  primaryText: '#1C1A17',
-  secondaryText: '#6E6A63',
   border: 'rgba(28,26,23,0.10)',
   input: 'rgba(28,26,23,0.14)',
   ring: '#4F6B57',
   destructive: '#B4553F',
   destructiveForeground: '#F6F4EF',
-  error: '#B4553F',
   success: '#4F6B57',
   successForeground: '#F6F4EF',
   successSoft: '#F1F4EF',
-  warning: '#B4553F',
-  warningForeground: '#F6F4EF',
   overlay: 'rgba(28,26,23,0.40)',
 };
 
@@ -125,18 +106,13 @@ export const darkColors: ColorTokens = {
   mutedForeground: '#8C877E',
   accent: '#7FA189',
   accentForeground: '#161514',
-  primaryText: '#F0EDE6',
-  secondaryText: '#8C877E',
   border: 'rgba(255,255,255,0.08)',
   input: 'rgba(255,255,255,0.14)',
   ring: '#7FA189',
   destructive: '#C9705A',
   destructiveForeground: '#161514',
-  error: '#C9705A',
   success: '#7FA189',
   successForeground: '#161514',
   successSoft: '#2A322C',
-  warning: '#C9705A',
-  warningForeground: '#161514',
   overlay: 'rgba(0,0,0,0.60)',
 };

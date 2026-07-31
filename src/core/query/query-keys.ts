@@ -55,6 +55,7 @@ export const activityKeys = {
 export const billingKeys = {
   all: ['billing'] as const,
   overview: () => [...billingKeys.all, 'overview'] as const,
+  offerings: () => [...billingKeys.all, 'offerings'] as const,
 };
 
 export const weeklyReviewKeys = {
@@ -73,4 +74,46 @@ export const notificationKeys = {
     [...notificationKeys.all, 'list', params ?? {}] as const,
   unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
   preferences: () => [...notificationKeys.all, 'preferences'] as const,
+};
+
+export const articleKeys = {
+  all: ['articles'] as const,
+  lists: () => [...articleKeys.all, 'list'] as const,
+  list: (params?: { categorySlug?: string; page?: number; limit?: number }) =>
+    [...articleKeys.lists(), params ?? {}] as const,
+  featured: () => [...articleKeys.all, 'featured'] as const,
+  author: (authorId: string, params?: { page?: number; limit?: number }) =>
+    [...articleKeys.all, 'author', authorId, params ?? {}] as const,
+  details: () => [...articleKeys.all, 'detail'] as const,
+  detail: (id: string) => [...articleKeys.details(), id] as const,
+};
+
+export const savedKeys = {
+  all: ['saved'] as const,
+  list: (params?: { page?: number; limit?: number }) =>
+    [...savedKeys.all, 'list', params ?? {}] as const,
+  listDetailed: (params?: { page?: number; limit?: number }) =>
+    [...savedKeys.all, 'listDetailed', params ?? {}] as const,
+};
+
+export const searchKeys = {
+  all: ['search'] as const,
+  query: (params: { q: string; itemType?: string; page?: number; limit?: number }) =>
+    [...searchKeys.all, 'query', params] as const,
+};
+
+export const templateKeys = {
+  all: ['templates'] as const,
+  habit: () => [...templateKeys.all, 'habit'] as const,
+  goal: () => [...templateKeys.all, 'goal'] as const,
+};
+
+export const conversationKeys = {
+  all: ['conversations'] as const,
+  lists: () => [...conversationKeys.all, 'list'] as const,
+  list: (params?: { type?: string; page?: number; limit?: number }) =>
+    [...conversationKeys.lists(), params ?? {}] as const,
+  details: () => [...conversationKeys.all, 'detail'] as const,
+  detail: (id: string) => [...conversationKeys.details(), id] as const,
+  messages: (id: string) => [...conversationKeys.detail(id), 'messages'] as const,
 };

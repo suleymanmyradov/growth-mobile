@@ -103,10 +103,9 @@ export function HabitForm({
                   ]}
                 >
                   <ThemedText
+                    variant="label"
                     style={{
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: value === cat.slug ? colors.primary : colors.primaryText,
+                      color: value === cat.slug ? colors.primary : colors.foreground,
                     }}
                   >
                     {cat.name}
@@ -117,7 +116,10 @@ export function HabitForm({
           ))}
         </View>
         {errors.category?.message ? (
-          <ThemedText variant="caption" style={{ color: colors.error, marginTop: spacing.xs }}>
+          <ThemedText
+            variant="caption"
+            style={{ color: colors.destructive, marginTop: spacing.xs }}
+          >
             {t('habits.selectCategory')}
           </ThemedText>
         ) : null}

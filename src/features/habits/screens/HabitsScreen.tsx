@@ -110,7 +110,7 @@ export function HabitsScreen() {
         hitSlop={8}
         style={{ padding: 8, minHeight: 44, justifyContent: 'center' }}
       >
-        <RotateCcw color={colors.secondaryText} size={20} />
+        <RotateCcw color={colors.mutedForeground} size={20} />
       </Pressable>
       <Pressable
         onPress={() => {

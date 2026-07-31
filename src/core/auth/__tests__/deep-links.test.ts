@@ -24,22 +24,22 @@ describe('deep-links', () => {
   describe('destinationToRoute', () => {
     const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
 
-    // Phase D: habits live under the Plan tab.
+    // Phase D/E: habits and goals live under the Plan tab. There is no per-id
+    // detail screen in the new IA, so both route to Plan regardless of id.
     it('routes habit-detail without resourceId to the Plan tab', () => {
       expect(destinationToRoute('habit-detail')).toBe('/(app)/(tabs)/plan');
     });
 
-    it('returns null for habit-detail with resourceId (detail screen missing)', () => {
-      expect(destinationToRoute('habit-detail', VALID_UUID)).toBeNull();
+    it('routes habit-detail with resourceId to the Plan tab (no detail screen)', () => {
+      expect(destinationToRoute('habit-detail', VALID_UUID)).toBe('/(app)/(tabs)/plan');
     });
 
-    // Phase E folded goals into the Plan tab; goal-detail routes to Plan.
     it('routes goal-detail without resourceId to the Plan tab', () => {
       expect(destinationToRoute('goal-detail')).toBe('/(app)/(tabs)/plan');
     });
 
-    it('returns null for goal-detail with resourceId (detail screen missing)', () => {
-      expect(destinationToRoute('goal-detail', VALID_UUID)).toBeNull();
+    it('routes goal-detail with resourceId to the Plan tab (no detail screen)', () => {
+      expect(destinationToRoute('goal-detail', VALID_UUID)).toBe('/(app)/(tabs)/plan');
     });
 
     // Article/conversation routes exist as thin wrappers; id is required + validated.

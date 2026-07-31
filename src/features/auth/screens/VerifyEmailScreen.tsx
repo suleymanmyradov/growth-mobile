@@ -3,6 +3,10 @@
  * manual entry), calls the backend, and redirects to onboarding on success.
  *
  * On error, shows a resend-verification form.
+ *
+ * Paper (`mobile.md` §8.8): onboardingTitle variant, sage accent for success,
+ * destructive for failure, muted secondary text, keyboard avoidance, 48-unit
+ * inputs.
  */
 import { Link, useLocalSearchParams } from 'expo-router';
 import { CheckCircle2, MailWarning, XCircle } from 'lucide-react-native';
@@ -11,9 +15,10 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { ApiError } from '@/core/api/errors';
-import { Button, Card, Input, Screen, Spinner, ThemedText } from '@/design-system';
+import { Button, Card, Input, Spinner, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 
+import { AuthShell } from '../components/AuthShell';
 import { authErrorKey, useResendVerification, useVerifyEmail } from '../hooks';
 
 type Status = 'loading' | 'success' | 'error';
@@ -57,81 +62,86 @@ export function VerifyEmailScreen() {
     resend.mutate({ email: resendEmail });
   };
 
+  if (status === 'loading') {
+    return (
+      <AuthShell>
+        <Spinner size="large" label={t('auth.verifyEmail')} />
+      </AuthShell>
+    );
+  }
+
   return (
-    <Screen>
-      <View style={[styles.container, { padding: spacing.lg, gap: spacing.md }]}>
-        {status === 'loading' ? (
-          <>
-            <Spinner size="large" label={t('auth.verifyEmail')} />
-          </>
-        ) : status === 'success' ? (
-          <>
-            <View style={[styles.iconWrap, { backgroundColor: `${colors.primary}1A` }]}>
-              <CheckCircle2 color={colors.primary} size={48} />
-            </View>
-            <ThemedText variant="heading" style={{ fontSize: 24, textAlign: 'center' }}>
-              {t('auth.verifyEmailSuccess')}
-            </ThemedText>
-            <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
-              {t('auth.verifyEmailRedirecting')}
-            </ThemedText>
-          </>
-        ) : (
-          <>
-            <View style={[styles.iconWrap, { backgroundColor: `${colors.error}1A` }]}>
-              <XCircle color={colors.error} size={48} />
-            </View>
-            <ThemedText variant="heading" style={{ fontSize: 24, textAlign: 'center' }}>
-              {t('auth.verifyEmailFailed')}
-            </ThemedText>
-            <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
-              {error}
-            </ThemedText>
+    <AuthShell>
+      <View style={{ alignItems: 'center', gap: spacing.md, width: '100%' }}>
+        <View
+          style={[
+            styles.iconWrap,
+            {
+              backgroundColor:
+                status === 'success' ? colors.successSoft : `${colors.destructive}1A`,
+              borderRadius: spacing.lg,
+            },
+          ]}
+        >
+          {status === 'success' ? (
+            <CheckCircle2 color={colors.accent} size={48} />
+          ) : (
+            <XCircle color={colors.destructive} size={48} />
+          )}
+        </View>
+        <ThemedText variant="onboardingTitle" style={{ textAlign: 'center' }}>
+          {status === 'success' ? t('auth.verifyEmailSuccess') : t('auth.verifyEmailFailed')}
+        </ThemedText>
+        <ThemedText
+          variant="body"
+          style={{ color: colors.mutedForeground, textAlign: 'center' }}
+          accessibilityRole={status === 'error' ? 'alert' : undefined}
+        >
+          {status === 'success' ? t('auth.verifyEmailRedirecting') : error}
+        </ThemedText>
 
-            <Card>
-              <View style={{ gap: spacing.sm }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  <MailWarning color={colors.secondaryText} size={16} />
-                  <ThemedText variant="label">{t('auth.resendVerification')}</ThemedText>
-                </View>
-                <Input
-                  placeholder={t('auth.emailPlaceholder')}
-                  value={resendEmail}
-                  onChangeText={setResendEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  accessibilityLabel={t('auth.email')}
-                />
-                <Button
-                  fullWidth
-                  loading={resend.isPending}
-                  onPress={handleResend}
-                  disabled={!resendEmail}
-                >
-                  {resend.isPending ? t('auth.resending') : t('auth.resendVerification')}
-                </Button>
+        {status === 'error' ? (
+          <Card style={{ width: '100%' }}>
+            <View style={{ gap: spacing.sm }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <MailWarning color={colors.mutedForeground} size={16} />
+                <ThemedText variant="label">{t('auth.resendVerification')}</ThemedText>
               </View>
-            </Card>
+              <Input
+                placeholder={t('auth.emailPlaceholder')}
+                value={resendEmail}
+                onChangeText={setResendEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                accessibilityLabel={t('auth.email')}
+              />
+              <Button
+                fullWidth
+                loading={resend.isPending}
+                onPress={handleResend}
+                disabled={!resendEmail}
+              >
+                {resend.isPending ? t('auth.resending') : t('auth.resendVerification')}
+              </Button>
+            </View>
+          </Card>
+        ) : null}
 
-            <Link href="/(public)/sign-in">
-              <ThemedText style={{ color: colors.primary, textAlign: 'center' }}>
-                {t('auth.backToSignIn')}
-              </ThemedText>
-            </Link>
-          </>
-        )}
+        <Link href="/(public)/sign-in">
+          <ThemedText variant="label" style={{ color: colors.accent, textAlign: 'center' }}>
+            {t('auth.backToSignIn')}
+          </ThemedText>
+        </Link>
       </View>
-    </Screen>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   iconWrap: {
     width: 80,
     height: 80,
-    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },

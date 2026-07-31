@@ -34,11 +34,9 @@ export function GoalCard({
           }}
         >
           <View style={{ flex: 1 }}>
-            <ThemedText variant="label" style={{ fontWeight: '600', fontSize: 16 }}>
-              {goal.title}
-            </ThemedText>
+            <ThemedText variant="cardTitle">{goal.title}</ThemedText>
             {goal.description ? (
-              <ThemedText variant="caption" style={{ color: colors.secondaryText, marginTop: 2 }}>
+              <ThemedText variant="caption" style={{ color: colors.mutedForeground, marginTop: 2 }}>
                 {goal.description}
               </ThemedText>
             ) : null}
@@ -49,7 +47,7 @@ export function GoalCard({
         {/* Progress bar */}
         <View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-            <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+            <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
               {t('goals.progress')}
             </ThemedText>
             <ThemedText variant="caption" style={{ color: colors.primary, fontWeight: '600' }}>
@@ -76,7 +74,7 @@ export function GoalCard({
         </View>
 
         {goal.dueDate ? (
-          <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+          <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
             {t('goals.dueDate')}: {new Date(goal.dueDate).toLocaleDateString()}
           </ThemedText>
         ) : null}
@@ -107,13 +105,12 @@ export function GoalCard({
             {goal.completed ? (
               <CheckCircle color={colors.success} size={18} />
             ) : (
-              <Circle color={colors.secondaryText} size={18} />
+              <Circle color={colors.mutedForeground} size={18} />
             )}
             <ThemedText
+              variant="label"
               style={{
-                color: goal.completed ? colors.success : colors.primaryText,
-                fontWeight: '600',
-                fontSize: 14,
+                color: goal.completed ? colors.success : colors.foreground,
               }}
             >
               {goal.completed ? t('goals.completed') : t('goals.markComplete')}
@@ -127,7 +124,7 @@ export function GoalCard({
             hitSlop={8}
             style={{ padding: 10, minHeight: 44, justifyContent: 'center' }}
           >
-            <Pencil color={colors.secondaryText} size={18} />
+            <Pencil color={colors.mutedForeground} size={18} />
           </Pressable>
           <Pressable
             onPress={onDelete}
@@ -136,7 +133,7 @@ export function GoalCard({
             hitSlop={8}
             style={{ padding: 10, minHeight: 44, justifyContent: 'center' }}
           >
-            <Trash2 color={colors.error} size={18} />
+            <Trash2 color={colors.destructive} size={18} />
           </Pressable>
         </View>
       </View>

@@ -483,3 +483,406 @@ export const UpdateNotificationPreferencesRequestSchema = z.object({
 export type UpdateNotificationPreferencesRequest = z.infer<
   typeof UpdateNotificationPreferencesRequestSchema
 >;
+
+// ─── Articles ─────────────────────────────────────────────────────────────────
+
+export const ArticleCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  slug: z.string(),
+});
+
+export type ArticleCategory = z.infer<typeof ArticleCategorySchema>;
+
+export const ArticleSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  excerpt: z.string(),
+  content: z.string(),
+  category: ArticleCategorySchema.nullable().optional(),
+  readTime: z.number().int().nonnegative(),
+  imageUrl: z.string(),
+  author: z.string(),
+  publishedAt: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  isSaved: z.boolean(),
+  likeCount: z.number().int().nonnegative(),
+  isLiked: z.boolean(),
+  tags: z.preprocess((v) => v ?? [], z.array(z.string()).optional()),
+});
+
+export type Article = z.infer<typeof ArticleSchema>;
+
+export const ArticleResponseSchema = ApiResponseSchema(ArticleSchema);
+
+export type ArticleResponse = z.infer<typeof ArticleResponseSchema>;
+
+export const ArticlesResponseSchema = ApiResponseSchema(z.array(ArticleSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type ArticlesResponse = z.infer<typeof ArticlesResponseSchema>;
+
+export const ListArticlesRequestSchema = z.object({
+  categorySlug: z.string().optional(),
+  page: z.number().int().positive().optional(),
+  limit: z.number().int().positive().max(100).optional(),
+});
+
+export type ListArticlesRequest = z.infer<typeof ListArticlesRequestSchema>;
+
+export const LikeArticleResponseSchema = z.object({
+  success: z.boolean(),
+  newLikeCount: z.number().int().nonnegative(),
+  isLiked: z.boolean(),
+});
+
+export type LikeArticleResponse = z.infer<typeof LikeArticleResponseSchema>;
+
+export const ShareArticleResponseSchema = z.object({
+  success: z.boolean(),
+});
+
+export type ShareArticleResponse = z.infer<typeof ShareArticleResponseSchema>;
+
+// ─── Saved items ──────────────────────────────────────────────────────────────
+
+export const SavedItemTypeSchema = z.enum(['article', 'goal', 'habit']);
+
+export type SavedItemType = z.infer<typeof SavedItemTypeSchema>;
+
+export const SavedItemSchema = z.object({
+  id: z.string(),
+  itemType: SavedItemTypeSchema,
+  itemId: z.string(),
+  userId: z.string(),
+  createdAt: z.string(),
+});
+
+export type SavedItem = z.infer<typeof SavedItemSchema>;
+
+export const SavedItemResponseSchema = ApiResponseSchema(SavedItemSchema);
+
+export type SavedItemResponse = z.infer<typeof SavedItemResponseSchema>;
+
+export const SavedItemsResponseSchema = ApiResponseSchema(z.array(SavedItemSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type SavedItemsResponse = z.infer<typeof SavedItemsResponseSchema>;
+
+export const SavedItemDetailedSchema = z.object({
+  id: z.string(),
+  itemType: SavedItemTypeSchema,
+  itemId: z.string(),
+  userId: z.string(),
+  createdAt: z.string(),
+  article: ArticleSchema.nullable().optional(),
+  habit: HabitSchema.nullable().optional(),
+  goal: GoalSchema.nullable().optional(),
+});
+
+export type SavedItemDetailed = z.infer<typeof SavedItemDetailedSchema>;
+
+export const SavedItemsDetailedResponseSchema = ApiResponseSchema(
+  z.array(SavedItemDetailedSchema),
+).extend({
+  page: PageResponseSchema,
+});
+
+export type SavedItemsDetailedResponse = z.infer<typeof SavedItemsDetailedResponseSchema>;
+
+export const SaveItemRequestSchema = z.object({
+  itemType: SavedItemTypeSchema,
+  itemId: z.string().min(1),
+});
+
+export type SaveItemRequest = z.infer<typeof SaveItemRequestSchema>;
+
+// ─── Search ───────────────────────────────────────────────────────────────────
+
+export const SearchResultSchema = z.object({
+  id: z.string(),
+  itemType: z.string(),
+  title: z.string(),
+  description: z.string(),
+  score: z.number(),
+  highlight: z.string().optional(),
+});
+
+export type SearchResult = z.infer<typeof SearchResultSchema>;
+
+export const SearchResponseSchema = ApiResponseSchema(z.array(SearchResultSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type SearchResponse = z.infer<typeof SearchResponseSchema>;
+
+export const SearchRequestSchema = z.object({
+  q: z.string().min(1),
+  itemType: z.string().optional(),
+  page: z.number().int().positive().optional(),
+  limit: z.number().int().positive().max(100).optional(),
+});
+
+export type SearchRequest = z.infer<typeof SearchRequestSchema>;
+
+// ─── Templates ────────────────────────────────────────────────────────────────
+
+export const TemplateCategorySchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  slug: z.string().optional(),
+});
+
+export type TemplateCategory = z.infer<typeof TemplateCategorySchema>;
+
+export const HabitTemplateItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  category: TemplateCategorySchema.nullable().optional(),
+  sortOrder: z.number().int(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type HabitTemplateItem = z.infer<typeof HabitTemplateItemSchema>;
+
+export const HabitTemplatesResponseSchema = ApiResponseSchema(z.array(HabitTemplateItemSchema));
+
+export type HabitTemplatesResponse = z.infer<typeof HabitTemplatesResponseSchema>;
+
+export const GoalTemplateItemSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  category: TemplateCategorySchema.nullable().optional(),
+  sortOrder: z.number().int(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type GoalTemplateItem = z.infer<typeof GoalTemplateItemSchema>;
+
+export const GoalTemplatesResponseSchema = ApiResponseSchema(z.array(GoalTemplateItemSchema));
+
+export type GoalTemplatesResponse = z.infer<typeof GoalTemplatesResponseSchema>;
+
+// ─── Conversations (AI coach) ─────────────────────────────────────────────────
+
+export const ConversationSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  type: z.string(),
+  lastMessage: z.string(),
+  userId: z.string().optional(),
+  archived: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type Conversation = z.infer<typeof ConversationSchema>;
+
+export const ConversationMessageSchema = z.object({
+  id: z.string(),
+  conversationId: z.string(),
+  role: z.enum(['user', 'assistant', 'system']),
+  content: z.string(),
+  createdAt: z.string(),
+});
+
+export type ConversationMessage = z.infer<typeof ConversationMessageSchema>;
+
+export const StartConversationRequestSchema = z.object({
+  type: z.string().optional(),
+  title: z.string().optional(),
+  initialMessage: z.string().optional(),
+});
+
+export type StartConversationRequest = z.infer<typeof StartConversationRequestSchema>;
+
+export const StartConversationResponseSchema = z.object({
+  data: ConversationSchema,
+  initialMessage: ConversationMessageSchema.nullable().optional(),
+});
+
+export type StartConversationResponse = z.infer<typeof StartConversationResponseSchema>;
+
+export const ListConversationsResponseSchema = ApiResponseSchema(
+  z.array(ConversationSchema),
+).extend({
+  page: PageResponseSchema,
+});
+
+export type ListConversationsResponse = z.infer<typeof ListConversationsResponseSchema>;
+
+export const GetConversationResponseSchema = z.object({
+  data: ConversationSchema,
+});
+
+export type GetConversationResponse = z.infer<typeof GetConversationResponseSchema>;
+
+export const GetMessagesResponseSchema = ApiResponseSchema(
+  z.array(ConversationMessageSchema),
+).extend({
+  page: PageResponseSchema,
+});
+
+export type GetMessagesResponse = z.infer<typeof GetMessagesResponseSchema>;
+
+export const AppendMessageRequestSchema = z.object({
+  content: z.string().min(1),
+  role: z.string().optional(),
+});
+
+export type AppendMessageRequest = z.infer<typeof AppendMessageRequestSchema>;
+
+export const AppendMessageResponseSchema = z.object({
+  data: ConversationMessageSchema,
+  conversation: ConversationSchema,
+});
+
+export type AppendMessageResponse = z.infer<typeof AppendMessageResponseSchema>;
+
+// ─── Personalization / coaching ───────────────────────────────────────────────
+
+export const GeneratePersonalizedCoachingRequestSchema = z.object({
+  userMessage: z.string().min(1),
+  context: z.string().optional(),
+  conversationId: z.string().optional(),
+});
+
+export type GeneratePersonalizedCoachingRequest = z.infer<
+  typeof GeneratePersonalizedCoachingRequestSchema
+>;
+
+// ─── Billing / entitlements ───────────────────────────────────────────────────
+
+export const PlanSchema = z.object({
+  id: z.string(),
+  code: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  priceMonthlyCents: z.number().int(),
+  priceAnnualCents: z.number().int(),
+  activeGoalLimit: z.number().int().optional(),
+  activeHabitLimit: z.number().int().optional(),
+  weeklyReviewHistoryLimit: z.number().int().optional(),
+  planAdjustmentLimit: z.number().int().optional(),
+  personalizedAiEnabled: z.boolean(),
+  isActive: z.boolean(),
+});
+
+export type Plan = z.infer<typeof PlanSchema>;
+
+export const UserSubscriptionSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  planId: z.string(),
+  planCode: z.string(),
+  planName: z.string(),
+  status: z.string(),
+  billingInterval: z.string().optional(),
+  currentPeriodStart: z.string().optional(),
+  currentPeriodEnd: z.string().optional(),
+  trialEnd: z.string().optional(),
+  cancelAtPeriodEnd: z.boolean(),
+  stripeCustomerId: z.string().optional(),
+  stripeSubscriptionId: z.string().optional(),
+});
+
+export type UserSubscription = z.infer<typeof UserSubscriptionSchema>;
+
+export const EntitlementsSchema = z.object({
+  planCode: z.string(),
+  status: z.string(),
+  activeGoalLimit: z.number().int().optional(),
+  activeHabitLimit: z.number().int().optional(),
+  weeklyReviewHistoryLimit: z.number().int().optional(),
+  planAdjustmentLimit: z.number().int().optional(),
+  personalizedAiEnabled: z.boolean(),
+  canCreateGoal: z.boolean(),
+  canCreateHabit: z.boolean(),
+  canViewWeeklyReviewHistory: z.boolean(),
+  canUsePersonalizedAi: z.boolean(),
+  canCreatePlanAdjustment: z.boolean(),
+  currentActiveGoals: z.number().int(),
+  currentActiveHabits: z.number().int(),
+  currentPendingAdjustments: z.number().int(),
+});
+
+export type Entitlements = z.infer<typeof EntitlementsSchema>;
+
+export const BillingOverviewResponseSchema = z.object({
+  plans: z.array(PlanSchema),
+  subscription: UserSubscriptionSchema,
+  entitlements: EntitlementsSchema,
+  billingMode: z.string(),
+});
+
+export type BillingOverviewResponse = z.infer<typeof BillingOverviewResponseSchema>;
+
+// ─── Billing checkout / portal / upgrade events ───────────────────────────────
+
+export const CreateCheckoutSessionRequestSchema = z.object({
+  planCode: z.string().min(1),
+  billingInterval: z.string().min(1),
+});
+
+export type CreateCheckoutSessionRequest = z.infer<typeof CreateCheckoutSessionRequestSchema>;
+
+export const CreateCheckoutSessionResponseSchema = z.object({
+  checkoutUrl: z.string().url().optional(),
+  sessionId: z.string().optional(),
+});
+
+export type CreateCheckoutSessionResponse = z.infer<typeof CreateCheckoutSessionResponseSchema>;
+
+export const CreateCustomerPortalSessionResponseSchema = z.object({
+  portalUrl: z.string().url().optional(),
+});
+
+export type CreateCustomerPortalSessionResponse = z.infer<
+  typeof CreateCustomerPortalSessionResponseSchema
+>;
+
+export const TrackUpgradeEventRequestSchema = z.object({
+  eventType: z.string().min(1),
+  surface: z.string().min(1),
+  planCode: z.string().optional(),
+  billingInterval: z.string().optional(),
+  trigger: z.string().optional(),
+  feedbackReason: z.string().optional(),
+  feedbackNote: z.string().optional(),
+  metadataJson: z.string().optional(),
+});
+
+export type TrackUpgradeEventRequest = z.infer<typeof TrackUpgradeEventRequestSchema>;
+
+export const TrackUpgradeEventResponseSchema = z.object({
+  eventId: z.string().optional(),
+});
+
+export type TrackUpgradeEventResponse = z.infer<typeof TrackUpgradeEventResponseSchema>;
+
+// ─── Push device registration ──────────────────────────────────────────────────
+
+export const RegisterDeviceRequestSchema = z.object({
+  pushToken: z.string().min(1),
+  provider: z.string().min(1),
+  platform: z.string().min(1),
+  environment: z.string().min(1),
+  appId: z.string().optional(),
+  appVersion: z.string().optional(),
+  osVersion: z.string().optional(),
+  locale: z.string().optional(),
+  timezone: z.string().optional(),
+});
+
+export type RegisterDeviceRequest = z.infer<typeof RegisterDeviceRequestSchema>;
+
+export const UnregisterDeviceRequestSchema = z.object({});
+
+export type UnregisterDeviceRequest = z.infer<typeof UnregisterDeviceRequestSchema>;

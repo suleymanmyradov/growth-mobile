@@ -60,8 +60,10 @@ function DefaultFallback({ error, theme }: { error: Error; theme: Theme }): Reac
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       testID="error-boundary-fallback"
     >
-      <Text style={[styles.title, { color: theme.colors.error }]}>{t('errorBoundary.title')}</Text>
-      <Text style={[styles.message, { color: theme.colors.secondaryText }]}>{error.message}</Text>
+      <Text style={[styles.title, { color: theme.colors.destructive }]}>
+        {t('errorBoundary.title')}
+      </Text>
+      <Text style={[styles.message, { color: theme.colors.mutedForeground }]}>{error.message}</Text>
       <Pressable
         style={[styles.reloadButton, { backgroundColor: theme.colors.primary }]}
         onPress={() => router.reload()}

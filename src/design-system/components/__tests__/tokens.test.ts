@@ -26,13 +26,20 @@ describe('Paper color tokens', () => {
     expect(darkColors.destructive).toBe('#C9705A');
   });
 
-  test('compatibility aliases mirror their canonical tokens', () => {
-    expect(lightColors.error).toBe(lightColors.destructive);
-    expect(lightColors.secondaryText).toBe(lightColors.mutedForeground);
-    expect(lightColors.primaryText).toBe(lightColors.foreground);
-    expect(darkColors.error).toBe(darkColors.destructive);
-    expect(darkColors.secondaryText).toBe(darkColors.mutedForeground);
-    expect(darkColors.primaryText).toBe(darkColors.foreground);
+  test('Phase J removed the back-compat aliases from the schema', () => {
+    // The temporary aliases (error, secondaryText, primaryText, warning,
+    // warningForeground) were removed in Phase J. Asserting their absence keeps
+    // a future re-addition from silently re-introducing drift.
+    expect('error' in lightColors).toBe(false);
+    expect('secondaryText' in lightColors).toBe(false);
+    expect('primaryText' in lightColors).toBe(false);
+    expect('warning' in lightColors).toBe(false);
+    expect('warningForeground' in lightColors).toBe(false);
+    expect('error' in darkColors).toBe(false);
+    expect('secondaryText' in darkColors).toBe(false);
+    expect('primaryText' in darkColors).toBe(false);
+    expect('warning' in darkColors).toBe(false);
+    expect('warningForeground' in darkColors).toBe(false);
   });
 
   test('success shares the sage accent token', () => {

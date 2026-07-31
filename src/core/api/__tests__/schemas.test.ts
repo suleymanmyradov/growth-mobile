@@ -5,18 +5,38 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   ActivitySchema,
+  ArticleSchema,
+  ArticlesResponseSchema,
   AuthResponseSchema,
+  BillingOverviewResponseSchema,
   CategorySchema,
   CheckInSchema,
+  ConversationMessageSchema,
+  ConversationSchema,
   CreateCheckInRequestSchema,
+  CreateCheckoutSessionResponseSchema,
+  CreateCustomerPortalSessionResponseSchema,
   CreateHabitRequestSchema,
   GenerateOnboardingHabitsRequestSchema,
   GoalSchema,
+  GoalTemplatesResponseSchema,
   HabitSchema,
+  HabitTemplatesResponseSchema,
+  LikeArticleResponseSchema,
   NotificationSchema,
   NotificationsResponseSchema,
   ProfileSchema,
+  RegisterDeviceRequestSchema,
+  SaveItemRequestSchema,
+  SavedItemDetailedSchema,
+  SavedItemSchema,
+  SavedItemsDetailedResponseSchema,
+  SavedItemsResponseSchema,
+  SearchResponseSchema,
+  SearchResultSchema,
   SettingsSchema,
+  ShareArticleResponseSchema,
+  StartConversationResponseSchema,
   UnreadNotificationCountResponseSchema,
   WeeklyReviewResponseSchema,
   WeeklyReviewSchema,
@@ -403,5 +423,457 @@ describe('NotificationSchema', () => {
   it('UnreadNotificationCountResponseSchema parses count', () => {
     const parsed = UnreadNotificationCountResponseSchema.parse({ count: 3 });
     expect(parsed.count).toBe(3);
+  });
+});
+
+describe('ArticleSchema', () => {
+  const validArticle = {
+    id: 'article-1',
+    title: '10 Habits for Personal Growth',
+    excerpt: 'Discover the top habits...',
+    content: 'Full article content here...',
+    readTime: 5,
+    imageUrl: 'https://example.com/article.jpg',
+    author: 'John Smith',
+    publishedAt: '2024-01-01T00:00:00Z',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-15T00:00:00Z',
+    isSaved: false,
+    likeCount: 10,
+    isLiked: false,
+  };
+
+  it('parses a valid article', () => {
+    const parsed = ArticleSchema.parse(validArticle);
+    expect(parsed.title).toBe('10 Habits for Personal Growth');
+    expect(parsed.isSaved).toBe(false);
+  });
+
+  it('accepts optional category and tags', () => {
+    const parsed = ArticleSchema.parse({
+      ...validArticle,
+      category: { id: 'cat-1', name: 'Personal Development', slug: 'personal-development' },
+      tags: ['habits', 'growth'],
+    });
+    expect(parsed.category?.slug).toBe('personal-development');
+    expect(parsed.tags).toEqual(['habits', 'growth']);
+  });
+
+  it('defaults tags to empty array when absent', () => {
+    const parsed = ArticleSchema.parse(validArticle);
+    expect(parsed.tags).toEqual([]);
+  });
+
+  it('ArticlesResponseSchema wraps data + page', () => {
+    const parsed = ArticlesResponseSchema.parse({
+      data: [validArticle],
+      page: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
+    expect(parsed.data).toHaveLength(1);
+  });
+});
+
+describe('LikeArticleResponseSchema', () => {
+  it('parses a valid like response', () => {
+    const parsed = LikeArticleResponseSchema.parse({
+      success: true,
+      newLikeCount: 11,
+      isLiked: true,
+    });
+    expect(parsed.isLiked).toBe(true);
+    expect(parsed.newLikeCount).toBe(11);
+  });
+});
+
+describe('ShareArticleResponseSchema', () => {
+  it('parses a valid share response', () => {
+    const parsed = ShareArticleResponseSchema.parse({ success: true });
+    expect(parsed.success).toBe(true);
+  });
+});
+
+describe('SavedItemSchema', () => {
+  it('parses a valid saved item', () => {
+    const parsed = SavedItemSchema.parse({
+      id: 'saved-1',
+      itemType: 'article',
+      itemId: 'article-1',
+      userId: 'user-1',
+      createdAt: '2024-01-01T00:00:00Z',
+    });
+    expect(parsed.itemType).toBe('article');
+  });
+
+  it('rejects invalid itemType', () => {
+    expect(() =>
+      SavedItemSchema.parse({
+        id: 'saved-1',
+        itemType: 'invalid',
+        itemId: 'article-1',
+        userId: 'user-1',
+        createdAt: '2024-01-01T00:00:00Z',
+      }),
+    ).toThrow();
+  });
+
+  it('SavedItemsResponseSchema wraps data + page', () => {
+    const parsed = SavedItemsResponseSchema.parse({
+      data: [
+        {
+          id: 'saved-1',
+          itemType: 'article',
+          itemId: 'article-1',
+          userId: 'user-1',
+          createdAt: '2024-01-01T00:00:00Z',
+        },
+      ],
+      page: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
+    expect(parsed.data).toHaveLength(1);
+  });
+});
+
+describe('SavedItemDetailedSchema', () => {
+  it('parses a detailed saved item with hydrated article', () => {
+    const parsed = SavedItemDetailedSchema.parse({
+      id: 'saved-1',
+      itemType: 'article',
+      itemId: 'article-1',
+      userId: 'user-1',
+      createdAt: '2024-01-01T00:00:00Z',
+      article: {
+        id: 'article-1',
+        title: 'Test',
+        excerpt: 'Excerpt',
+        content: 'Content',
+        readTime: 3,
+        imageUrl: '',
+        author: 'Author',
+        publishedAt: '2024-01-01T00:00:00Z',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        isSaved: true,
+        likeCount: 0,
+        isLiked: false,
+      },
+    });
+    expect(parsed.article?.title).toBe('Test');
+  });
+
+  it('SavedItemsDetailedResponseSchema wraps data + page', () => {
+    const parsed = SavedItemsDetailedResponseSchema.parse({
+      data: [
+        {
+          id: 'saved-1',
+          itemType: 'habit',
+          itemId: 'habit-1',
+          userId: 'user-1',
+          createdAt: '2024-01-01T00:00:00Z',
+        },
+      ],
+      page: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
+    expect(parsed.data).toHaveLength(1);
+  });
+});
+
+describe('SaveItemRequestSchema', () => {
+  it('parses a valid save request', () => {
+    const parsed = SaveItemRequestSchema.parse({ itemType: 'article', itemId: 'article-1' });
+    expect(parsed.itemType).toBe('article');
+  });
+
+  it('rejects empty itemId', () => {
+    expect(() => SaveItemRequestSchema.parse({ itemType: 'article', itemId: '' })).toThrow();
+  });
+});
+
+describe('SearchResultSchema', () => {
+  it('parses a valid search result', () => {
+    const parsed = SearchResultSchema.parse({
+      id: 'article-1',
+      itemType: 'article',
+      title: 'Test',
+      description: 'Desc',
+      score: 0.95,
+    });
+    expect(parsed.score).toBe(0.95);
+  });
+
+  it('accepts optional highlight', () => {
+    const parsed = SearchResultSchema.parse({
+      id: 'article-1',
+      itemType: 'article',
+      title: 'Test',
+      description: 'Desc',
+      score: 0.95,
+      highlight: '<em>Test</em>',
+    });
+    expect(parsed.highlight).toBe('<em>Test</em>');
+  });
+
+  it('SearchResponseSchema wraps data + page', () => {
+    const parsed = SearchResponseSchema.parse({
+      data: [{ id: 'a1', itemType: 'article', title: 'T', description: 'D', score: 1 }],
+      page: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
+    expect(parsed.data).toHaveLength(1);
+  });
+});
+
+describe('HabitTemplatesResponseSchema', () => {
+  it('parses habit templates', () => {
+    const parsed = HabitTemplatesResponseSchema.parse({
+      data: [
+        {
+          id: 'tpl-1',
+          name: 'Morning Exercise',
+          description: '30 min cardio',
+          sortOrder: 1,
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+      ],
+    });
+    expect(parsed.data).toHaveLength(1);
+    expect(parsed.data[0]?.name).toBe('Morning Exercise');
+  });
+});
+
+describe('GoalTemplatesResponseSchema', () => {
+  it('parses goal templates', () => {
+    const parsed = GoalTemplatesResponseSchema.parse({
+      data: [
+        {
+          id: 'tpl-1',
+          title: 'Run a marathon',
+          description: 'Complete a 42km race',
+          sortOrder: 1,
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z',
+        },
+      ],
+    });
+    expect(parsed.data).toHaveLength(1);
+    expect(parsed.data[0]?.title).toBe('Run a marathon');
+  });
+});
+
+describe('ConversationSchema', () => {
+  it('parses a valid conversation', () => {
+    const parsed = ConversationSchema.parse({
+      id: 'conv-1',
+      title: 'My coaching thread',
+      type: 'coach',
+      lastMessage: 'Keep going!',
+      archived: false,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-02T00:00:00Z',
+    });
+    expect(parsed.id).toBe('conv-1');
+    expect(parsed.type).toBe('coach');
+    expect(parsed.archived).toBe(false);
+  });
+
+  it('accepts an optional userId', () => {
+    const parsed = ConversationSchema.parse({
+      id: 'conv-1',
+      title: 'Thread',
+      type: 'coach',
+      lastMessage: '',
+      userId: 'user-1',
+      archived: false,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+    });
+    expect(parsed.userId).toBe('user-1');
+  });
+});
+
+describe('ConversationMessageSchema', () => {
+  it('parses a valid user message', () => {
+    const parsed = ConversationMessageSchema.parse({
+      id: 'msg-1',
+      conversationId: 'conv-1',
+      role: 'user',
+      content: 'How do I stay consistent?',
+      createdAt: '2024-01-01T00:00:00Z',
+    });
+    expect(parsed.role).toBe('user');
+  });
+
+  it('parses a valid assistant message', () => {
+    const parsed = ConversationMessageSchema.parse({
+      id: 'msg-2',
+      conversationId: 'conv-1',
+      role: 'assistant',
+      content: 'Small, repeatable cues.',
+      createdAt: '2024-01-01T00:00:01Z',
+    });
+    expect(parsed.role).toBe('assistant');
+  });
+
+  it('rejects an invalid role', () => {
+    expect(() =>
+      ConversationMessageSchema.parse({
+        id: 'msg-3',
+        conversationId: 'conv-1',
+        role: 'unknown',
+        content: 'x',
+        createdAt: '2024-01-01T00:00:00Z',
+      }),
+    ).toThrow();
+  });
+});
+
+describe('StartConversationResponseSchema', () => {
+  it('parses a start response with initial message', () => {
+    const parsed = StartConversationResponseSchema.parse({
+      data: {
+        id: 'conv-1',
+        title: 'New chat',
+        type: 'coach',
+        lastMessage: '',
+        archived: false,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+      },
+      initialMessage: {
+        id: 'msg-1',
+        conversationId: 'conv-1',
+        role: 'assistant',
+        content: 'Hello!',
+        createdAt: '2024-01-01T00:00:00Z',
+      },
+    });
+    expect(parsed.data.id).toBe('conv-1');
+    expect(parsed.initialMessage?.content).toBe('Hello!');
+  });
+
+  it('parses a start response without initial message', () => {
+    const parsed = StartConversationResponseSchema.parse({
+      data: {
+        id: 'conv-2',
+        title: 'New chat',
+        type: 'coach',
+        lastMessage: '',
+        archived: false,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+      },
+    });
+    expect(parsed.initialMessage).toBeUndefined();
+  });
+});
+
+describe('BillingOverviewResponseSchema', () => {
+  it('parses a billing overview with entitlements', () => {
+    const parsed = BillingOverviewResponseSchema.parse({
+      plans: [
+        {
+          id: 'plan-1',
+          code: 'free',
+          name: 'Free',
+          priceMonthlyCents: 0,
+          priceAnnualCents: 0,
+          personalizedAiEnabled: false,
+          isActive: true,
+        },
+      ],
+      subscription: {
+        id: 'sub-1',
+        userId: 'user-1',
+        planId: 'plan-1',
+        planCode: 'free',
+        planName: 'Free',
+        status: 'free',
+        cancelAtPeriodEnd: false,
+      },
+      entitlements: {
+        planCode: 'free',
+        status: 'free',
+        personalizedAiEnabled: false,
+        canCreateGoal: true,
+        canCreateHabit: true,
+        canViewWeeklyReviewHistory: false,
+        canUsePersonalizedAi: false,
+        canCreatePlanAdjustment: false,
+        currentActiveGoals: 1,
+        currentActiveHabits: 2,
+        currentPendingAdjustments: 0,
+      },
+      billingMode: 'fake_door',
+    });
+    expect(parsed.entitlements.canUsePersonalizedAi).toBe(false);
+    expect(parsed.entitlements.currentActiveHabits).toBe(2);
+  });
+});
+
+describe('CreateCheckoutSessionResponseSchema', () => {
+  it('parses a checkout url + session id', () => {
+    const parsed = CreateCheckoutSessionResponseSchema.parse({
+      checkoutUrl: 'https://checkout.stripe.com/c/test_123',
+      sessionId: 'cs_test_123',
+    });
+    expect(parsed.checkoutUrl).toBe('https://checkout.stripe.com/c/test_123');
+    expect(parsed.sessionId).toBe('cs_test_123');
+  });
+
+  it('parses when optional fields are absent', () => {
+    const parsed = CreateCheckoutSessionResponseSchema.parse({});
+    expect(parsed.checkoutUrl).toBeUndefined();
+    expect(parsed.sessionId).toBeUndefined();
+  });
+
+  it('rejects a non-url checkoutUrl', () => {
+    expect(() => CreateCheckoutSessionResponseSchema.parse({ checkoutUrl: 'not-a-url' })).toThrow();
+  });
+});
+
+describe('CreateCustomerPortalSessionResponseSchema', () => {
+  it('parses a portal url', () => {
+    const parsed = CreateCustomerPortalSessionResponseSchema.parse({
+      portalUrl: 'https://billing.stripe.com/portal',
+    });
+    expect(parsed.portalUrl).toBe('https://billing.stripe.com/portal');
+  });
+
+  it('parses when portal url is absent', () => {
+    const parsed = CreateCustomerPortalSessionResponseSchema.parse({});
+    expect(parsed.portalUrl).toBeUndefined();
+  });
+});
+
+describe('RegisterDeviceRequestSchema', () => {
+  it('parses a valid device registration', () => {
+    const parsed = RegisterDeviceRequestSchema.parse({
+      pushToken: 'ExponentPushToken[abc]',
+      provider: 'expo',
+      platform: 'ios',
+      environment: 'production',
+    });
+    expect(parsed.pushToken).toBe('ExponentPushToken[abc]');
+    expect(parsed.appId).toBeUndefined();
+  });
+
+  it('rejects an empty push token', () => {
+    expect(() =>
+      RegisterDeviceRequestSchema.parse({
+        pushToken: '',
+        provider: 'expo',
+        platform: 'ios',
+        environment: 'production',
+      }),
+    ).toThrow();
+  });
+
+  it('rejects a missing required field', () => {
+    expect(() =>
+      RegisterDeviceRequestSchema.parse({
+        pushToken: 'tok',
+        provider: 'expo',
+        platform: 'ios',
+      }),
+    ).toThrow();
   });
 });

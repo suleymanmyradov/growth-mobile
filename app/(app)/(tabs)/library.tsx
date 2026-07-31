@@ -1,20 +1,14 @@
-import { EmptyState, Screen } from '@/design-system';
-import { useTranslation } from 'react-i18next';
+import { LibraryScreen } from '@/features/library';
 
 /**
  * Library tab route (thin wrapper).
  *
- * Phase D: shell placeholder. The Library composition (Explore, Saved,
- * Templates, People segments, and search) is built in Phase F, composing
- * public surfaces from `features/articles`, `features/saved`, `features/search`
- * while those domains keep separate feature ownership. This route file stays
- * thin and contains no business logic.
+ * Phase F: renders the Library composition (Explore, Saved, Templates
+ * segments, and search) which composes public surfaces from `features/articles`,
+ * `features/saved`, `features/search`, and `features/templates` while those
+ * domains keep separate feature ownership. This route file stays thin and
+ * contains no business logic.
  */
 export default function LibraryRoute() {
-  const { t } = useTranslation();
-  return (
-    <Screen>
-      <EmptyState title={t('tabs.library')} subtitle={t('common.comingLater')} />
-    </Screen>
-  );
+  return <LibraryScreen />;
 }

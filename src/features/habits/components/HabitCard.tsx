@@ -36,11 +36,9 @@ export function HabitCard({
           }}
         >
           <View style={{ flex: 1 }}>
-            <ThemedText variant="label" style={{ fontWeight: '600', fontSize: 16 }}>
-              {habit.name}
-            </ThemedText>
+            <ThemedText variant="cardTitle">{habit.name}</ThemedText>
             {habit.description ? (
-              <ThemedText variant="caption" style={{ color: colors.secondaryText, marginTop: 2 }}>
+              <ThemedText variant="caption" style={{ color: colors.mutedForeground, marginTop: 2 }}>
                 {habit.description}
               </ThemedText>
             ) : null}
@@ -49,8 +47,8 @@ export function HabitCard({
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-          <Flame color={colors.warning} size={16} />
-          <ThemedText variant="caption" style={{ color: colors.secondaryText }}>
+          <Flame color={colors.destructive} size={16} />
+          <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
             {habit.streak === 1
               ? t('habits.streakOne')
               : t('habits.streak', { count: habit.streak })}
@@ -97,10 +95,9 @@ export function HabitCard({
           >
             <CheckCircle color={habit.completed ? colors.success : colors.background} size={18} />
             <ThemedText
+              variant="label"
               style={{
                 color: habit.completed ? colors.success : colors.background,
-                fontWeight: '600',
-                fontSize: 14,
               }}
             >
               {habit.completed ? t('habits.doneToday') : t('habits.checkIn')}
@@ -114,7 +111,7 @@ export function HabitCard({
             hitSlop={8}
             style={{ padding: 10, minHeight: 44, justifyContent: 'center' }}
           >
-            <Pencil color={colors.secondaryText} size={18} />
+            <Pencil color={colors.mutedForeground} size={18} />
           </Pressable>
           <Pressable
             onPress={onDelete}
@@ -123,7 +120,7 @@ export function HabitCard({
             hitSlop={8}
             style={{ padding: 10, minHeight: 44, justifyContent: 'center' }}
           >
-            <Trash2 color={colors.error} size={18} />
+            <Trash2 color={colors.destructive} size={18} />
           </Pressable>
         </View>
       </View>

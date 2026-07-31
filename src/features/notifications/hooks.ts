@@ -5,16 +5,22 @@
  * both the list and the unread count so the badge stays in sync.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
-import type { NotificationsResponse } from '@/core/api/schemas';
+import type { NotificationsResponse, RegisterDeviceRequest } from '@/core/api/schemas';
 import { notificationKeys } from '@/core/query/query-keys';
 
 import {
+  getNotificationPreferences,
   getUnreadNotificationCount,
   listNotifications,
   markAllNotificationsRead,
   markNotificationRead,
+  registerDevice,
+  unregisterDevice,
+  updateNotificationPreferences,
 } from './api';
+import { registerPushToken } from './push-registration';
 
 export function useNotifications(params?: { page?: number; limit?: number }) {
   return useQuery({
@@ -95,4 +101,64 @@ export function useMarkAllNotificationsRead() {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
   });
+}
+
+export function useNotificationPreferences() {
+  return useQuery({
+    queryKey: notificationKeys.preferences(),
+    queryFn: () => getNotificationPreferences(),
+    staleTime: 60 * 1000,
+  });
+}
+
+export function useUpdateNotificationPreferences() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (preferences: import('@/core/api/schemas').NotificationPreferences) =>
+      updateNotificationPreferences(preferences),
+    onSuccess: (preferences) => {
+      queryClient.setQueryData(notificationKeys.preferences(), preferences);
+    },
+  });
+}
+
+export function useRegisterDevice() {
+  return useMutation({
+    mutationFn: ({
+      installationId,
+      request,
+    }: {
+      installationId: string;
+      request: RegisterDeviceRequest;
+    }) => registerDevice(installationId, request),
+  });
+}
+
+export function useUnregisterDevice() {
+  return useMutation({
+    mutationFn: (installationId: string) => unregisterDevice(installationId),
+  });
+}
+
+/**
+ * Registers the Expo push token with the backend on mount. Best-effort and
+ * fire-and-forget — no-ops on simulators, when no EAS project id is configured,
+ * or when the token fetch fails. Per AGENTS.md, push delivery requires org
+ * configuration; this only wires the registration call.
+ */
+export function useRegisterPushTokenOnMount(): void {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const result = await registerPushToken();
+        if (cancelled || !result.registered) return;
+      } catch {
+        // Best-effort; ignore.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 }

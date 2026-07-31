@@ -24,7 +24,7 @@ export function Badge({ children, color, variant = 'default' }: BadgeProps): Rea
     variant === 'success'
       ? colors.success
       : variant === 'warning'
-        ? colors.warning
+        ? colors.destructive
         : variant === 'error'
           ? colors.destructive
           : (color ?? colors.accent);

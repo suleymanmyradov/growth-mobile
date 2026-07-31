@@ -1,14 +1,19 @@
 /**
  * Check-email screen — shown after successful registration.
  * Displays the "check your email" message and a link back to sign-in.
+ *
+ * Paper (`mobile.md` §8.8): onboardingTitle variant, sage accent, muted
+ * secondary text, centered.
  */
 import { Link, useLocalSearchParams } from 'expo-router';
 import { MailCheck } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Screen, ThemedText } from '@/design-system';
+import { Button, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
+
+import { AuthShell } from '../components/AuthShell';
 
 export function CheckEmailScreen() {
   const { t } = useTranslation();
@@ -17,15 +22,20 @@ export function CheckEmailScreen() {
   const email = params.email ?? '';
 
   return (
-    <Screen>
-      <View style={[styles.container, { padding: spacing.lg, gap: spacing.md }]}>
-        <View style={[styles.iconWrap, { backgroundColor: `${colors.primary}1A` }]}>
-          <MailCheck color={colors.primary} size={48} />
+    <AuthShell>
+      <View style={{ alignItems: 'center', gap: spacing.md }}>
+        <View
+          style={[
+            styles.iconWrap,
+            { backgroundColor: colors.successSoft, borderRadius: spacing.lg },
+          ]}
+        >
+          <MailCheck color={colors.accent} size={48} />
         </View>
-        <ThemedText variant="heading" style={{ fontSize: 24, textAlign: 'center' }}>
+        <ThemedText variant="onboardingTitle" style={{ textAlign: 'center' }}>
           {t('auth.checkEmail')}
         </ThemedText>
-        <ThemedText variant="body" style={{ color: colors.secondaryText, textAlign: 'center' }}>
+        <ThemedText variant="body" style={{ color: colors.mutedForeground, textAlign: 'center' }}>
           {t('auth.checkEmailMessage', { email })}
         </ThemedText>
 
@@ -35,16 +45,14 @@ export function CheckEmailScreen() {
           </Button>
         </Link>
       </View>
-    </Screen>
+    </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   iconWrap: {
     width: 80,
     height: 80,
-    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },

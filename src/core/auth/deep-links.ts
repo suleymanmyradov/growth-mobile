@@ -64,9 +64,12 @@ export function validateDestination(dest: string): DeepLinkDestination | null {
  * Phase D route migration: the old `Home/Explore/Habits/Coach/Profile` tabs are
  * now `Today/Plan/Coach/Library/Me`. Legacy destinations are re-pointed to the
  * new IA. `weekly-review` and `activity` both route to the Progress stack
- * screen (pushed from Today). Detail routes that still lack a per-id screen
- * fall back to their owning tab/list screen when no id is supplied, and return
- * null when an id is supplied but the detail screen is not implemented.
+ * screen (pushed from Today). `habit-detail` and `goal-detail` route to the
+ * Plan tab, which is the canonical home for habits and goals in the new IA —
+ * habits nest under goals and there is no standalone per-id detail screen. The
+ * `resourceId` is accepted but not interpolated, since the Plan tab does not
+ * (yet) accept a focus/highlight query param; landing on Plan is the correct
+ * fallback rather than dropping the user on Today.
  */
 export function destinationToRoute(
   destination: DeepLinkDestination,
@@ -74,11 +77,11 @@ export function destinationToRoute(
 ): string | null {
   switch (destination) {
     case 'habit-detail':
-      // Plan tab hosts habits; /habits/[id] detail screen is not yet implemented.
-      return resourceId ? null : '/(app)/(tabs)/plan';
+      // Plan tab hosts habits nested under goals; no per-id detail screen exists.
+      return '/(app)/(tabs)/plan';
     case 'goal-detail':
-      // Goals fold into Plan (Phase E); the standalone goals stack route was removed.
-      return resourceId ? null : '/(app)/(tabs)/plan';
+      // Goals fold into Plan (Phase E); no per-id detail screen exists.
+      return '/(app)/(tabs)/plan';
     case 'article-detail':
       // /article/[id] exists as a thin wrapper; validate the id before routing.
       return resourceId && isValidUUID(resourceId)

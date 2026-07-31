@@ -103,10 +103,9 @@ export function GoalForm({
                   ]}
                 >
                   <ThemedText
+                    variant="label"
                     style={{
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: value === cat.slug ? colors.primary : colors.primaryText,
+                      color: value === cat.slug ? colors.primary : colors.foreground,
                     }}
                   >
                     {cat.name}
