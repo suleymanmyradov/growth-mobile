@@ -11,19 +11,19 @@ import { describe, expect, it } from '@jest/globals';
 
 import type { SSEEvent } from '@/core/api/sse';
 import {
-  initialCoachingStreamState,
-  initialVoiceTurnStreamState,
-  reduceCoachingEvent,
-  reduceVoiceTurnEvent,
-  runCoachingReducer,
-  runVoiceTurnReducer,
+    initialCoachingStreamState,
+    initialVoiceTurnStreamState,
+    reduceCoachingEvent,
+    reduceVoiceTurnEvent,
+    runCoachingReducer,
+    runVoiceTurnReducer,
 } from '../streaming';
 
 const ev = (event: string, data: string): SSEEvent => ({ event, data });
 
 describe('reduceCoachingEvent', () => {
-  it('starts in the thinking phase', () => {
-    expect(initialCoachingStreamState.phase).toBe('thinking');
+  it('starts idle before the first message is sent', () => {
+    expect(initialCoachingStreamState.phase).toBe('idle');
     expect(initialCoachingStreamState.done).toBe(false);
   });
 
@@ -109,7 +109,7 @@ describe('reduceCoachingEvent', () => {
   it('handles empty data payload', () => {
     const state = reduceCoachingEvent(initialCoachingStreamState, ev('delta', ''));
     expect(state.partialText).toBe('');
-    expect(state.phase).toBe('thinking');
+    expect(state.phase).toBe('idle');
   });
 
   it('ignores unknown event types (forward-compatible)', () => {

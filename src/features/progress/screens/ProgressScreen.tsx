@@ -35,6 +35,7 @@ import { useTheme } from '@/design-system/theme';
 import { useActivity } from '@/features/activity';
 import { useCurrentWeeklyReview, useGenerateWeeklyReview } from '@/features/weekly-review';
 
+import { formatWeekLabel } from '../date-format';
 export function ProgressScreen(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
@@ -74,9 +75,7 @@ export function ProgressScreen(): React.ReactNode {
 
   const lastUpdated = reviewUpdatedAt ? new Date(reviewUpdatedAt).toLocaleString() : undefined;
 
-  const weekLabel = review
-    ? `${new Date(review.weekStart).toLocaleDateString()} – ${new Date(review.weekEnd).toLocaleDateString()}`
-    : null;
+  const weekLabel = review ? formatWeekLabel(review.weekStart, review.weekEnd) : null;
 
   return (
     <Screen title={t('screens.progress.title')} onBack={() => router.back()} scrollable={false}>
@@ -109,16 +108,16 @@ export function ProgressScreen(): React.ReactNode {
           <View style={{ gap: spacing.md }}>
             <SectionLabel>{t('progress.weekLabel')}</SectionLabel>
             <ThemedText variant="meta" style={{ color: colors.mutedForeground }}>
-              {weekLabel}
+              {weekLabel ?? t('progress.currentWeek')}
             </ThemedText>
 
             <Card>
               <View style={{ gap: spacing.md }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <View style={{ gap: 2 }}>
+                <View style={{ flexDirection: 'row', gap: spacing.lg }}>
+                  <View style={{ flex: 1, gap: 2 }}>
                     <ThemedText
                       variant="numeric"
-                      style={{ color: colors.foreground, fontSize: 28 }}
+                      style={{ color: colors.foreground, fontSize: 24, lineHeight: 30 }}
                     >
                       {review.completedCheckIns}
                     </ThemedText>
@@ -126,8 +125,14 @@ export function ProgressScreen(): React.ReactNode {
                       {t('progress.checkInsCompleted')}
                     </ThemedText>
                   </View>
-                  <View style={{ gap: 2, alignItems: 'flex-end' }}>
-                    <ThemedText variant="numeric" style={{ color: colors.accent, fontSize: 28 }}>
+                  <View style={{ flex: 1, minWidth: 96, gap: 2, alignItems: 'flex-end' }}>
+                    <ThemedText
+                      variant="numeric"
+                      style={{ color: colors.accent, fontSize: 24, lineHeight: 30 }}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
+                    >
                       {t('today.percent', { percent: Math.round(review.completionRate * 100) })}
                     </ThemedText>
                     <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>

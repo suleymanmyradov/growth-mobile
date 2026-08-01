@@ -58,6 +58,7 @@
   },
   "progress": {
     "weekLabel": "This week",
+    "currentWeek": "Current week",
     "checkInsCompleted": "Check-ins completed",
     "consistency": "Consistency",
     "missed": "{{count}} missed",
@@ -104,6 +105,7 @@
     "noConversationsTitle": "No conversations yet",
     "noConversationsBody": "Start a text or voice conversation to get coaching.",
     "openConversation": "Open conversation {{title}}",
+    "untitledConversation": "Untitled conversation",
     "emptyConversation": "Say something to start the conversation.",
     "composerPlaceholder": "Message your coach…",
     "composerLabel": "Message",
@@ -114,7 +116,8 @@
     "voicePromptTitle": "Tap the mic to talk",
     "voicePromptBody": "Speak naturally. Your coach will listen and respond.",
     "permissionDeniedTitle": "Microphone access needed",
-    "permissionDeniedBody": "Enable microphone access in Settings to use voice coaching."
+    "permissionDeniedBody": "Enable microphone access in Settings to use voice coaching.",
+    "thinking": "Thinking…"
   },
   "screens": {
     "progress": {

@@ -60,7 +60,7 @@ export function PaywallScreen(): React.ReactNode {
   const params = useLocalSearchParams<{ reason?: string }>();
   const reason = reasonKey(typeof params.reason === 'string' ? params.reason : undefined);
 
-  const { data: offerings, isLoading } = useOfferings();
+  const { data: offerings, isLoading, refetch: refetchOfferings } = useOfferings();
   const purchase = usePurchasePackage();
   const restore = useRestorePurchases();
   const reconcile = useReconcileEntitlement();
@@ -202,7 +202,7 @@ export function PaywallScreen(): React.ReactNode {
             ))}
           </View>
         ) : packages.length === 0 ? (
-          <ErrorState message={t('paywall.unavailable')} onRetry={() => {}} />
+          <ErrorState message={t('paywall.unavailable')} onRetry={() => refetchOfferings()} />
         ) : (
           <View style={{ gap: spacing.sm }}>
             {packages.map((pkg) => {

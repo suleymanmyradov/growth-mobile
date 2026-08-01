@@ -16,7 +16,7 @@ function makeNotification(itemType: string): Notification {
     id: 'notif-1',
     title: 'Title',
     message: 'Message',
-    itemType,
+    type: itemType,
     read: false,
     userId: 'user-1',
     createdAt: '2024-01-15T08:00:00Z',

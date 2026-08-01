@@ -39,7 +39,12 @@ import { useReducedMotion } from '@/design-system/theme/use-reduced-motion';
 import { useSaveItem } from '@/features/saved';
 
 import { useArticle, useShareArticle } from '../hooks';
-import { READER_SIZES, buildMarkdownStyle, type ReaderSize } from '../markdown-style';
+import {
+  READER_SIZES,
+  buildMarkdownStyle,
+  withoutDuplicateLeadingTitle,
+  type ReaderSize,
+} from '../markdown-style';
 import {
   getReaderSize,
   getScrollPosition,
@@ -310,7 +315,7 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
         </View>
 
         <Markdown style={markdownStyle} onLinkPress={handleLinkPress}>
-          {article.content}
+          {withoutDuplicateLeadingTitle(article.content, article.title)}
         </Markdown>
       </ScrollView>
     </SafeAreaView>

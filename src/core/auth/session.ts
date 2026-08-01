@@ -12,7 +12,17 @@ export interface SessionUser {
   id: string;
   email: string;
   fullName: string;
-  onboardingCompleted: boolean;
+  /** Null means authentication succeeded but onboarding status is unavailable. */
+  onboardingCompleted: boolean | null;
+}
+
+export const APP_ROUTE = '/(app)/(tabs)' as const;
+export const ONBOARDING_ROUTE = '/(onboarding)' as const;
+
+export function routeForOnboardingStatus(
+  status: boolean | null,
+): typeof APP_ROUTE | typeof ONBOARDING_ROUTE {
+  return status === false ? ONBOARDING_ROUTE : APP_ROUTE;
 }
 
 interface SessionState {

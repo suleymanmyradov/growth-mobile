@@ -47,7 +47,10 @@ export function usePaperFonts(): { loaded: boolean; error: Error | null } {
         if (mounted) setLoaded(true);
       })
       .catch((e: unknown) => {
-        if (mounted) setError(e instanceof Error ? e : new Error(String(e)));
+        if (mounted) {
+          setError(e instanceof Error ? e : new Error(String(e)));
+          setLoaded(true);
+        }
       });
     return () => {
       mounted = false;

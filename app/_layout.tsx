@@ -17,13 +17,14 @@ import { getSettings } from '@/features/settings';
 import { initI18n } from '@/i18n';
 import { QueryClientProvider } from '@tanstack/react-query';
 
+initI18n();
 SplashScreen.preventAutoHideAsync();
 
 /**
  * Inner tree rendered inside the QueryClientProvider so hooks that call
  * useQueryClient (e.g. useSessionRestore) have a provider ancestor.
  */
-function AppBootstrap({ fontsLoaded }: { fontsLoaded: boolean }) {
+function AppBootstrap({ fontsReady }: { fontsReady: boolean }) {
   // Wire feature-owned API functions into core session restore. The app layer
   // is the only allowed place to bridge features into core (app → features →
   // core per AGENTS.md); core never imports features.
@@ -38,12 +39,12 @@ function AppBootstrap({ fontsLoaded }: { fontsLoaded: boolean }) {
   // Hide splash screen once fonts are loaded and the session is hydrated.
   const isHydrated = useSessionStore((s) => s.isHydrated);
   useEffect(() => {
-    if (isHydrated && fontsLoaded) {
+    if (isHydrated && fontsReady) {
       SplashScreen.hideAsync().catch(() => {
         // Ignore — splash hide failures are non-fatal.
       });
     }
-  }, [isHydrated, fontsLoaded]);
+  }, [isHydrated, fontsReady]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -63,7 +64,6 @@ export default function RootLayout() {
   // Initialize i18n, Sentry (no-op if DSN is empty), and React Query native integrations.
   const env = getEnv();
   useEffect(() => {
-    initI18n();
     initSentry(env.EXPO_PUBLIC_SENTRY_DSN, __DEV__ ? 'development' : 'production');
     setupReactNativeIntegrations();
   }, [env.EXPO_PUBLIC_SENTRY_DSN]);
@@ -75,7 +75,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemeProvider fontsLoaded={fontsLoaded}>
           <QueryClientProvider client={queryClient}>
-            <AppBootstrap fontsLoaded={fontsLoaded} />
+            <AppBootstrap fontsReady={fontsLoaded} />
             <StatusBar style="auto" />
           </QueryClientProvider>
         </ThemeProvider>

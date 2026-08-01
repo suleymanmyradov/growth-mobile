@@ -394,7 +394,7 @@ describe('NotificationSchema', () => {
       id: 'notif-1',
       title: 'Reminder',
       message: 'Do your habit',
-      itemType: 'habit_reminder',
+      type: 'habit_reminder',
       read: false,
       userId: 'user-1',
       createdAt: '2024-01-15T08:00:00Z',
@@ -409,7 +409,7 @@ describe('NotificationSchema', () => {
           id: 'notif-1',
           title: 'Reminder',
           message: 'Do your habit',
-          itemType: 'habit_reminder',
+          type: 'habit_reminder',
           read: false,
           userId: 'user-1',
           createdAt: '2024-01-15T08:00:00Z',
@@ -589,10 +589,10 @@ describe('SaveItemRequestSchema', () => {
 });
 
 describe('SearchResultSchema', () => {
-  it('parses a valid search result', () => {
+  it('parses a gateway search result type', () => {
     const parsed = SearchResultSchema.parse({
       id: 'article-1',
-      itemType: 'article',
+      type: 'article',
       title: 'Test',
       description: 'Desc',
       score: 0.95,
@@ -603,7 +603,7 @@ describe('SearchResultSchema', () => {
   it('accepts optional highlight', () => {
     const parsed = SearchResultSchema.parse({
       id: 'article-1',
-      itemType: 'article',
+      type: 'article',
       title: 'Test',
       description: 'Desc',
       score: 0.95,
@@ -614,7 +614,7 @@ describe('SearchResultSchema', () => {
 
   it('SearchResponseSchema wraps data + page', () => {
     const parsed = SearchResponseSchema.parse({
-      data: [{ id: 'a1', itemType: 'article', title: 'T', description: 'D', score: 1 }],
+      data: [{ id: 'a1', type: 'article', title: 'T', description: 'D', score: 1 }],
       page: { total: 1, page: 1, limit: 20, totalPages: 1 },
     });
     expect(parsed.data).toHaveLength(1);

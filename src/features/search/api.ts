@@ -20,7 +20,12 @@ export async function search(params: {
   const response = await apiRequest<unknown>({
     method: 'GET',
     url: searchEndpoints.search,
-    params: { page: 1, limit: 20, ...params },
+    params: {
+      page: 1,
+      limit: 20,
+      q: params.q,
+      ...(params.itemType ? { type: params.itemType } : {}),
+    },
   });
   return SearchResponseSchema.parse(response);
 }

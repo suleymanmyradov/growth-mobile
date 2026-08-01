@@ -12,12 +12,12 @@
  * unvalidated id. Unknown item types resolve to null so the caller falls back
  * to a safe default (the Today tab) instead of landing on +not-found.
  */
+import type { Notification } from '@/core/api/schemas';
 import {
   destinationToRoute,
   validateDestination,
   type DeepLinkDestination,
 } from '@/core/auth/deep-links';
-import type { Notification } from '@/core/api/schemas';
 
 /**
  * Maps a notification `itemType` to a validated deep-link destination.
@@ -62,7 +62,7 @@ export function notificationTypeToDestination(itemType: string): DeepLinkDestina
  * resolve to their owning tab/list screen (e.g. `habit-detail` → Plan tab).
  */
 export function notificationToRoute(notification: Notification): string | null {
-  const destination = notificationTypeToDestination(notification.itemType);
+  const destination = notificationTypeToDestination(notification.type);
   if (!destination) return null;
   if (!validateDestination(destination)) return null;
   return destinationToRoute(destination);

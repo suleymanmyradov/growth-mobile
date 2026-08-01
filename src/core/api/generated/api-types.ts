@@ -4,5982 +4,5982 @@
  */
 
 export interface paths {
-  '/api/v1/activity': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetActivityFeed */
-    get: operations['activityGetActivityFeed'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListArticles */
-    get: operations['articlesListArticles'];
-    put?: never;
-    /** CreateArticle */
-    post: operations['articlesCreateArticle'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles/author/{authorId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetAuthorArticles */
-    get: operations['articlesGetAuthorArticles'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles/featured': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetFeaturedArticle */
-    get: operations['articlesGetFeaturedArticle'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetArticle */
-    get: operations['articlesGetArticle'];
-    /** UpdateArticle */
-    put: operations['articlesUpdateArticle'];
-    post?: never;
-    /** DeleteArticle */
-    delete: operations['articlesDeleteArticle'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles/{id}/like': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** LikeArticle */
-    post: operations['articlesLikeArticle'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/articles/{id}/share': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ShareArticle */
-    post: operations['articlesShareArticle'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/apple': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** AppleLogin */
-    post: operations['authAppleLogin'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/forgot-password': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ForgotPassword */
-    post: operations['authForgotPassword'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/google': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** GoogleLogin */
-    post: operations['authGoogleLogin'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/login': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Login */
-    post: operations['authLogin'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/logout': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Logout */
-    post: operations['authLogout'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/refresh': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** RefreshToken */
-    post: operations['authRefreshToken'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/register': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Register */
-    post: operations['authRegister'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/resend-verification': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ResendVerification */
-    post: operations['authResendVerification'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/reset-password': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ResetPassword */
-    post: operations['authResetPassword'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/auth/verify-email': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** VerifyEmail */
-    post: operations['authVerifyEmail'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/checkout': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** CreateCheckoutSession */
-    post: operations['billingCreateCheckoutSession'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/overview': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetBillingOverview */
-    get: operations['billingGetBillingOverview'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/portal': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** CreateCustomerPortalSession */
-    post: operations['billingCreateCustomerPortalSession'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/revenuecat-webhook': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** HandleRevenueCatWebhook */
-    post: operations['billingHandleRevenueCatWebhook'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/upgrade-events': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** TrackUpgradeEvent */
-    post: operations['billingTrackUpgradeEvent'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/billing/webhook': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** HandleStripeWebhook */
-    post: operations['billingHandleStripeWebhook'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/categories': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListCategories */
-    get: operations['categoriesListCategories'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/check-ins': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** CreateCheckIn */
-    post: operations['checkinCreateCheckIn'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/check-ins/checked-today': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** HasCheckedInToday */
-    get: operations['checkinHasCheckedInToday'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/check-ins/history': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetCheckInHistory */
-    get: operations['checkinGetCheckInHistory'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/check-ins/today': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetTodayCheckIns */
-    get: operations['checkinGetTodayCheckIns'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/conversations': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListConversations */
-    get: operations['conversationsListConversations'];
-    put?: never;
-    /** StartConversation */
-    post: operations['conversationsStartConversation'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/conversations/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetConversation */
-    get: operations['conversationsGetConversation'];
-    put?: never;
-    post?: never;
-    /** DeleteConversation */
-    delete: operations['conversationsDeleteConversation'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/conversations/{id}/archive': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** ArchiveConversation */
-    put: operations['conversationsArchiveConversation'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/conversations/{id}/messages': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetMessages */
-    get: operations['conversationsGetMessages'];
-    put?: never;
-    /** AppendMessage */
-    post: operations['conversationsAppendMessage'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/conversations/{id}/unarchive': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** UnarchiveConversation */
-    put: operations['conversationsUnarchiveConversation'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/devices/{installationId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** RegisterDevice */
-    put: operations['notificationsRegisterDevice'];
-    post?: never;
-    /** UnregisterDevice */
-    delete: operations['notificationsUnregisterDevice'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/goal-templates': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListGoalTemplates */
-    get: operations['goaltemplatesListGoalTemplates'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/goals': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListGoals */
-    get: operations['goalsListGoals'];
-    put?: never;
-    /** CreateGoal */
-    post: operations['goalsCreateGoal'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/goals/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetGoal */
-    get: operations['goalsGetGoal'];
-    /** UpdateGoal */
-    put: operations['goalsUpdateGoal'];
-    post?: never;
-    /** DeleteGoal */
-    delete: operations['goalsDeleteGoal'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/goals/{id}/progress': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** UpdateGoalProgress */
-    put: operations['goalsUpdateGoalProgress'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/goals/{id}/toggle': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ToggleGoal */
-    post: operations['goalsToggleGoal'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/habit-templates': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListHabitTemplates */
-    get: operations['habittemplatesListHabitTemplates'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/habits': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListHabits */
-    get: operations['habitsListHabits'];
-    put?: never;
-    /** CreateHabit */
-    post: operations['habitsCreateHabit'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/habits/reset-today': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ResetTodayHabits */
-    post: operations['habitsResetTodayHabits'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/habits/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetHabit */
-    get: operations['habitsGetHabit'];
-    /** UpdateHabit */
-    put: operations['habitsUpdateHabit'];
-    post?: never;
-    /** DeleteHabit */
-    delete: operations['habitsDeleteHabit'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/notification-preferences': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetNotificationPreferences */
-    get: operations['notificationsGetNotificationPreferences'];
-    /** UpdateNotificationPreferences */
-    put: operations['notificationsUpdateNotificationPreferences'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/notifications': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListNotifications */
-    get: operations['notificationsListNotifications'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/notifications/read-all': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** MarkAllNotificationsRead */
-    put: operations['notificationsMarkAllNotificationsRead'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/notifications/unread-count': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetUnreadNotificationCount */
-    get: operations['notificationsGetUnreadNotificationCount'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/notifications/{id}/read': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** MarkNotificationRead */
-    put: operations['notificationsMarkNotificationRead'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/coaching': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** GeneratePersonalizedCoaching */
-    post: operations['personalizationGeneratePersonalizedCoaching'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/coaching-profile': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetCoachingProfile */
-    get: operations['personalizationGetCoachingProfile'];
-    put?: never;
-    /** UpsertCoachingProfile */
-    post: operations['personalizationUpsertCoachingProfile'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/coaching-profile/preferences': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** UpdateCoachingProfilePreferences */
-    put: operations['personalizationUpdateCoachingProfilePreferences'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/coaching-stream': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** StreamPersonalizedCoaching */
-    post: operations['personalizationStreamPersonalizedCoaching'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/context': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetPersonalizationContext */
-    get: operations['personalizationGetPersonalizationContext'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/onboarding-habits': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** GenerateOnboardingHabits */
-    post: operations['personalizationGenerateOnboardingHabits'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/plan-adjustments': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListPendingPlanAdjustmentSuggestions */
-    get: operations['personalizationListPendingPlanAdjustmentSuggestions'];
-    put?: never;
-    /** CreatePlanAdjustmentSuggestion */
-    post: operations['personalizationCreatePlanAdjustmentSuggestion'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/plan-adjustments/{id}/apply': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** ApplyPlanAdjustmentSuggestion */
-    post: operations['personalizationApplyPlanAdjustmentSuggestion'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/plan-adjustments/{id}/status': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** UpdatePlanAdjustmentSuggestionStatus */
-    put: operations['personalizationUpdatePlanAdjustmentSuggestionStatus'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/profile': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /** UpdateProfile */
-    put: operations['profileUpdateProfile'];
-    post?: never;
-    /** DeleteAccount */
-    delete: operations['profileDeleteAccount'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/profile/me': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetProfile */
-    get: operations['profileGetProfile'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/report': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** SubmitReport */
-    post: operations['reportSubmitReport'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/saved': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListSaved */
-    get: operations['savedListSaved'];
-    put?: never;
-    /** SaveItem */
-    post: operations['savedSaveItem'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/saved/detailed': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListSavedDetailed */
-    get: operations['savedListSavedDetailed'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/saved/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /** RemoveSaved */
-    delete: operations['savedRemoveSaved'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/search': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Search */
-    get: operations['searchSearch'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/settings': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetSettings */
-    get: operations['settingsGetSettings'];
-    /** UpdateSettings */
-    put: operations['settingsUpdateSettings'];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/site-settings': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListSiteSettings */
-    get: operations['sitesettingsListSiteSettings'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/weekly-reviews': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** ListWeeklyReviews */
-    get: operations['weeklyreviewListWeeklyReviews'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/weekly-reviews/current': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetCurrentWeeklyReview */
-    get: operations['weeklyreviewGetCurrentWeeklyReview'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/weekly-reviews/generate': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** GenerateWeeklyReview */
-    post: operations['weeklyreviewGenerateWeeklyReview'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/weekly-reviews/generate-stream': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** StreamWeeklyReview */
-    post: operations['weeklyreviewStreamWeeklyReview'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/weekly-reviews/{weekStart}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** GetWeeklyReview */
-    get: operations['weeklyreviewGetWeeklyReview'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/files/upload': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Upload a file to object storage
-     * @description Uploads a single file to MinIO object storage via the filemanager RPC.
-     *     Multipart form with a binary "file" field and an optional "folder" field
-     *     (defaults to "uploads"). Maximum request body size is 10 MB. Requires
-     *     authentication.
-     */
-    post: operations['uploadFile'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/transcribe': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Transcribe an audio clip to text
-     * @description Accepts a multipart audio upload (field "audio") and returns the transcribed
-     *     text via the ai-coach STT provider. Optional "language" hint (BCP-47, e.g.
-     *     "en-US"). Maximum request body size is 25 MB (matching the OpenAI Whisper
-     *     limit). The audio format is derived from the filename extension or the
-     *     Content-Type; supported formats are wav, mp3, flac, m4a, ogg, webm, aac.
-     *     Requires authentication.
-     */
-    post: operations['transcribeAudio'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/v1/personalization/voice-turn': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * One voice coaching turn (audio in, SSE stream out)
-     * @description Turn-based live voice coaching. The client uploads one recorded utterance
-     *     (multipart field "audio") plus optional "language" and "conversationId" form
-     *     fields, and the server responds with an SSE stream (`text/event-stream`) that
-     *     carries the transcription, the streamed coaching response, the synthesized
-     *     spoken audio, and a terminal "ready" event.
-     *
-     *     Maximum request body size is 25 MB. The audio format is derived from the
-     *     filename extension or Content-Type (wav, mp3, flac, m4a, ogg, webm, aac).
-     *     Requires authentication.
-     *
-     *     ## SSE event ordering
-     *
-     *     The stream commits HTTP 200 with `Content-Type: text/event-stream` before any
-     *     processing, so authentication and multipart parse errors are returned as
-     *     regular JSON error responses (not as SSE events) when they occur before the
-     *     stream is committed. Once the stream is committed, all subsequent errors are
-     *     delivered as `error` SSE events.
-     *
-     *     Typical successful ordering:
-     *
-     *     1. `transcript` — STT result for the uploaded utterance (always first).
-     *     2. `conversation` — emitted only when a new conversation is created (i.e. when
-     *        no `conversationId` was supplied). Omitted when continuing an existing
-     *        conversation.
-     *     3. `delta` — zero or more incremental coaching text chunks, in order.
-     *     4. `complete` — the full assembled coaching response (exactly one).
-     *     5. `audio` — synthesized TTS audio for the full response (zero or one). Emitted
-     *        only when synthesis succeeds and produces audio bytes.
-     *     6. `ready` — terminal success event (exactly one). Signals the client may begin
-     *        the next turn.
-     *
-     *     ## Terminal events
-     *
-     *     - `ready` — terminal success. The stream ends after this event.
-     *     - `error` — may be fatal or non-fatal:
-     *       - Fatal: emitted before `complete` (e.g. transcription failed, transcription
-     *         was empty, personalization context failed, coaching stream open failed, or
-     *         the coaching stream broke before producing any output). The stream ends
-     *         after a fatal `error` event and no `ready` is sent.
-     *       - Non-fatal: emitted after `complete` (e.g. TTS synthesis unavailable). The
-     *         stream continues and still ends with `ready`.
-     *
-     *     ## Cancellation
-     *
-     *     The client may close the connection at any time to cancel an in-flight turn
-     *     (e.g. user pressed stop, navigated away, or started a new turn). The server
-     *     honors the request context deadline and aborts upstream STT/coaching/TTS
-     *     calls. The client must not assume any partial state is persisted beyond what
-     *     was already emitted; the assistant message is persisted only after `complete`.
-     *
-     *     ## Reconnect behavior
-     *
-     *     This is a POST stream that triggers generation. The client must NOT blindly
-     *     reconnect on disconnect, because a reconnect would re-run STT and coaching and
-     *     duplicate the turn. Reconnect/resume is not supported until the backend
-     *     provides an idempotency/resume token.
-     *
-     *     ## Event wire format
-     *
-     *     Each event is written as:
-     *     ```
-     *     event: <eventName>\n
-     *     data: <json>\n
-     *     \n
-     *     ```
-     *     with `\n` (LF) line separators. The client SSE parser must tolerate chunk
-     *     boundaries that split a JSON `data` value across reads, CRLF/LF mixed
-     *     separators, comment/heartbeat lines (`: keep-alive`), and multiple consecutive
-     *     `data:` lines for a single event.
-     */
-    post: operations['voiceTurn'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/api/v1/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetActivityFeed */
+        get: operations["activityGetActivityFeed"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListArticles */
+        get: operations["articlesListArticles"];
+        put?: never;
+        /** CreateArticle */
+        post: operations["articlesCreateArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles/author/{authorId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetAuthorArticles */
+        get: operations["articlesGetAuthorArticles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles/featured": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetFeaturedArticle */
+        get: operations["articlesGetFeaturedArticle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetArticle */
+        get: operations["articlesGetArticle"];
+        /** UpdateArticle */
+        put: operations["articlesUpdateArticle"];
+        post?: never;
+        /** DeleteArticle */
+        delete: operations["articlesDeleteArticle"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles/{id}/like": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** LikeArticle */
+        post: operations["articlesLikeArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/articles/{id}/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ShareArticle */
+        post: operations["articlesShareArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/apple": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** AppleLogin */
+        post: operations["authAppleLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ForgotPassword */
+        post: operations["authForgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GoogleLogin */
+        post: operations["authGoogleLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["authLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout */
+        post: operations["authLogout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** RefreshToken */
+        post: operations["authRefreshToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register */
+        post: operations["authRegister"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/resend-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ResendVerification */
+        post: operations["authResendVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ResetPassword */
+        post: operations["authResetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** VerifyEmail */
+        post: operations["authVerifyEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CreateCheckoutSession */
+        post: operations["billingCreateCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetBillingOverview */
+        get: operations["billingGetBillingOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/portal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CreateCustomerPortalSession */
+        post: operations["billingCreateCustomerPortalSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/revenuecat-webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** HandleRevenueCatWebhook */
+        post: operations["billingHandleRevenueCatWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/upgrade-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** TrackUpgradeEvent */
+        post: operations["billingTrackUpgradeEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** HandleStripeWebhook */
+        post: operations["billingHandleStripeWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListCategories */
+        get: operations["categoriesListCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/check-ins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CreateCheckIn */
+        post: operations["checkinCreateCheckIn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/check-ins/checked-today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** HasCheckedInToday */
+        get: operations["checkinHasCheckedInToday"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/check-ins/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetCheckInHistory */
+        get: operations["checkinGetCheckInHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/check-ins/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetTodayCheckIns */
+        get: operations["checkinGetTodayCheckIns"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListConversations */
+        get: operations["conversationsListConversations"];
+        put?: never;
+        /** StartConversation */
+        post: operations["conversationsStartConversation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetConversation */
+        get: operations["conversationsGetConversation"];
+        put?: never;
+        post?: never;
+        /** DeleteConversation */
+        delete: operations["conversationsDeleteConversation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** ArchiveConversation */
+        put: operations["conversationsArchiveConversation"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetMessages */
+        get: operations["conversationsGetMessages"];
+        put?: never;
+        /** AppendMessage */
+        post: operations["conversationsAppendMessage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/unarchive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UnarchiveConversation */
+        put: operations["conversationsUnarchiveConversation"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/devices/{installationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** RegisterDevice */
+        put: operations["notificationsRegisterDevice"];
+        post?: never;
+        /** UnregisterDevice */
+        delete: operations["notificationsUnregisterDevice"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goal-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListGoalTemplates */
+        get: operations["goaltemplatesListGoalTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListGoals */
+        get: operations["goalsListGoals"];
+        put?: never;
+        /** CreateGoal */
+        post: operations["goalsCreateGoal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetGoal */
+        get: operations["goalsGetGoal"];
+        /** UpdateGoal */
+        put: operations["goalsUpdateGoal"];
+        post?: never;
+        /** DeleteGoal */
+        delete: operations["goalsDeleteGoal"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UpdateGoalProgress */
+        put: operations["goalsUpdateGoalProgress"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}/toggle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ToggleGoal */
+        post: operations["goalsToggleGoal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/habit-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListHabitTemplates */
+        get: operations["habittemplatesListHabitTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/habits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListHabits */
+        get: operations["habitsListHabits"];
+        put?: never;
+        /** CreateHabit */
+        post: operations["habitsCreateHabit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/habits/reset-today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ResetTodayHabits */
+        post: operations["habitsResetTodayHabits"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/habits/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetHabit */
+        get: operations["habitsGetHabit"];
+        /** UpdateHabit */
+        put: operations["habitsUpdateHabit"];
+        post?: never;
+        /** DeleteHabit */
+        delete: operations["habitsDeleteHabit"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notification-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetNotificationPreferences */
+        get: operations["notificationsGetNotificationPreferences"];
+        /** UpdateNotificationPreferences */
+        put: operations["notificationsUpdateNotificationPreferences"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListNotifications */
+        get: operations["notificationsListNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** MarkAllNotificationsRead */
+        put: operations["notificationsMarkAllNotificationsRead"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetUnreadNotificationCount */
+        get: operations["notificationsGetUnreadNotificationCount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** MarkNotificationRead */
+        put: operations["notificationsMarkNotificationRead"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/coaching": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GeneratePersonalizedCoaching */
+        post: operations["personalizationGeneratePersonalizedCoaching"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/coaching-profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetCoachingProfile */
+        get: operations["personalizationGetCoachingProfile"];
+        put?: never;
+        /** UpsertCoachingProfile */
+        post: operations["personalizationUpsertCoachingProfile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/coaching-profile/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UpdateCoachingProfilePreferences */
+        put: operations["personalizationUpdateCoachingProfilePreferences"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/coaching-stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** StreamPersonalizedCoaching */
+        post: operations["personalizationStreamPersonalizedCoaching"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetPersonalizationContext */
+        get: operations["personalizationGetPersonalizationContext"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/onboarding-habits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GenerateOnboardingHabits */
+        post: operations["personalizationGenerateOnboardingHabits"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/plan-adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListPendingPlanAdjustmentSuggestions */
+        get: operations["personalizationListPendingPlanAdjustmentSuggestions"];
+        put?: never;
+        /** CreatePlanAdjustmentSuggestion */
+        post: operations["personalizationCreatePlanAdjustmentSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/plan-adjustments/{id}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ApplyPlanAdjustmentSuggestion */
+        post: operations["personalizationApplyPlanAdjustmentSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/plan-adjustments/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UpdatePlanAdjustmentSuggestionStatus */
+        put: operations["personalizationUpdatePlanAdjustmentSuggestionStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UpdateProfile */
+        put: operations["profileUpdateProfile"];
+        post?: never;
+        /** DeleteAccount */
+        delete: operations["profileDeleteAccount"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/profile/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetProfile */
+        get: operations["profileGetProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** SubmitReport */
+        post: operations["reportSubmitReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/saved": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListSaved */
+        get: operations["savedListSaved"];
+        put?: never;
+        /** SaveItem */
+        post: operations["savedSaveItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/saved/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListSavedDetailed */
+        get: operations["savedListSavedDetailed"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/saved/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** RemoveSaved */
+        delete: operations["savedRemoveSaved"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search */
+        get: operations["searchSearch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetSettings */
+        get: operations["settingsGetSettings"];
+        /** UpdateSettings */
+        put: operations["settingsUpdateSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/site-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListSiteSettings */
+        get: operations["sitesettingsListSiteSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weekly-reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListWeeklyReviews */
+        get: operations["weeklyreviewListWeeklyReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weekly-reviews/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetCurrentWeeklyReview */
+        get: operations["weeklyreviewGetCurrentWeeklyReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weekly-reviews/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GenerateWeeklyReview */
+        post: operations["weeklyreviewGenerateWeeklyReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weekly-reviews/generate-stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** StreamWeeklyReview */
+        post: operations["weeklyreviewStreamWeeklyReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weekly-reviews/{weekStart}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetWeeklyReview */
+        get: operations["weeklyreviewGetWeeklyReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a file to object storage
+         * @description Uploads a single file to MinIO object storage via the filemanager RPC.
+         *     Multipart form with a binary "file" field and an optional "folder" field
+         *     (defaults to "uploads"). Maximum request body size is 10 MB. Requires
+         *     authentication.
+         */
+        post: operations["uploadFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/transcribe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Transcribe an audio clip to text
+         * @description Accepts a multipart audio upload (field "audio") and returns the transcribed
+         *     text via the ai-coach STT provider. Optional "language" hint (BCP-47, e.g.
+         *     "en-US"). Maximum request body size is 25 MB (matching the OpenAI Whisper
+         *     limit). The audio format is derived from the filename extension or the
+         *     Content-Type; supported formats are wav, mp3, flac, m4a, ogg, webm, aac.
+         *     Requires authentication.
+         */
+        post: operations["transcribeAudio"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/voice-turn": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * One voice coaching turn (audio in, SSE stream out)
+         * @description Turn-based live voice coaching. The client uploads one recorded utterance
+         *     (multipart field "audio") plus optional "language" and "conversationId" form
+         *     fields, and the server responds with an SSE stream (`text/event-stream`) that
+         *     carries the transcription, the streamed coaching response, the synthesized
+         *     spoken audio, and a terminal "ready" event.
+         *
+         *     Maximum request body size is 25 MB. The audio format is derived from the
+         *     filename extension or Content-Type (wav, mp3, flac, m4a, ogg, webm, aac).
+         *     Requires authentication.
+         *
+         *     ## SSE event ordering
+         *
+         *     The stream commits HTTP 200 with `Content-Type: text/event-stream` before any
+         *     processing, so authentication and multipart parse errors are returned as
+         *     regular JSON error responses (not as SSE events) when they occur before the
+         *     stream is committed. Once the stream is committed, all subsequent errors are
+         *     delivered as `error` SSE events.
+         *
+         *     Typical successful ordering:
+         *
+         *     1. `transcript` — STT result for the uploaded utterance (always first).
+         *     2. `conversation` — emitted only when a new conversation is created (i.e. when
+         *        no `conversationId` was supplied). Omitted when continuing an existing
+         *        conversation.
+         *     3. `delta` — zero or more incremental coaching text chunks, in order.
+         *     4. `complete` — the full assembled coaching response (exactly one).
+         *     5. `audio` — synthesized TTS audio for the full response (zero or one). Emitted
+         *        only when synthesis succeeds and produces audio bytes.
+         *     6. `ready` — terminal success event (exactly one). Signals the client may begin
+         *        the next turn.
+         *
+         *     ## Terminal events
+         *
+         *     - `ready` — terminal success. The stream ends after this event.
+         *     - `error` — may be fatal or non-fatal:
+         *       - Fatal: emitted before `complete` (e.g. transcription failed, transcription
+         *         was empty, personalization context failed, coaching stream open failed, or
+         *         the coaching stream broke before producing any output). The stream ends
+         *         after a fatal `error` event and no `ready` is sent.
+         *       - Non-fatal: emitted after `complete` (e.g. TTS synthesis unavailable). The
+         *         stream continues and still ends with `ready`.
+         *
+         *     ## Cancellation
+         *
+         *     The client may close the connection at any time to cancel an in-flight turn
+         *     (e.g. user pressed stop, navigated away, or started a new turn). The server
+         *     honors the request context deadline and aborts upstream STT/coaching/TTS
+         *     calls. The client must not assume any partial state is persisted beyond what
+         *     was already emitted; the assistant message is persisted only after `complete`.
+         *
+         *     ## Reconnect behavior
+         *
+         *     This is a POST stream that triggers generation. The client must NOT blindly
+         *     reconnect on disconnect, because a reconnect would re-run STT and coaching and
+         *     duplicate the turn. Reconnect/resume is not supported until the backend
+         *     provides an idempotency/resume token.
+         *
+         *     ## Event wire format
+         *
+         *     Each event is written as:
+         *     ```
+         *     event: <eventName>\n
+         *     data: <json>\n
+         *     \n
+         *     ```
+         *     with `\n` (LF) line separators. The client SSE parser must tolerate chunk
+         *     boundaries that split a JSON `data` value across reads, CRLF/LF mixed
+         *     separators, comment/heartbeat lines (`: keep-alive`), and multiple consecutive
+         *     `data:` lines for a single event.
+         */
+        post: operations["voiceTurn"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    UploadResponse: {
-      /**
-       * Format: uri
-       * @description Public or pre-signed URL of the stored object.
-       * @example https://cdn.example.com/uploads/0192be94-...-image.png
-       */
-      url: string;
-      /**
-       * @description Object storage key (path) of the stored object.
-       * @example uploads/0192be94-1234-5678-9aaa-09876543210a-image.png
-       */
-      key: string;
-    };
-    TranscribeResponse: {
-      /**
-       * @description Transcribed text.
-       * @example How do I stay consistent?
-       */
-      text: string;
-      /**
-       * @description Detected or echoed language (BCP-47), when available.
-       * @example en
-       */
-      language?: string;
-      /**
-       * Format: float
-       * @description Audio duration in seconds, when available.
-       * @example 2.4
-       */
-      duration?: number;
-    };
-    /** @description Payload of the `transcript` SSE event. Always the first event. */
-    VoiceTurnTranscriptEvent: {
-      /** @description Transcribed user utterance. */
-      text: string;
-      /** @description Detected/echoed language (BCP-47), when available. */
-      language?: string;
-      /**
-       * Format: float
-       * @description Audio duration in seconds, when available.
-       */
-      duration?: number;
-    };
-    /** @description Payload of a `delta` SSE event. Zero or more, in order. */
-    VoiceTurnDeltaEvent: {
-      /** @description Incremental coaching text chunk. Concatenate in order to build the full response. */
-      text: string;
-    };
-    /** @description Payload of the `complete` SSE event. Exactly one on success. */
-    VoiceTurnCompleteEvent: {
-      /** @description The full assembled coaching response. */
-      fullResponse: string;
-    };
-    /**
-     * @description Payload of the `audio` SSE event. Zero or one. Base64-encoded TTS audio for
-     *     the full coaching response. Mobile clients should treat base64 TTS in SSE as
-     *     a parity path and prefer a future authenticated short-lived audio URL.
-     */
-    VoiceTurnAudioEvent: {
-      /**
-       * @description Audio format of the encoded payload.
-       * @example mp3
-       */
-      format: string;
-      /** @description Base64-encoded audio bytes. */
-      data: string;
-    };
-    /**
-     * @description Payload of the `conversation` SSE event. Emitted only when a new conversation
-     *     is created (no `conversationId` supplied). Carries the new conversation ID so
-     *     the client can append subsequent turns to it.
-     */
-    VoiceTurnConversationEvent: {
-      /**
-       * Format: uuid
-       * @description New conversation ID.
-       */
-      id: string;
-    };
-    /**
-     * @description Payload of the `error` SSE event. Fatal when emitted before `complete`
-     *     (stream ends, no `ready`); non-fatal when emitted after `complete` (stream
-     *     still ends with `ready`).
-     */
-    VoiceTurnErrorEvent: {
-      /** @description User-safe error message. */
-      message: string;
-    };
-    /**
-     * @description Payload of the `ready` SSE event. Terminal success event (exactly one). The
-     *     stream ends after this event; the client may begin the next turn.
-     *     The payload is an empty JSON object.
-     */
-    VoiceTurnReadyEvent: Record<string, never>;
-    /**
-     * @description Standard gateway error response (see pkg/httpx/errors/errors.go). The `code`
-     *     field is a stable snake_case identifier; `message` is a user-safe string.
-     *     `limit` and `upgradeTrigger` are present only on plan-limit (402) responses.
-     */
-    ErrorResponse: {
-      /**
-       * @description Stable snake_case error code.
-       * @example unauthenticated
-       */
-      code: string;
-      /**
-       * @description User-safe error message.
-       * @example authentication required
-       */
-      message: string;
-      /**
-       * @description Present only on plan-limit responses (HTTP 402). The feature limit reached.
-       * @example max_goals
-       */
-      limit?: string;
-      /**
-       * @description Present only on plan-limit responses (HTTP 402). The upgrade trigger identifier.
-       * @example goals
-       */
-      upgradeTrigger?: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: {
-    authForgotPasswordBody: {
-      content: {
-        'application/json': {
-          /** @example john@example.com */
-          email: string;
+    schemas: {
+        UploadResponse: {
+            /**
+             * Format: uri
+             * @description Public or pre-signed URL of the stored object.
+             * @example https://cdn.example.com/uploads/0192be94-...-image.png
+             */
+            url: string;
+            /**
+             * @description Object storage key (path) of the stored object.
+             * @example uploads/0192be94-1234-5678-9aaa-09876543210a-image.png
+             */
+            key: string;
         };
-      };
-    };
-    weeklyreviewGenerateWeeklyReviewBody: {
-      content: {
-        'application/json': {
-          forceRegenerate?: boolean;
-          weekStart?: string;
+        TranscribeResponse: {
+            /**
+             * @description Transcribed text.
+             * @example How do I stay consistent?
+             */
+            text: string;
+            /**
+             * @description Detected or echoed language (BCP-47), when available.
+             * @example en
+             */
+            language?: string;
+            /**
+             * Format: float
+             * @description Audio duration in seconds, when available.
+             * @example 2.4
+             */
+            duration?: number;
         };
-      };
-    };
-    personalizationGeneratePersonalizedCoachingBody: {
-      content: {
-        'application/json': {
-          /** @example User has been struggling with motivation */
-          context?: string;
-          conversationId?: string;
-          /** @example User missed 3 consecutive check-ins */
-          userMessage: string;
+        /** @description Payload of the `transcript` SSE event. Always the first event. */
+        VoiceTurnTranscriptEvent: {
+            /** @description Transcribed user utterance. */
+            text: string;
+            /** @description Detected/echoed language (BCP-47), when available. */
+            language?: string;
+            /**
+             * Format: float
+             * @description Audio duration in seconds, when available.
+             */
+            duration?: number;
         };
-      };
+        /** @description Payload of a `delta` SSE event. Zero or more, in order. */
+        VoiceTurnDeltaEvent: {
+            /** @description Incremental coaching text chunk. Concatenate in order to build the full response. */
+            text: string;
+        };
+        /** @description Payload of the `complete` SSE event. Exactly one on success. */
+        VoiceTurnCompleteEvent: {
+            /** @description The full assembled coaching response. */
+            fullResponse: string;
+        };
+        /**
+         * @description Payload of the `audio` SSE event. Zero or one. Base64-encoded TTS audio for
+         *     the full coaching response. Mobile clients should treat base64 TTS in SSE as
+         *     a parity path and prefer a future authenticated short-lived audio URL.
+         */
+        VoiceTurnAudioEvent: {
+            /**
+             * @description Audio format of the encoded payload.
+             * @example mp3
+             */
+            format: string;
+            /** @description Base64-encoded audio bytes. */
+            data: string;
+        };
+        /**
+         * @description Payload of the `conversation` SSE event. Emitted only when a new conversation
+         *     is created (no `conversationId` supplied). Carries the new conversation ID so
+         *     the client can append subsequent turns to it.
+         */
+        VoiceTurnConversationEvent: {
+            /**
+             * Format: uuid
+             * @description New conversation ID.
+             */
+            id: string;
+        };
+        /**
+         * @description Payload of the `error` SSE event. Fatal when emitted before `complete`
+         *     (stream ends, no `ready`); non-fatal when emitted after `complete` (stream
+         *     still ends with `ready`).
+         */
+        VoiceTurnErrorEvent: {
+            /** @description User-safe error message. */
+            message: string;
+        };
+        /**
+         * @description Payload of the `ready` SSE event. Terminal success event (exactly one). The
+         *     stream ends after this event; the client may begin the next turn.
+         *     The payload is an empty JSON object.
+         */
+        VoiceTurnReadyEvent: Record<string, never>;
+        /**
+         * @description Standard gateway error response (see pkg/httpx/errors/errors.go). The `code`
+         *     field is a stable snake_case identifier; `message` is a user-safe string.
+         *     `limit` and `upgradeTrigger` are present only on plan-limit (402) responses.
+         */
+        ErrorResponse: {
+            /**
+             * @description Stable snake_case error code.
+             * @example unauthenticated
+             */
+            code: string;
+            /**
+             * @description User-safe error message.
+             * @example authentication required
+             */
+            message: string;
+            /**
+             * @description Present only on plan-limit responses (HTTP 402). The feature limit reached.
+             * @example max_goals
+             */
+            limit?: string;
+            /**
+             * @description Present only on plan-limit responses (HTTP 402). The upgrade trigger identifier.
+             * @example goals
+             */
+            upgradeTrigger?: string;
+        };
     };
-  };
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: {
+        authForgotPasswordBody: {
+            content: {
+                "application/json": {
+                    /** @example john@example.com */
+                    email: string;
+                };
+            };
+        };
+        weeklyreviewGenerateWeeklyReviewBody: {
+            content: {
+                "application/json": {
+                    forceRegenerate?: boolean;
+                    weekStart?: string;
+                };
+            };
+        };
+        personalizationGeneratePersonalizedCoachingBody: {
+            content: {
+                "application/json": {
+                    /** @example User has been struggling with motivation */
+                    context?: string;
+                    conversationId?: string;
+                    /** @example User missed 3 consecutive check-ins */
+                    userMessage: string;
+                };
+            };
+        };
+    };
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  activityGetActivityFeed: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example 2024-01-15T08:00:00Z */
-              createdAt: string;
-              /** @example You completed Morning Exercise */
-              description: string;
-              /** @example activity-123 */
-              id: string;
-              /** @example {"habitId":"habit-123"} */
-              metadata?: string;
-              /** @example Habit Completed */
-              title: string;
-              /** @example habit_completed */
-              type: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
+    activityGetActivityFeed: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
             };
-          };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesListArticles: {
-    parameters: {
-      query: {
-        category?: string;
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example 2024-01-15T08:00:00Z */
+                            createdAt: string;
+                            /** @example You completed Morning Exercise */
+                            description: string;
+                            /** @example activity-123 */
+                            id: string;
+                            /** @example {"habitId":"habit-123"} */
+                            metadata?: string;
+                            /** @example Habit Completed */
+                            title: string;
+                            /** @example habit_completed */
+                            type: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+    };
+    articlesListArticles: {
+        parameters: {
+            query: {
+                category?: string;
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    articlesCreateArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example user-123 */
+                    authorId: string;
+                    /** @example cat-123 */
+                    categoryId?: string;
+                    /** @example Full article content here... */
+                    content: string;
+                    /** @example https://example.com/article.jpg */
+                    coverImage?: string;
+                    /** @example 5 */
+                    readTime: number;
+                    summary?: string;
+                    tags?: string[];
+                    /** @example 10 Habits for Personal Growth */
+                    title: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    articlesGetAuthorArticles: {
+        parameters: {
+            query: {
+                authorId: string;
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    articlesGetFeaturedArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    articlesGetArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesCreateArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example user-123 */
-          authorId: string;
-          /** @example cat-123 */
-          categoryId?: string;
-          /** @example Full article content here... */
-          content: string;
-          /** @example https://example.com/article.jpg */
-          coverImage?: string;
-          /** @example 5 */
-          readTime: number;
-          summary?: string;
-          tags?: string[];
-          /** @example 10 Habits for Personal Growth */
-          title: string;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        };
+                    };
+                };
+            };
         };
-      };
     };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+    articlesUpdateArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesGetAuthorArticles: {
-    parameters: {
-      query: {
-        authorId: string;
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody: {
+            content: {
+                "application/json": {
+                    authorId?: string;
+                    categoryId?: string;
+                    content?: string;
+                    coverImage?: string;
+                    readTime?: number;
+                    summary?: string;
+                    tags?: string[];
+                    title?: string;
+                };
+            };
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example John Smith */
+                            author: string;
+                            category: {
+                                /** @example cat-123 */
+                                id: string;
+                                /** @example Personal Development */
+                                name: string;
+                                /** @example personal-development */
+                                slug: string;
+                            };
+                            /** @example Full article content here... */
+                            content: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Discover the top habits that can transform your life... */
+                            excerpt: string;
+                            /** @example article-123 */
+                            id: string;
+                            /** @example https://example.com/article.jpg */
+                            imageUrl: string;
+                            isLiked: boolean;
+                            isSaved: boolean;
+                            likeCount: number;
+                            /** @example 2024-01-01T00:00:00Z */
+                            publishedAt: string;
+                            /** @example 5 */
+                            readTime: number;
+                            tags?: string[];
+                            /** @example 10 Habits for Personal Growth */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    articlesDeleteArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesGetFeaturedArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+    };
+    articlesLikeArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesGetArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        isLiked?: boolean;
+                        newLikeCount?: number;
+                        success?: boolean;
+                    };
+                };
+            };
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+    };
+    articlesShareArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesUpdateArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          authorId?: string;
-          categoryId?: string;
-          content?: string;
-          coverImage?: string;
-          readTime?: number;
-          summary?: string;
-          tags?: string[];
-          title?: string;
+        requestBody: {
+            content: {
+                "application/json": {
+                    platform: string;
+                };
+            };
         };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success?: boolean;
+                    };
+                };
+            };
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example John Smith */
-              author: string;
-              category: {
-                /** @example cat-123 */
+    };
+    authAppleLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example c... */
+                    authorizationCode?: string;
+                    fullName?: {
+                        /** @example Doe */
+                        familyName?: string;
+                        /** @example John */
+                        givenName?: string;
+                    };
+                    /** @example eyJraWQi... */
+                    identityToken: string;
+                    /** @example ... */
+                    nonce?: string;
+                    /** @example https://app.example.com/auth/callback/apple */
+                    redirectUri?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        accessToken?: string;
+                        /** @example 3600 */
+                        expiresIn?: number;
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        refreshToken?: string;
+                        user?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    authForgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["authForgotPasswordBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    authGoogleLogin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example 4/0AX4Xf... */
+                    authorizationCode: string;
+                    /** @example https://app.example.com/auth/callback/google */
+                    redirectUri?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        accessToken?: string;
+                        /** @example 3600 */
+                        expiresIn?: number;
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        refreshToken?: string;
+                        user?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    authLogin: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @example device-12345 */
+                "X-Device-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example john@example.com */
+                    email: string;
+                    /** @example securePassword123 */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        accessToken?: string;
+                        /** @example 3600 */
+                        expiresIn?: number;
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        refreshToken?: string;
+                        user?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    authLogout: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @example device-12345 */
+                "X-Device-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                    refreshToken?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    authRefreshToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                    refreshToken: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        accessToken?: string;
+                        /** @example 3600 */
+                        expiresIn?: number;
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        refreshToken?: string;
+                        user?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    authRegister: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @example device-12345 */
+                "X-Device-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example john@example.com */
+                    email: string;
+                    /** @example John Doe */
+                    fullName: string;
+                    /** @example securePassword123 */
+                    password: string;
+                    /** @example johndoe */
+                    username: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Check your email for a verification link. */
+                        message?: string;
+                        /** @example true */
+                        requiresVerification?: boolean;
+                    };
+                };
+            };
+        };
+    };
+    authResendVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["authForgotPasswordBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    authResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example securePassword123 */
+                    newPassword: string;
+                    /** @example 9f8e... */
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    authVerifyEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example 9f8e... */
+                    token: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        accessToken?: string;
+                        /** @example 3600 */
+                        expiresIn?: number;
+                        /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
+                        refreshToken?: string;
+                        user?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    billingCreateCheckoutSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example monthly */
+                    billingInterval: string;
+                    /** @example pro */
+                    planCode: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example https://checkout.stripe.com/... */
+                        checkoutUrl?: string;
+                        /** @example cs_test_... */
+                        sessionId?: string;
+                    };
+                };
+            };
+        };
+    };
+    billingGetBillingOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example fake_door */
+                        billingMode?: string;
+                        entitlements?: {
+                            /** @example 1 */
+                            activeGoalLimit?: number;
+                            /** @example 3 */
+                            activeHabitLimit?: number;
+                            /** @example true */
+                            canCreateGoal: boolean;
+                            /** @example true */
+                            canCreateHabit: boolean;
+                            /** @example false */
+                            canCreatePlanAdjustment: boolean;
+                            /** @example false */
+                            canUsePersonalizedAi: boolean;
+                            /** @example false */
+                            canViewWeeklyReviewHistory: boolean;
+                            /** @example 1 */
+                            currentActiveGoals: number;
+                            /** @example 2 */
+                            currentActiveHabits: number;
+                            /** @example 1 */
+                            currentPendingAdjustments: number;
+                            /** @example false */
+                            personalizedAiEnabled: boolean;
+                            /** @example 3 */
+                            planAdjustmentLimit?: number;
+                            /** @example free */
+                            planCode: string;
+                            /** @example free */
+                            status: string;
+                            /** @example 1 */
+                            weeklyReviewHistoryLimit?: number;
+                        };
+                        plans?: {
+                            /** @example 1 */
+                            activeGoalLimit?: number;
+                            /** @example 3 */
+                            activeHabitLimit?: number;
+                            /** @example free */
+                            code: string;
+                            /** @example Start with the core accountability loop */
+                            description?: string;
+                            /** @example plan-123 */
+                            id: string;
+                            /** @example true */
+                            isActive: boolean;
+                            /** @example Free */
+                            name: string;
+                            /** @example false */
+                            personalizedAiEnabled: boolean;
+                            /** @example 3 */
+                            planAdjustmentLimit?: number;
+                            /** @example 0 */
+                            priceAnnualCents: number;
+                            /** @example 0 */
+                            priceMonthlyCents: number;
+                            /** @example 1 */
+                            weeklyReviewHistoryLimit?: number;
+                        }[];
+                        subscription?: {
+                            /** @example monthly */
+                            billingInterval?: string;
+                            /** @example false */
+                            cancelAtPeriodEnd: boolean;
+                            /** @example 2024-02-01T00:00:00Z */
+                            currentPeriodEnd?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            currentPeriodStart?: string;
+                            /** @example sub-123 */
+                            id: string;
+                            /** @example free */
+                            planCode: string;
+                            /** @example plan-123 */
+                            planId: string;
+                            /** @example Free */
+                            planName: string;
+                            /** @example free */
+                            status: string;
+                            stripeCustomerId?: string;
+                            stripeSubscriptionId?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            trialEnd?: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    billingCreateCustomerPortalSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example https://billing.stripe.com/... */
+                        portalUrl?: string;
+                    };
+                };
+            };
+        };
+    };
+    billingHandleRevenueCatWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        processed?: boolean;
+                    };
+                };
+            };
+        };
+    };
+    billingTrackUpgradeEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example monthly */
+                    billingInterval?: string;
+                    /** @example prompt_viewed */
+                    eventType: string;
+                    feedbackNote?: string;
+                    /** @example too_expensive */
+                    feedbackReason?: string;
+                    metadataJson?: string;
+                    /** @example pro */
+                    planCode?: string;
+                    /** @example goal_create_limit */
+                    surface: string;
+                    /** @example goal_limit */
+                    trigger?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example event-123 */
+                        eventId?: string;
+                    };
+                };
+            };
+        };
+    };
+    billingHandleStripeWebhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    rawBody: string;
+                    signature: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        processed?: boolean;
+                    };
+                };
+            };
+        };
+    };
+    categoriesListCategories: {
+        parameters: {
+            query: {
+                /** @example habit */
+                entityType: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example habit */
+                            entityType: string;
+                            /** @example cat-123 */
+                            id: string;
+                            /** @example Fitness */
+                            name: string;
+                            /** @example fitness */
+                            slug: string;
+                            /** @example 1 */
+                            sortOrder: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    checkinCreateCheckIn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example lack_of_time */
+                    blocker?: string;
+                    /** @example high */
+                    energy?: string;
+                    /** @example habit-123 */
+                    habitId: string;
+                    /** @example great */
+                    mood?: string;
+                    /** @example Felt motivated today */
+                    note?: string;
+                    /** @example completed */
+                    status: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Great job keeping your streak! */
+                        aiFeedback?: string;
+                        checkIn?: {
+                            /** @example lack_of_time */
+                            blocker?: string;
+                            /** @example 2024-01-15T08:00:00Z */
+                            createdAt: string;
+                            /** @example high */
+                            energy?: string;
+                            /** @example habit-123 */
+                            habitId: string;
+                            /** @example checkin-123 */
+                            id: string;
+                            /** @example great */
+                            mood?: string;
+                            /** @example Felt motivated today */
+                            note?: string;
+                            /** @example completed */
+                            status: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                        habit?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
+                            id: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    checkinHasCheckedInToday: {
+        parameters: {
+            query: {
+                habitId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        checkedIn?: boolean;
+                    };
+                };
+            };
+        };
+    };
+    checkinGetCheckInHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example habit-123 */
+                    habitId?: string;
+                    /**
+                     * @default 20
+                     * @example 20
+                     */
+                    limit: number;
+                    /**
+                     * @default 1
+                     * @example 1
+                     */
+                    page: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        checkIns?: {
+                            /** @example lack_of_time */
+                            blocker?: string;
+                            /** @example 2024-01-15T08:00:00Z */
+                            createdAt: string;
+                            /** @example high */
+                            energy?: string;
+                            /** @example habit-123 */
+                            habitId: string;
+                            /** @example checkin-123 */
+                            id: string;
+                            /** @example great */
+                            mood?: string;
+                            /** @example Felt motivated today */
+                            note?: string;
+                            /** @example completed */
+                            status: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                        /** @example 10 */
+                        total?: number;
+                    };
+                };
+            };
+        };
+    };
+    checkinGetTodayCheckIns: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        checkIns?: {
+                            /** @example lack_of_time */
+                            blocker?: string;
+                            /** @example 2024-01-15T08:00:00Z */
+                            createdAt: string;
+                            /** @example high */
+                            energy?: string;
+                            /** @example habit-123 */
+                            habitId: string;
+                            /** @example checkin-123 */
+                            id: string;
+                            /** @example great */
+                            mood?: string;
+                            /** @example Felt motivated today */
+                            note?: string;
+                            /** @example completed */
+                            status: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    conversationsListConversations: {
+        parameters: {
+            query: {
+                type?: string;
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsStartConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    initialMessage?: string;
+                    title?: string;
+                    type?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                        initialMessage?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsGetConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example Personal Development */
-                name: string;
-                /** @example personal-development */
-                slug: string;
-              };
-              /** @example Full article content here... */
-              content: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Discover the top habits that can transform your life... */
-              excerpt: string;
-              /** @example article-123 */
-              id: string;
-              /** @example https://example.com/article.jpg */
-              imageUrl: string;
-              isLiked: boolean;
-              isSaved: boolean;
-              likeCount: number;
-              /** @example 2024-01-01T00:00:00Z */
-              publishedAt: string;
-              /** @example 5 */
-              readTime: number;
-              tags?: string[];
-              /** @example 10 Habits for Personal Growth */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  articlesDeleteArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  articlesLikeArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            isLiked?: boolean;
-            newLikeCount?: number;
-            success?: boolean;
-          };
-        };
-      };
-    };
-  };
-  articlesShareArticle: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          platform: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            success?: boolean;
-          };
-        };
-      };
-    };
-  };
-  authAppleLogin: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example c... */
-          authorizationCode?: string;
-          fullName?: {
-            /** @example Doe */
-            familyName?: string;
-            /** @example John */
-            givenName?: string;
-          };
-          /** @example eyJraWQi... */
-          identityToken: string;
-          /** @example ... */
-          nonce?: string;
-          /** @example https://app.example.com/auth/callback/apple */
-          redirectUri?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            accessToken?: string;
-            /** @example 3600 */
-            expiresIn?: number;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            refreshToken?: string;
-            user?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
     };
-  };
-  authForgotPassword: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['authForgotPasswordBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  authGoogleLogin: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example 4/0AX4Xf... */
-          authorizationCode: string;
-          /** @example https://app.example.com/auth/callback/google */
-          redirectUri?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            accessToken?: string;
-            /** @example 3600 */
-            expiresIn?: number;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            refreshToken?: string;
-            user?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  authLogin: {
-    parameters: {
-      query?: never;
-      header?: {
-        /** @example device-12345 */
-        'X-Device-Id'?: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example john@example.com */
-          email: string;
-          /** @example securePassword123 */
-          password: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            accessToken?: string;
-            /** @example 3600 */
-            expiresIn?: number;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            refreshToken?: string;
-            user?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  authLogout: {
-    parameters: {
-      query?: never;
-      header?: {
-        /** @example device-12345 */
-        'X-Device-Id'?: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-          refreshToken?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  authRefreshToken: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-          refreshToken: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            accessToken?: string;
-            /** @example 3600 */
-            expiresIn?: number;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            refreshToken?: string;
-            user?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  authRegister: {
-    parameters: {
-      query?: never;
-      header?: {
-        /** @example device-12345 */
-        'X-Device-Id'?: string;
-      };
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example john@example.com */
-          email: string;
-          /** @example John Doe */
-          fullName: string;
-          /** @example securePassword123 */
-          password: string;
-          /** @example johndoe */
-          username: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example Check your email for a verification link. */
-            message?: string;
-            /** @example true */
-            requiresVerification?: boolean;
-          };
-        };
-      };
-    };
-  };
-  authResendVerification: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['authForgotPasswordBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  authResetPassword: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example securePassword123 */
-          newPassword: string;
-          /** @example 9f8e... */
-          token: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  authVerifyEmail: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example 9f8e... */
-          token: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            accessToken?: string;
-            /** @example 3600 */
-            expiresIn?: number;
-            /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... */
-            refreshToken?: string;
-            user?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  billingCreateCheckoutSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example monthly */
-          billingInterval: string;
-          /** @example pro */
-          planCode: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example https://checkout.stripe.com/... */
-            checkoutUrl?: string;
-            /** @example cs_test_... */
-            sessionId?: string;
-          };
-        };
-      };
-    };
-  };
-  billingGetBillingOverview: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example fake_door */
-            billingMode?: string;
-            entitlements?: {
-              /** @example 1 */
-              activeGoalLimit?: number;
-              /** @example 3 */
-              activeHabitLimit?: number;
-              /** @example true */
-              canCreateGoal: boolean;
-              /** @example true */
-              canCreateHabit: boolean;
-              /** @example false */
-              canCreatePlanAdjustment: boolean;
-              /** @example false */
-              canUsePersonalizedAi: boolean;
-              /** @example false */
-              canViewWeeklyReviewHistory: boolean;
-              /** @example 1 */
-              currentActiveGoals: number;
-              /** @example 2 */
-              currentActiveHabits: number;
-              /** @example 1 */
-              currentPendingAdjustments: number;
-              /** @example false */
-              personalizedAiEnabled: boolean;
-              /** @example 3 */
-              planAdjustmentLimit?: number;
-              /** @example free */
-              planCode: string;
-              /** @example free */
-              status: string;
-              /** @example 1 */
-              weeklyReviewHistoryLimit?: number;
-            };
-            plans?: {
-              /** @example 1 */
-              activeGoalLimit?: number;
-              /** @example 3 */
-              activeHabitLimit?: number;
-              /** @example free */
-              code: string;
-              /** @example Start with the core accountability loop */
-              description?: string;
-              /** @example plan-123 */
-              id: string;
-              /** @example true */
-              isActive: boolean;
-              /** @example Free */
-              name: string;
-              /** @example false */
-              personalizedAiEnabled: boolean;
-              /** @example 3 */
-              planAdjustmentLimit?: number;
-              /** @example 0 */
-              priceAnnualCents: number;
-              /** @example 0 */
-              priceMonthlyCents: number;
-              /** @example 1 */
-              weeklyReviewHistoryLimit?: number;
-            }[];
-            subscription?: {
-              /** @example monthly */
-              billingInterval?: string;
-              /** @example false */
-              cancelAtPeriodEnd: boolean;
-              /** @example 2024-02-01T00:00:00Z */
-              currentPeriodEnd?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              currentPeriodStart?: string;
-              /** @example sub-123 */
-              id: string;
-              /** @example free */
-              planCode: string;
-              /** @example plan-123 */
-              planId: string;
-              /** @example Free */
-              planName: string;
-              /** @example free */
-              status: string;
-              stripeCustomerId?: string;
-              stripeSubscriptionId?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              trialEnd?: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  billingCreateCustomerPortalSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example https://billing.stripe.com/... */
-            portalUrl?: string;
-          };
-        };
-      };
-    };
-  };
-  billingHandleRevenueCatWebhook: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example true */
-            processed?: boolean;
-          };
-        };
-      };
-    };
-  };
-  billingTrackUpgradeEvent: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example monthly */
-          billingInterval?: string;
-          /** @example prompt_viewed */
-          eventType: string;
-          feedbackNote?: string;
-          /** @example too_expensive */
-          feedbackReason?: string;
-          metadataJson?: string;
-          /** @example pro */
-          planCode?: string;
-          /** @example goal_create_limit */
-          surface: string;
-          /** @example goal_limit */
-          trigger?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example event-123 */
-            eventId?: string;
-          };
-        };
-      };
-    };
-  };
-  billingHandleStripeWebhook: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          rawBody: string;
-          signature: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example true */
-            processed?: boolean;
-          };
-        };
-      };
-    };
-  };
-  categoriesListCategories: {
-    parameters: {
-      query: {
-        /** @example habit */
-        entityType: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example habit */
-              entityType: string;
-              /** @example cat-123 */
-              id: string;
-              /** @example Fitness */
-              name: string;
-              /** @example fitness */
-              slug: string;
-              /** @example 1 */
-              sortOrder: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  checkinCreateCheckIn: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example lack_of_time */
-          blocker?: string;
-          /** @example high */
-          energy?: string;
-          /** @example habit-123 */
-          habitId: string;
-          /** @example great */
-          mood?: string;
-          /** @example Felt motivated today */
-          note?: string;
-          /** @example completed */
-          status: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example Great job keeping your streak! */
-            aiFeedback?: string;
-            checkIn?: {
-              /** @example lack_of_time */
-              blocker?: string;
-              /** @example 2024-01-15T08:00:00Z */
-              createdAt: string;
-              /** @example high */
-              energy?: string;
-              /** @example habit-123 */
-              habitId: string;
-              /** @example checkin-123 */
-              id: string;
-              /** @example great */
-              mood?: string;
-              /** @example Felt motivated today */
-              note?: string;
-              /** @example completed */
-              status: string;
-              /** @example user-123 */
-              userId: string;
-            };
-            habit?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example 30 minutes of cardio every morning */
-              description: string;
-              /** @example habit-123 */
-              id: string;
-              /** @example Morning Exercise */
-              name: string;
-              recentHistory?: boolean[];
-              /** @example 7 */
-              streak: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  checkinHasCheckedInToday: {
-    parameters: {
-      query: {
-        habitId: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            checkedIn?: boolean;
-          };
-        };
-      };
-    };
-  };
-  checkinGetCheckInHistory: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example habit-123 */
-          habitId?: string;
-          /**
-           * @default 20
-           * @example 20
-           */
-          limit: number;
-          /**
-           * @default 1
-           * @example 1
-           */
-          page: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            checkIns?: {
-              /** @example lack_of_time */
-              blocker?: string;
-              /** @example 2024-01-15T08:00:00Z */
-              createdAt: string;
-              /** @example high */
-              energy?: string;
-              /** @example habit-123 */
-              habitId: string;
-              /** @example checkin-123 */
-              id: string;
-              /** @example great */
-              mood?: string;
-              /** @example Felt motivated today */
-              note?: string;
-              /** @example completed */
-              status: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-            /** @example 10 */
-            total?: number;
-          };
-        };
-      };
-    };
-  };
-  checkinGetTodayCheckIns: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            checkIns?: {
-              /** @example lack_of_time */
-              blocker?: string;
-              /** @example 2024-01-15T08:00:00Z */
-              createdAt: string;
-              /** @example high */
-              energy?: string;
-              /** @example habit-123 */
-              habitId: string;
-              /** @example checkin-123 */
-              id: string;
-              /** @example great */
-              mood?: string;
-              /** @example Felt motivated today */
-              note?: string;
-              /** @example completed */
-              status: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  conversationsListConversations: {
-    parameters: {
-      query: {
-        type?: string;
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsStartConversation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          initialMessage?: string;
-          title?: string;
-          type?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            };
-            initialMessage?: {
-              content: string;
-              conversationId: string;
-              createdAt: string;
-              id: string;
-              role: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsGetConversation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsDeleteConversation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  conversationsArchiveConversation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsGetMessages: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 50 */
-        limit: number;
-      };
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              content: string;
-              conversationId: string;
-              createdAt: string;
-              id: string;
-              role: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsAppendMessage: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          content: string;
-          role?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            conversation?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            };
-            data?: {
-              content: string;
-              conversationId: string;
-              createdAt: string;
-              id: string;
-              role: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  conversationsUnarchiveConversation: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              archived: boolean;
-              createdAt: string;
-              id: string;
-              lastMessage: string;
-              title: string;
-              type: string;
-              updatedAt: string;
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  notificationsRegisterDevice: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        installationId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example com.company.growth */
-          appId?: string;
-          /** @example 1.0.0 */
-          appVersion?: string;
-          /** @example production */
-          environment: string;
-          /** @example en-US */
-          locale?: string;
-          /** @example 17.5 */
-          osVersion?: string;
-          /** @example ios */
-          platform: string;
-          /** @example expo */
-          provider: string;
-          /** @example ExponentPushToken[...] */
-          pushToken: string;
-          /** @example America/Los_Angeles */
-          timezone?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  notificationsUnregisterDevice: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        installationId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  goaltemplatesListGoalTemplates: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              category?: {
-                id?: string;
-                name?: string;
-                slug?: string;
-              };
-              createdAt: string;
-              description?: string;
-              id: string;
-              sortOrder: number;
-              title: string;
-              updatedAt: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  goalsListGoals: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  goalsCreateGoal: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example fitness */
-          category: string;
-          /** @example Complete a 42.195km marathon race */
-          description: string;
-          /** @example 2024-12-31T00:00:00Z */
-          dueDate?: string;
-          /** @example ["habit-1" */
-          relatedHabitIds?: string[];
-          /** @example Run a marathon */
-          title: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  goalsGetGoal: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  goalsUpdateGoal: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          category?: string;
-          description?: string;
-          dueDate?: string;
-          relatedHabitIds?: string[];
-          title?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  goalsDeleteGoal: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  goalsUpdateGoalProgress: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          progress: number;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  goalsToggleGoal: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example Complete a 42.195km marathon race */
-              description: string;
-              /** @example 2024-12-31T00:00:00Z */
-              dueDate?: string;
-              /** @example goal-123 */
-              id: string;
-              /** @example 50 */
-              progress: number;
-              /** @example ["habit-1" */
-              relatedHabitIds?: string[];
-              /** @example Run a marathon */
-              title: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  habittemplatesListHabitTemplates: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              category?: {
-                id?: string;
-                name?: string;
-                slug?: string;
-              };
-              createdAt: string;
-              description?: string;
-              id: string;
-              name: string;
-              sortOrder: number;
-              updatedAt: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  habitsListHabits: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example 30 minutes of cardio every morning */
-              description: string;
-              /** @example habit-123 */
-              id: string;
-              /** @example Morning Exercise */
-              name: string;
-              recentHistory?: boolean[];
-              /** @example 7 */
-              streak: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  habitsCreateHabit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example fitness */
-          category: string;
-          /** @example 30 minutes of cardio every morning */
-          description: string;
-          /** @example Morning Exercise */
-          name: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example 30 minutes of cardio every morning */
-              description: string;
-              /** @example habit-123 */
-              id: string;
-              /** @example Morning Exercise */
-              name: string;
-              recentHistory?: boolean[];
-              /** @example 7 */
-              streak: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  habitsResetTodayHabits: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  habitsGetHabit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example 30 minutes of cardio every morning */
-              description: string;
-              /** @example habit-123 */
-              id: string;
-              /** @example Morning Exercise */
-              name: string;
-              recentHistory?: boolean[];
-              /** @example 7 */
-              streak: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  habitsUpdateHabit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          category?: string;
-          description?: string;
-          name?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example fitness */
-              category: string;
-              /** @example false */
-              completed: boolean;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example 30 minutes of cardio every morning */
-              description: string;
-              /** @example habit-123 */
-              id: string;
-              /** @example Morning Exercise */
-              name: string;
-              recentHistory?: boolean[];
-              /** @example 7 */
-              streak: number;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  habitsDeleteHabit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  notificationsGetNotificationPreferences: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            preferences?: {
-              /** @example false */
-              emailEnabled: boolean;
-              /** @example false */
-              goalRemindersEnabled: boolean;
-              /** @example true */
-              habitRemindersEnabled: boolean;
-              /** @example false */
-              pushEnabled: boolean;
-            };
-          };
-        };
-      };
-    };
-  };
-  notificationsUpdateNotificationPreferences: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          preferences: {
-            /** @example false */
-            emailEnabled: boolean;
-            /** @example false */
-            goalRemindersEnabled: boolean;
-            /** @example true */
-            habitRemindersEnabled: boolean;
-            /** @example false */
-            pushEnabled: boolean;
-          };
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            preferences?: {
-              /** @example false */
-              emailEnabled: boolean;
-              /** @example false */
-              goalRemindersEnabled: boolean;
-              /** @example true */
-              habitRemindersEnabled: boolean;
-              /** @example false */
-              pushEnabled: boolean;
-            };
-          };
-        };
-      };
-    };
-  };
-  notificationsListNotifications: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example 2024-01-15T08:00:00Z */
-              createdAt: string;
-              /** @example notif-123 */
-              id: string;
-              /** @example Don't forget to complete your morning exercise! */
-              message: string;
-              /** @example false */
-              read: boolean;
-              /** @example Habit Reminder */
-              title: string;
-              /** @example habit_reminder */
-              type: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  notificationsMarkAllNotificationsRead: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  notificationsGetUnreadNotificationCount: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            count?: number;
-          };
-        };
-      };
-    };
-  };
-  notificationsMarkNotificationRead: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  personalizationGeneratePersonalizedCoaching: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['personalizationGeneratePersonalizedCoachingBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example I noticed you've missed a few check-ins lately... */
-            coachingResponse?: string;
-            /** @example User has been struggling with motivation */
-            context?: string;
-          };
-        };
-      };
-    };
-  };
-  personalizationGetCoachingProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example balanced */
-              accountabilityStyle: string;
-              coachingNotes?: {
-                [key: string]: string;
-              };
-              /** @example ["lack_of_time" */
-              commonBlockers?: string[];
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example adaptive */
-              difficultyPreference: string;
-              /** @example profile-123 */
-              id: string;
-              /** @example 2024-01-15T00:00:00Z */
-              lastContextRefreshAt?: string;
-              /** @example supportive */
-              preferredTone: string;
-              /** @example personal_growth */
-              primaryMotivation?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  personalizationUpsertCoachingProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example balanced */
-          accountabilityStyle?: string;
-          coachingNotes?: {
-            [key: string]: string;
-          };
-          /** @example ["lack_of_time" */
-          commonBlockers?: string[];
-          /** @example adaptive */
-          difficultyPreference?: string;
-          /** @example supportive */
-          preferredTone?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example balanced */
-              accountabilityStyle: string;
-              coachingNotes?: {
-                [key: string]: string;
-              };
-              /** @example ["lack_of_time" */
-              commonBlockers?: string[];
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example adaptive */
-              difficultyPreference: string;
-              /** @example profile-123 */
-              id: string;
-              /** @example 2024-01-15T00:00:00Z */
-              lastContextRefreshAt?: string;
-              /** @example supportive */
-              preferredTone: string;
-              /** @example personal_growth */
-              primaryMotivation?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  personalizationUpdateCoachingProfilePreferences: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example balanced */
-          accountabilityStyle: string;
-          /** @example adaptive */
-          difficultyPreference: string;
-          /** @example supportive */
-          preferredTone: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example balanced */
-              accountabilityStyle: string;
-              coachingNotes?: {
-                [key: string]: string;
-              };
-              /** @example ["lack_of_time" */
-              commonBlockers?: string[];
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example adaptive */
-              difficultyPreference: string;
-              /** @example profile-123 */
-              id: string;
-              /** @example 2024-01-15T00:00:00Z */
-              lastContextRefreshAt?: string;
-              /** @example supportive */
-              preferredTone: string;
-              /** @example personal_growth */
-              primaryMotivation?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  personalizationStreamPersonalizedCoaching: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['personalizationGeneratePersonalizedCoachingBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            /** @example I noticed you've missed a few check-ins lately... */
-            coachingResponse?: string;
-            /** @example User has been struggling with motivation */
-            context?: string;
-          };
-        };
-      };
-    };
-  };
-  personalizationGetPersonalizationContext: {
-    parameters: {
-      query: {
-        /** @example false */
-        forceRefresh: boolean;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              activeGoals: {
-                /** @example fitness */
-                category: string;
-                /** @example false */
-                completed: boolean;
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example Complete a 42.195km marathon race */
-                description: string;
-                /** @example 2024-12-31T00:00:00Z */
-                dueDate?: string;
-                /** @example goal-123 */
+    conversationsDeleteConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    conversationsArchiveConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsGetMessages: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
                 /** @example 50 */
-                progress: number;
-                /** @example ["habit-1" */
-                relatedHabitIds?: string[];
-                /** @example Run a marathon */
-                title: string;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              }[];
-              activeHabits: {
-                /** @example fitness */
-                category: string;
+                limit: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsAppendMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    content: string;
+                    role?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        conversation?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                        data?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsUnarchiveConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    notificationsRegisterDevice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                installationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example com.company.growth */
+                    appId?: string;
+                    /** @example 1.0.0 */
+                    appVersion?: string;
+                    /** @example production */
+                    environment: string;
+                    /** @example en-US */
+                    locale?: string;
+                    /** @example 17.5 */
+                    osVersion?: string;
+                    /** @example ios */
+                    platform: string;
+                    /** @example expo */
+                    provider: string;
+                    /** @example ExponentPushToken[...] */
+                    pushToken: string;
+                    /** @example America/Los_Angeles */
+                    timezone?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationsUnregisterDevice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                installationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    goaltemplatesListGoalTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            category?: {
+                                id?: string;
+                                name?: string;
+                                slug?: string;
+                            };
+                            createdAt: string;
+                            description?: string;
+                            id: string;
+                            sortOrder: number;
+                            title: string;
+                            updatedAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    goalsListGoals: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsCreateGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example fitness */
+                    category: string;
+                    /** @example Complete a 42.195km marathon race */
+                    description: string;
+                    /** @example 2024-12-31T00:00:00Z */
+                    dueDate?: string;
+                    /** @example ["habit-1" */
+                    relatedHabitIds?: string[];
+                    /** @example Run a marathon */
+                    title: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsGetGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsUpdateGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    category?: string;
+                    description?: string;
+                    dueDate?: string;
+                    relatedHabitIds?: string[];
+                    title?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsDeleteGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    goalsUpdateGoalProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    progress: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsToggleGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    habittemplatesListHabitTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            category?: {
+                                id?: string;
+                                name?: string;
+                                slug?: string;
+                            };
+                            createdAt: string;
+                            description?: string;
+                            id: string;
+                            name: string;
+                            sortOrder: number;
+                            updatedAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    habitsListHabits: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
+                            id: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    habitsCreateHabit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example fitness */
+                    category: string;
+                    /** @example 30 minutes of cardio every morning */
+                    description: string;
+                    /** @example Morning Exercise */
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
+                            id: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    habitsResetTodayHabits: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    habitsGetHabit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
+                            id: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    habitsUpdateHabit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    category?: string;
+                    description?: string;
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
+                            id: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    habitsDeleteHabit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationsGetNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        preferences?: {
+                            /** @example false */
+                            emailEnabled: boolean;
+                            /** @example false */
+                            goalRemindersEnabled: boolean;
+                            /** @example true */
+                            habitRemindersEnabled: boolean;
+                            /** @example false */
+                            pushEnabled: boolean;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    notificationsUpdateNotificationPreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    preferences: {
+                        /** @example false */
+                        emailEnabled: boolean;
+                        /** @example false */
+                        goalRemindersEnabled: boolean;
+                        /** @example true */
+                        habitRemindersEnabled: boolean;
+                        /** @example false */
+                        pushEnabled: boolean;
+                    };
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        preferences?: {
+                            /** @example false */
+                            emailEnabled: boolean;
+                            /** @example false */
+                            goalRemindersEnabled: boolean;
+                            /** @example true */
+                            habitRemindersEnabled: boolean;
+                            /** @example false */
+                            pushEnabled: boolean;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    notificationsListNotifications: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example 2024-01-15T08:00:00Z */
+                            createdAt: string;
+                            /** @example notif-123 */
+                            id: string;
+                            /** @example Don't forget to complete your morning exercise! */
+                            message: string;
+                            /** @example false */
+                            read: boolean;
+                            /** @example Habit Reminder */
+                            title: string;
+                            /** @example habit_reminder */
+                            type: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    notificationsMarkAllNotificationsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    notificationsGetUnreadNotificationCount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count?: number;
+                    };
+                };
+            };
+        };
+    };
+    notificationsMarkNotificationRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    personalizationGeneratePersonalizedCoaching: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["personalizationGeneratePersonalizedCoachingBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example I noticed you've missed a few check-ins lately... */
+                        coachingResponse?: string;
+                        /** @example User has been struggling with motivation */
+                        context?: string;
+                    };
+                };
+            };
+        };
+    };
+    personalizationGetCoachingProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example balanced */
+                            accountabilityStyle: string;
+                            coachingNotes?: {
+                                [key: string]: string;
+                            };
+                            /** @example ["lack_of_time" */
+                            commonBlockers?: string[];
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example adaptive */
+                            difficultyPreference: string;
+                            /** @example profile-123 */
+                            id: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            lastContextRefreshAt?: string;
+                            /** @example supportive */
+                            preferredTone: string;
+                            /** @example personal_growth */
+                            primaryMotivation?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationUpsertCoachingProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example balanced */
+                    accountabilityStyle?: string;
+                    coachingNotes?: {
+                        [key: string]: string;
+                    };
+                    /** @example ["lack_of_time" */
+                    commonBlockers?: string[];
+                    /** @example adaptive */
+                    difficultyPreference?: string;
+                    /** @example supportive */
+                    preferredTone?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example balanced */
+                            accountabilityStyle: string;
+                            coachingNotes?: {
+                                [key: string]: string;
+                            };
+                            /** @example ["lack_of_time" */
+                            commonBlockers?: string[];
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example adaptive */
+                            difficultyPreference: string;
+                            /** @example profile-123 */
+                            id: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            lastContextRefreshAt?: string;
+                            /** @example supportive */
+                            preferredTone: string;
+                            /** @example personal_growth */
+                            primaryMotivation?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationUpdateCoachingProfilePreferences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example balanced */
+                    accountabilityStyle: string;
+                    /** @example adaptive */
+                    difficultyPreference: string;
+                    /** @example supportive */
+                    preferredTone: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example balanced */
+                            accountabilityStyle: string;
+                            coachingNotes?: {
+                                [key: string]: string;
+                            };
+                            /** @example ["lack_of_time" */
+                            commonBlockers?: string[];
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example adaptive */
+                            difficultyPreference: string;
+                            /** @example profile-123 */
+                            id: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            lastContextRefreshAt?: string;
+                            /** @example supportive */
+                            preferredTone: string;
+                            /** @example personal_growth */
+                            primaryMotivation?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationStreamPersonalizedCoaching: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["personalizationGeneratePersonalizedCoachingBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example I noticed you've missed a few check-ins lately... */
+                        coachingResponse?: string;
+                        /** @example User has been struggling with motivation */
+                        context?: string;
+                    };
+                };
+            };
+        };
+    };
+    personalizationGetPersonalizationContext: {
+        parameters: {
+            query: {
                 /** @example false */
-                completed: boolean;
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example 30 minutes of cardio every morning */
-                description: string;
-                /** @example habit-123 */
-                id: string;
-                /** @example Morning Exercise */
-                name: string;
-                recentHistory?: boolean[];
-                /** @example 7 */
-                streak: number;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              }[];
-              latestWeeklyReview?: {
-                aiSummary?: string;
-                bestDay?: string;
-                completedCheckIns: number;
-                completionRate: number;
-                energySummary: {
-                  [key: string]: number;
+                forceRefresh: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
                 };
-                generatedAt: string;
-                habitBreakdown: {
-                  category?: string;
-                  completedCount: number;
-                  completionRate: number;
-                  habitId: string;
-                  habitName: string;
-                  lastCheckInAt?: string;
-                  missedCount: number;
-                  totalCheckIns: number;
-                }[];
-                hardestDay?: string;
-                id: string;
-                missedCheckIns: number;
-                moodSummary: {
-                  [key: string]: number;
+                content: {
+                    "application/json": {
+                        data?: {
+                            activeGoals: {
+                                /** @example fitness */
+                                category: string;
+                                /** @example false */
+                                completed: boolean;
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example Complete a 42.195km marathon race */
+                                description: string;
+                                /** @example 2024-12-31T00:00:00Z */
+                                dueDate?: string;
+                                /** @example goal-123 */
+                                id: string;
+                                /** @example 50 */
+                                progress: number;
+                                /** @example ["habit-1" */
+                                relatedHabitIds?: string[];
+                                /** @example Run a marathon */
+                                title: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            }[];
+                            activeHabits: {
+                                /** @example fitness */
+                                category: string;
+                                /** @example false */
+                                completed: boolean;
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example 30 minutes of cardio every morning */
+                                description: string;
+                                /** @example habit-123 */
+                                id: string;
+                                /** @example Morning Exercise */
+                                name: string;
+                                recentHistory?: boolean[];
+                                /** @example 7 */
+                                streak: number;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            }[];
+                            latestWeeklyReview?: {
+                                aiSummary?: string;
+                                bestDay?: string;
+                                completedCheckIns: number;
+                                completionRate: number;
+                                energySummary: {
+                                    [key: string]: number;
+                                };
+                                generatedAt: string;
+                                habitBreakdown: {
+                                    category?: string;
+                                    completedCount: number;
+                                    completionRate: number;
+                                    habitId: string;
+                                    habitName: string;
+                                    lastCheckInAt?: string;
+                                    missedCount: number;
+                                    totalCheckIns: number;
+                                }[];
+                                hardestDay?: string;
+                                id: string;
+                                missedCheckIns: number;
+                                moodSummary: {
+                                    [key: string]: number;
+                                };
+                                nextWeekPlan: {
+                                    commitments: string[];
+                                    focus: string;
+                                    recoveryActions: string[];
+                                    risks: string[];
+                                };
+                                suggestedAdjustments: {
+                                    adjustmentType: string;
+                                    habitId?: string;
+                                    habitName: string;
+                                    reason: string;
+                                    suggestion: string;
+                                }[];
+                                topBlocker?: string;
+                                totalHabits: number;
+                                userId: string;
+                                weekEnd: string;
+                                weekStart: string;
+                            };
+                            patternInsights?: {
+                                [key: string]: string;
+                            };
+                            pendingSuggestions: {
+                                /** @example reduce_frequency */
+                                adjustmentType: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                createdAt: string;
+                                /** @example goal-123 */
+                                goalId?: string;
+                                /** @example habit-123 */
+                                habitId?: string;
+                                /** @example suggestion-123 */
+                                id: string;
+                                metadata?: {
+                                    [key: string]: string;
+                                };
+                                /** @example Based on your recent completion patterns */
+                                reason?: string;
+                                /** @example weekly_review */
+                                source: string;
+                                /** @example pending */
+                                status: string;
+                                /** @example Consider reducing from daily to 3x per week */
+                                suggestion: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            }[];
+                            profile: {
+                                /** @example balanced */
+                                accountabilityStyle: string;
+                                coachingNotes?: {
+                                    [key: string]: string;
+                                };
+                                /** @example ["lack_of_time" */
+                                commonBlockers?: string[];
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example adaptive */
+                                difficultyPreference: string;
+                                /** @example profile-123 */
+                                id: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                lastContextRefreshAt?: string;
+                                /** @example supportive */
+                                preferredTone: string;
+                                /** @example personal_growth */
+                                primaryMotivation?: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            };
+                            recentCheckIns: {
+                                /** @example lack_of_time */
+                                blocker?: string;
+                                /** @example 2024-01-15T08:00:00Z */
+                                createdAt: string;
+                                /** @example high */
+                                energy?: string;
+                                /** @example habit-123 */
+                                habitId: string;
+                                /** @example checkin-123 */
+                                id: string;
+                                /** @example great */
+                                mood?: string;
+                                /** @example Felt motivated today */
+                                note?: string;
+                                /** @example completed */
+                                status: string;
+                                /** @example user-123 */
+                                userId: string;
+                            }[];
+                        };
+                    };
                 };
-                nextWeekPlan: {
-                  commitments: string[];
-                  focus: string;
-                  recoveryActions: string[];
-                  risks: string[];
+            };
+        };
+    };
+    personalizationGenerateOnboardingHabits: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example balanced */
+                    accountabilityStyle?: string;
+                    /** @example Lack of time in the morning */
+                    blocker?: string;
+                    /** @example 30 */
+                    dailyMinutes: number;
+                    /** @example fitness */
+                    goalCategory?: string;
+                    /** @example Run a 5k */
+                    goalTitle: string;
+                    /** @example Improve my health and energy */
+                    motivation?: string;
                 };
-                suggestedAdjustments: {
-                  adjustmentType: string;
-                  habitId?: string;
-                  habitName: string;
-                  reason: string;
-                  suggestion: string;
-                }[];
-                topBlocker?: string;
-                totalHabits: number;
-                userId: string;
-                weekEnd: string;
-                weekStart: string;
-              };
-              patternInsights?: {
-                [key: string]: string;
-              };
-              pendingSuggestions: {
-                /** @example reduce_frequency */
-                adjustmentType: string;
-                /** @example 2024-01-15T00:00:00Z */
-                createdAt: string;
-                /** @example goal-123 */
-                goalId?: string;
-                /** @example habit-123 */
-                habitId?: string;
-                /** @example suggestion-123 */
-                id: string;
-                metadata?: {
-                  [key: string]: string;
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
                 };
-                /** @example Based on your recent completion patterns */
-                reason?: string;
-                /** @example weekly_review */
-                source: string;
-                /** @example pending */
-                status: string;
-                /** @example Consider reducing from daily to 3x per week */
-                suggestion: string;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              }[];
-              profile: {
-                /** @example balanced */
-                accountabilityStyle: string;
-                coachingNotes?: {
-                  [key: string]: string;
+                content: {
+                    "application/json": {
+                        data?: {
+                            description: string;
+                            name: string;
+                        }[];
+                    };
                 };
-                /** @example ["lack_of_time" */
-                commonBlockers?: string[];
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example adaptive */
-                difficultyPreference: string;
-                /** @example profile-123 */
-                id: string;
-                /** @example 2024-01-15T00:00:00Z */
-                lastContextRefreshAt?: string;
-                /** @example supportive */
-                preferredTone: string;
-                /** @example personal_growth */
-                primaryMotivation?: string;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              };
-              recentCheckIns: {
-                /** @example lack_of_time */
-                blocker?: string;
-                /** @example 2024-01-15T08:00:00Z */
-                createdAt: string;
-                /** @example high */
-                energy?: string;
-                /** @example habit-123 */
-                habitId: string;
-                /** @example checkin-123 */
-                id: string;
-                /** @example great */
-                mood?: string;
-                /** @example Felt motivated today */
-                note?: string;
-                /** @example completed */
-                status: string;
-                /** @example user-123 */
-                userId: string;
-              }[];
             };
-          };
         };
-      };
     };
-  };
-  personalizationGenerateOnboardingHabits: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example balanced */
-          accountabilityStyle?: string;
-          /** @example Lack of time in the morning */
-          blocker?: string;
-          /** @example 30 */
-          dailyMinutes: number;
-          /** @example fitness */
-          goalCategory?: string;
-          /** @example Run a 5k */
-          goalTitle: string;
-          /** @example Improve my health and energy */
-          motivation?: string;
+    personalizationListPendingPlanAdjustmentSuggestions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              description: string;
-              name: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  personalizationListPendingPlanAdjustmentSuggestions: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example reduce_frequency */
-              adjustmentType: string;
-              /** @example 2024-01-15T00:00:00Z */
-              createdAt: string;
-              /** @example goal-123 */
-              goalId?: string;
-              /** @example habit-123 */
-              habitId?: string;
-              /** @example suggestion-123 */
-              id: string;
-              metadata?: {
-                [key: string]: string;
-              };
-              /** @example Based on your recent completion patterns */
-              reason?: string;
-              /** @example weekly_review */
-              source: string;
-              /** @example pending */
-              status: string;
-              /** @example Consider reducing from daily to 3x per week */
-              suggestion: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  personalizationCreatePlanAdjustmentSuggestion: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example reduce_frequency */
-          adjustmentType: string;
-          /** @example goal-123 */
-          goalId?: string;
-          /** @example habit-123 */
-          habitId?: string;
-          metadata?: {
-            [key: string]: string;
-          };
-          /** @example Based on your recent completion patterns */
-          reason?: string;
-          /** @example weekly_review */
-          source: string;
-          /** @example Consider reducing from daily to 3x per week */
-          suggestion: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example reduce_frequency */
-              adjustmentType: string;
-              /** @example 2024-01-15T00:00:00Z */
-              createdAt: string;
-              /** @example goal-123 */
-              goalId?: string;
-              /** @example habit-123 */
-              habitId?: string;
-              /** @example suggestion-123 */
-              id: string;
-              metadata?: {
-                [key: string]: string;
-              };
-              /** @example Based on your recent completion patterns */
-              reason?: string;
-              /** @example weekly_review */
-              source: string;
-              /** @example pending */
-              status: string;
-              /** @example Consider reducing from daily to 3x per week */
-              suggestion: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  personalizationApplyPlanAdjustmentSuggestion: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example reduce_frequency */
-              adjustmentType: string;
-              /** @example 2024-01-15T00:00:00Z */
-              createdAt: string;
-              /** @example goal-123 */
-              goalId?: string;
-              /** @example habit-123 */
-              habitId?: string;
-              /** @example suggestion-123 */
-              id: string;
-              metadata?: {
-                [key: string]: string;
-              };
-              /** @example Based on your recent completion patterns */
-              reason?: string;
-              /** @example weekly_review */
-              source: string;
-              /** @example pending */
-              status: string;
-              /** @example Consider reducing from daily to 3x per week */
-              suggestion: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  personalizationUpdatePlanAdjustmentSuggestionStatus: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          /** @example accepted */
-          status: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example reduce_frequency */
-              adjustmentType: string;
-              /** @example 2024-01-15T00:00:00Z */
-              createdAt: string;
-              /** @example goal-123 */
-              goalId?: string;
-              /** @example habit-123 */
-              habitId?: string;
-              /** @example suggestion-123 */
-              id: string;
-              metadata?: {
-                [key: string]: string;
-              };
-              /** @example Based on your recent completion patterns */
-              reason?: string;
-              /** @example weekly_review */
-              source: string;
-              /** @example pending */
-              status: string;
-              /** @example Consider reducing from daily to 3x per week */
-              suggestion: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  profileUpdateProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          avatarUrl?: string;
-          bio?: string;
-          fullName?: string;
-          interests?: string[];
-          location?: string;
-          website?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  profileDeleteAccount: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  profileGetProfile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example https://example.com/avatar.jpg */
-              avatarUrl?: string;
-              /** @example Passionate about personal growth */
-              bio?: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example john@example.com */
-              email: string;
-              /** @example true */
-              emailVerified: boolean;
-              /** @example John Doe */
-              fullName: string;
-              /** @example user-123 */
-              id: string;
-              /** @example ["fitness" */
-              interests?: string[];
-              /** @example San Francisco */
-              location?: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example johndoe */
-              username: string;
-              /** @example https://johndoe.com */
-              website?: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  reportSubmitReport: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          description: string;
-          email?: string;
-          title: string;
-          /** @description "bug", "feedback", "abuse" */
-          type: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  savedListSaved: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              createdAt: string;
-              id: string;
-              itemId: string;
-              /** @description "article", "goal", "habit" */
-              itemType: string;
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
-            };
-          };
-        };
-      };
-    };
-  };
-  savedSaveItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          itemId: string;
-          itemType: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              createdAt: string;
-              id: string;
-              itemId: string;
-              /** @description "article", "goal", "habit" */
-              itemType: string;
-              userId: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  savedListSavedDetailed: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              article: {
-                /** @example John Smith */
-                author: string;
-                category: {
-                  /** @example cat-123 */
-                  id: string;
-                  /** @example Personal Development */
-                  name: string;
-                  /** @example personal-development */
-                  slug: string;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
                 };
-                /** @example Full article content here... */
-                content: string;
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example Discover the top habits that can transform your life... */
-                excerpt: string;
-                /** @example article-123 */
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example reduce_frequency */
+                            adjustmentType: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            createdAt: string;
+                            /** @example goal-123 */
+                            goalId?: string;
+                            /** @example habit-123 */
+                            habitId?: string;
+                            /** @example suggestion-123 */
+                            id: string;
+                            metadata?: {
+                                [key: string]: string;
+                            };
+                            /** @example Based on your recent completion patterns */
+                            reason?: string;
+                            /** @example weekly_review */
+                            source: string;
+                            /** @example pending */
+                            status: string;
+                            /** @example Consider reducing from daily to 3x per week */
+                            suggestion: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    personalizationCreatePlanAdjustmentSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example reduce_frequency */
+                    adjustmentType: string;
+                    /** @example goal-123 */
+                    goalId?: string;
+                    /** @example habit-123 */
+                    habitId?: string;
+                    metadata?: {
+                        [key: string]: string;
+                    };
+                    /** @example Based on your recent completion patterns */
+                    reason?: string;
+                    /** @example weekly_review */
+                    source: string;
+                    /** @example Consider reducing from daily to 3x per week */
+                    suggestion: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example reduce_frequency */
+                            adjustmentType: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            createdAt: string;
+                            /** @example goal-123 */
+                            goalId?: string;
+                            /** @example habit-123 */
+                            habitId?: string;
+                            /** @example suggestion-123 */
+                            id: string;
+                            metadata?: {
+                                [key: string]: string;
+                            };
+                            /** @example Based on your recent completion patterns */
+                            reason?: string;
+                            /** @example weekly_review */
+                            source: string;
+                            /** @example pending */
+                            status: string;
+                            /** @example Consider reducing from daily to 3x per week */
+                            suggestion: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationApplyPlanAdjustmentSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example reduce_frequency */
+                            adjustmentType: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            createdAt: string;
+                            /** @example goal-123 */
+                            goalId?: string;
+                            /** @example habit-123 */
+                            habitId?: string;
+                            /** @example suggestion-123 */
+                            id: string;
+                            metadata?: {
+                                [key: string]: string;
+                            };
+                            /** @example Based on your recent completion patterns */
+                            reason?: string;
+                            /** @example weekly_review */
+                            source: string;
+                            /** @example pending */
+                            status: string;
+                            /** @example Consider reducing from daily to 3x per week */
+                            suggestion: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationUpdatePlanAdjustmentSuggestionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example https://example.com/article.jpg */
-                imageUrl: string;
-                isLiked: boolean;
-                isSaved: boolean;
-                likeCount: number;
-                /** @example 2024-01-01T00:00:00Z */
-                publishedAt: string;
-                /** @example 5 */
-                readTime: number;
-                tags?: string[];
-                /** @example 10 Habits for Personal Growth */
-                title: string;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-              };
-              createdAt: string;
-              goal: {
-                /** @example fitness */
-                category: string;
-                /** @example false */
-                completed: boolean;
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example Complete a 42.195km marathon race */
-                description: string;
-                /** @example 2024-12-31T00:00:00Z */
-                dueDate?: string;
-                /** @example goal-123 */
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example accepted */
+                    status: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example reduce_frequency */
+                            adjustmentType: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            createdAt: string;
+                            /** @example goal-123 */
+                            goalId?: string;
+                            /** @example habit-123 */
+                            habitId?: string;
+                            /** @example suggestion-123 */
+                            id: string;
+                            metadata?: {
+                                [key: string]: string;
+                            };
+                            /** @example Based on your recent completion patterns */
+                            reason?: string;
+                            /** @example weekly_review */
+                            source: string;
+                            /** @example pending */
+                            status: string;
+                            /** @example Consider reducing from daily to 3x per week */
+                            suggestion: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    profileUpdateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    avatarUrl?: string;
+                    bio?: string;
+                    fullName?: string;
+                    interests?: string[];
+                    location?: string;
+                    website?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    profileDeleteAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    profileGetProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example https://example.com/avatar.jpg */
+                            avatarUrl?: string;
+                            /** @example Passionate about personal growth */
+                            bio?: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example john@example.com */
+                            email: string;
+                            /** @example true */
+                            emailVerified: boolean;
+                            /** @example John Doe */
+                            fullName: string;
+                            /** @example user-123 */
+                            id: string;
+                            /** @example ["fitness" */
+                            interests?: string[];
+                            /** @example San Francisco */
+                            location?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example johndoe */
+                            username: string;
+                            /** @example https://johndoe.com */
+                            website?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    reportSubmitReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    description: string;
+                    email?: string;
+                    title: string;
+                    /** @description "bug", "feedback", "abuse" */
+                    type: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    savedListSaved: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            createdAt: string;
+                            id: string;
+                            itemId: string;
+                            /** @description "article", "goal", "habit" */
+                            itemType: string;
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    savedSaveItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    itemId: string;
+                    itemType: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            createdAt: string;
+                            id: string;
+                            itemId: string;
+                            /** @description "article", "goal", "habit" */
+                            itemType: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    savedListSavedDetailed: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            article: {
+                                /** @example John Smith */
+                                author: string;
+                                category: {
+                                    /** @example cat-123 */
+                                    id: string;
+                                    /** @example Personal Development */
+                                    name: string;
+                                    /** @example personal-development */
+                                    slug: string;
+                                };
+                                /** @example Full article content here... */
+                                content: string;
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example Discover the top habits that can transform your life... */
+                                excerpt: string;
+                                /** @example article-123 */
+                                id: string;
+                                /** @example https://example.com/article.jpg */
+                                imageUrl: string;
+                                isLiked: boolean;
+                                isSaved: boolean;
+                                likeCount: number;
+                                /** @example 2024-01-01T00:00:00Z */
+                                publishedAt: string;
+                                /** @example 5 */
+                                readTime: number;
+                                tags?: string[];
+                                /** @example 10 Habits for Personal Growth */
+                                title: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                            };
+                            createdAt: string;
+                            goal: {
+                                /** @example fitness */
+                                category: string;
+                                /** @example false */
+                                completed: boolean;
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example Complete a 42.195km marathon race */
+                                description: string;
+                                /** @example 2024-12-31T00:00:00Z */
+                                dueDate?: string;
+                                /** @example goal-123 */
+                                id: string;
+                                /** @example 50 */
+                                progress: number;
+                                /** @example ["habit-1" */
+                                relatedHabitIds?: string[];
+                                /** @example Run a marathon */
+                                title: string;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            };
+                            habit: {
+                                /** @example fitness */
+                                category: string;
+                                /** @example false */
+                                completed: boolean;
+                                /** @example 2024-01-01T00:00:00Z */
+                                createdAt: string;
+                                /** @example 30 minutes of cardio every morning */
+                                description: string;
+                                /** @example habit-123 */
+                                id: string;
+                                /** @example Morning Exercise */
+                                name: string;
+                                recentHistory?: boolean[];
+                                /** @example 7 */
+                                streak: number;
+                                /** @example 2024-01-15T00:00:00Z */
+                                updatedAt: string;
+                                /** @example user-123 */
+                                userId: string;
+                            };
+                            id: string;
+                            itemId: string;
+                            /** @description "article", "goal", "habit" */
+                            itemType: string;
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    savedRemoveSaved: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
                 id: string;
-                /** @example 50 */
-                progress: number;
-                /** @example ["habit-1" */
-                relatedHabitIds?: string[];
-                /** @example Run a marathon */
-                title: string;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              };
-              habit: {
-                /** @example fitness */
-                category: string;
-                /** @example false */
-                completed: boolean;
-                /** @example 2024-01-01T00:00:00Z */
-                createdAt: string;
-                /** @example 30 minutes of cardio every morning */
-                description: string;
-                /** @example habit-123 */
-                id: string;
-                /** @example Morning Exercise */
-                name: string;
-                recentHistory?: boolean[];
-                /** @example 7 */
-                streak: number;
-                /** @example 2024-01-15T00:00:00Z */
-                updatedAt: string;
-                /** @example user-123 */
-                userId: string;
-              };
-              id: string;
-              itemId: string;
-              /** @description "article", "goal", "habit" */
-              itemType: string;
-              userId: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
             };
-          };
+            cookie?: never;
         };
-      };
-    };
-  };
-  savedRemoveSaved: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': Record<string, never>;
-        };
-      };
-    };
-  };
-  searchSearch: {
-    parameters: {
-      query: {
-        q: string;
-        /** @description "article", "goal", "habit" */
-        type?: string;
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              description: string;
-              highlight?: string;
-              id: string;
-              score: number;
-              title: string;
-              /** @description "article", "goal", "habit" */
-              type: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
             };
-          };
         };
-      };
     };
-  };
-  settingsGetSettings: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example balanced */
-              accountabilityStyle: string;
-              /** @example 09:00 */
-              checkInTime: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example true */
-              emailNotifications: boolean;
-              /** @example true */
-              goalReminders: boolean;
-              /** @example true */
-              habitReminders: boolean;
-              /** @example settings-123 */
-              id: string;
-              /** @example en */
-              language: string;
-              /** @example false */
-              onboardingCompleted: boolean;
-              /** @example true */
-              pushNotifications: boolean;
-              /** @example dark */
-              theme: string;
-              /** @example UTC */
-              timezone: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
+    searchSearch: {
+        parameters: {
+            query: {
+                q: string;
+                /** @description "article", "goal", "habit" */
+                type?: string;
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
             };
-          };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
-    };
-  };
-  settingsUpdateSettings: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': {
-          accountabilityStyle?: string;
-          checkInTime?: string;
-          emailNotifications?: boolean;
-          goalReminders?: boolean;
-          habitReminders?: boolean;
-          language?: string;
-          onboardingCompleted?: boolean;
-          pushNotifications?: boolean;
-          theme?: string;
-          timezone?: string;
-        };
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example balanced */
-              accountabilityStyle: string;
-              /** @example 09:00 */
-              checkInTime: string;
-              /** @example 2024-01-01T00:00:00Z */
-              createdAt: string;
-              /** @example true */
-              emailNotifications: boolean;
-              /** @example true */
-              goalReminders: boolean;
-              /** @example true */
-              habitReminders: boolean;
-              /** @example settings-123 */
-              id: string;
-              /** @example en */
-              language: string;
-              /** @example false */
-              onboardingCompleted: boolean;
-              /** @example true */
-              pushNotifications: boolean;
-              /** @example dark */
-              theme: string;
-              /** @example UTC */
-              timezone: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example user-123 */
-              userId: string;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            description: string;
+                            highlight?: string;
+                            id: string;
+                            score: number;
+                            title: string;
+                            /** @description "article", "goal", "habit" */
+                            type: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
     };
-  };
-  sitesettingsListSiteSettings: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    settingsGetSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': {
-            data?: {
-              /** @example explore.header */
-              key: string;
-              /** @example 2024-01-15T00:00:00Z */
-              updatedAt: string;
-              /** @example {"title":"Explore"} */
-              value: string;
-            }[];
-          };
-        };
-      };
-    };
-  };
-  weeklyreviewListWeeklyReviews: {
-    parameters: {
-      query: {
-        /** @example 1 */
-        page: number;
-        /** @example 20 */
-        limit: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              aiSummary?: string;
-              bestDay?: string;
-              completedCheckIns: number;
-              completionRate: number;
-              energySummary: {
-                [key: string]: number;
-              };
-              generatedAt: string;
-              habitBreakdown: {
-                category?: string;
-                completedCount: number;
-                completionRate: number;
-                habitId: string;
-                habitName: string;
-                lastCheckInAt?: string;
-                missedCount: number;
-                totalCheckIns: number;
-              }[];
-              hardestDay?: string;
-              id: string;
-              missedCheckIns: number;
-              moodSummary: {
-                [key: string]: number;
-              };
-              nextWeekPlan: {
-                commitments: string[];
-                focus: string;
-                recoveryActions: string[];
-                risks: string[];
-              };
-              suggestedAdjustments: {
-                adjustmentType: string;
-                habitId?: string;
-                habitName: string;
-                reason: string;
-                suggestion: string;
-              }[];
-              topBlocker?: string;
-              totalHabits: number;
-              userId: string;
-              weekEnd: string;
-              weekStart: string;
-            }[];
-            page?: {
-              /** @example 20 */
-              limit: number;
-              /** @example 1 */
-              page: number;
-              /** @example 100 */
-              total: number;
-              /** @example 5 */
-              totalPages: number;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example balanced */
+                            accountabilityStyle: string;
+                            /** @example 09:00 */
+                            checkInTime: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example true */
+                            emailNotifications: boolean;
+                            /** @example true */
+                            goalReminders: boolean;
+                            /** @example true */
+                            habitReminders: boolean;
+                            /** @example settings-123 */
+                            id: string;
+                            /** @example en */
+                            language: string;
+                            /** @example false */
+                            onboardingCompleted: boolean;
+                            /** @example true */
+                            pushNotifications: boolean;
+                            /** @example dark */
+                            theme: string;
+                            /** @example UTC */
+                            timezone: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
     };
-  };
-  weeklyreviewGetCurrentWeeklyReview: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    settingsUpdateSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': {
-            data?: {
-              aiSummary?: string;
-              bestDay?: string;
-              completedCheckIns: number;
-              completionRate: number;
-              energySummary: {
-                [key: string]: number;
-              };
-              generatedAt: string;
-              habitBreakdown: {
-                category?: string;
-                completedCount: number;
-                completionRate: number;
-                habitId: string;
-                habitName: string;
-                lastCheckInAt?: string;
-                missedCount: number;
-                totalCheckIns: number;
-              }[];
-              hardestDay?: string;
-              id: string;
-              missedCheckIns: number;
-              moodSummary: {
-                [key: string]: number;
-              };
-              nextWeekPlan: {
-                commitments: string[];
-                focus: string;
-                recoveryActions: string[];
-                risks: string[];
-              };
-              suggestedAdjustments: {
-                adjustmentType: string;
-                habitId?: string;
-                habitName: string;
-                reason: string;
-                suggestion: string;
-              }[];
-              topBlocker?: string;
-              totalHabits: number;
-              userId: string;
-              weekEnd: string;
-              weekStart: string;
+        requestBody: {
+            content: {
+                "application/json": {
+                    accountabilityStyle?: string;
+                    checkInTime?: string;
+                    emailNotifications?: boolean;
+                    goalReminders?: boolean;
+                    habitReminders?: boolean;
+                    language?: string;
+                    onboardingCompleted?: boolean;
+                    pushNotifications?: boolean;
+                    theme?: string;
+                    timezone?: string;
+                };
             };
-          };
         };
-      };
-    };
-  };
-  weeklyreviewGenerateWeeklyReview: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['weeklyreviewGenerateWeeklyReviewBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              aiSummary?: string;
-              bestDay?: string;
-              completedCheckIns: number;
-              completionRate: number;
-              energySummary: {
-                [key: string]: number;
-              };
-              generatedAt: string;
-              habitBreakdown: {
-                category?: string;
-                completedCount: number;
-                completionRate: number;
-                habitId: string;
-                habitName: string;
-                lastCheckInAt?: string;
-                missedCount: number;
-                totalCheckIns: number;
-              }[];
-              hardestDay?: string;
-              id: string;
-              missedCheckIns: number;
-              moodSummary: {
-                [key: string]: number;
-              };
-              nextWeekPlan: {
-                commitments: string[];
-                focus: string;
-                recoveryActions: string[];
-                risks: string[];
-              };
-              suggestedAdjustments: {
-                adjustmentType: string;
-                habitId?: string;
-                habitName: string;
-                reason: string;
-                suggestion: string;
-              }[];
-              topBlocker?: string;
-              totalHabits: number;
-              userId: string;
-              weekEnd: string;
-              weekStart: string;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example balanced */
+                            accountabilityStyle: string;
+                            /** @example 09:00 */
+                            checkInTime: string;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            /** @example true */
+                            emailNotifications: boolean;
+                            /** @example true */
+                            goalReminders: boolean;
+                            /** @example true */
+                            habitReminders: boolean;
+                            /** @example settings-123 */
+                            id: string;
+                            /** @example en */
+                            language: string;
+                            /** @example false */
+                            onboardingCompleted: boolean;
+                            /** @example true */
+                            pushNotifications: boolean;
+                            /** @example dark */
+                            theme: string;
+                            /** @example UTC */
+                            timezone: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
             };
-          };
         };
-      };
     };
-  };
-  weeklyreviewStreamWeeklyReview: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: components['requestBodies']['weeklyreviewGenerateWeeklyReviewBody'];
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
+    sitesettingsListSiteSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': {
-            data?: {
-              aiSummary?: string;
-              bestDay?: string;
-              completedCheckIns: number;
-              completionRate: number;
-              energySummary: {
-                [key: string]: number;
-              };
-              generatedAt: string;
-              habitBreakdown: {
-                category?: string;
-                completedCount: number;
-                completionRate: number;
-                habitId: string;
-                habitName: string;
-                lastCheckInAt?: string;
-                missedCount: number;
-                totalCheckIns: number;
-              }[];
-              hardestDay?: string;
-              id: string;
-              missedCheckIns: number;
-              moodSummary: {
-                [key: string]: number;
-              };
-              nextWeekPlan: {
-                commitments: string[];
-                focus: string;
-                recoveryActions: string[];
-                risks: string[];
-              };
-              suggestedAdjustments: {
-                adjustmentType: string;
-                habitId?: string;
-                habitName: string;
-                reason: string;
-                suggestion: string;
-              }[];
-              topBlocker?: string;
-              totalHabits: number;
-              userId: string;
-              weekEnd: string;
-              weekStart: string;
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example explore.header */
+                            key: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example {"title":"Explore"} */
+                            value: string;
+                        }[];
+                    };
+                };
             };
-          };
         };
-      };
     };
-  };
-  weeklyreviewGetWeeklyReview: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': {
-            data?: {
-              aiSummary?: string;
-              bestDay?: string;
-              completedCheckIns: number;
-              completionRate: number;
-              energySummary: {
-                [key: string]: number;
-              };
-              generatedAt: string;
-              habitBreakdown: {
-                category?: string;
-                completedCount: number;
-                completionRate: number;
-                habitId: string;
-                habitName: string;
-                lastCheckInAt?: string;
-                missedCount: number;
-                totalCheckIns: number;
-              }[];
-              hardestDay?: string;
-              id: string;
-              missedCheckIns: number;
-              moodSummary: {
-                [key: string]: number;
-              };
-              nextWeekPlan: {
-                commitments: string[];
-                focus: string;
-                recoveryActions: string[];
-                risks: string[];
-              };
-              suggestedAdjustments: {
-                adjustmentType: string;
-                habitId?: string;
-                habitName: string;
-                reason: string;
-                suggestion: string;
-              }[];
-              topBlocker?: string;
-              totalHabits: number;
-              userId: string;
-              weekEnd: string;
-              weekStart: string;
+    weeklyreviewListWeeklyReviews: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
             };
-          };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
     };
-  };
-  uploadFile: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    weeklyreviewGetCurrentWeeklyReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        };
+                    };
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        'multipart/form-data': {
-          /**
-           * Format: binary
-           * @description The file to upload (binary content).
-           */
-          file: string;
-          /**
-           * @description Storage folder/key prefix. Defaults to "uploads" when omitted.
-           * @default uploads
-           * @example uploads
-           */
-          folder?: string;
+    weeklyreviewGenerateWeeklyReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        requestBody: components["requestBodies"]["weeklyreviewGenerateWeeklyReviewBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        };
+                    };
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Upload succeeded. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    weeklyreviewStreamWeeklyReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['UploadResponse'];
+        requestBody: components["requestBodies"]["weeklyreviewGenerateWeeklyReviewBody"];
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        };
+                    };
+                };
+            };
         };
-      };
-      /**
-       * @description Bad request — multipart parse failure, missing "file" field, or request
-       *     body exceeded the 10 MB limit.
-       */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Missing or invalid bearer token. */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Request entity too large (exceeded 10 MB). */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Object storage or upstream failure. */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
     };
-  };
-  transcribeAudio: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    weeklyreviewGetWeeklyReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        };
+                    };
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        'multipart/form-data': {
-          /**
-           * Format: binary
-           * @description Audio clip to transcribe. The format is inferred from the filename
-           *     extension (preferred) or the part Content-Type. Supported
-           *     extensions: wav, mp3, flac, m4a, ogg, webm, aac.
-           */
-          audio: string;
-          /**
-           * @description Optional BCP-47 language hint (e.g. "en-US").
-           * @example en-US
-           */
-          language?: string;
+    uploadFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-      };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description The file to upload (binary content).
+                     */
+                    file: string;
+                    /**
+                     * @description Storage folder/key prefix. Defaults to "uploads" when omitted.
+                     * @default uploads
+                     * @example uploads
+                     */
+                    folder?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Upload succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadResponse"];
+                };
+            };
+            /**
+             * @description Bad request — multipart parse failure, missing "file" field, or request
+             *     body exceeded the 10 MB limit.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Missing or invalid bearer token. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Request entity too large (exceeded 10 MB). */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Object storage or upstream failure. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Transcription succeeded. */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    transcribeAudio: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['TranscribeResponse'];
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Audio clip to transcribe. The format is inferred from the filename
+                     *     extension (preferred) or the part Content-Type. Supported
+                     *     extensions: wav, mp3, flac, m4a, ogg, webm, aac.
+                     */
+                    audio: string;
+                    /**
+                     * @description Optional BCP-47 language hint (e.g. "en-US").
+                     * @example en-US
+                     */
+                    language?: string;
+                };
+            };
         };
-      };
-      /**
-       * @description Bad request — multipart parse failure, missing "audio" field, empty
-       *     payload, unsupported/undeterminable audio format, or body exceeded 25 MB.
-       */
-      400: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description Transcription succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TranscribeResponse"];
+                };
+            };
+            /**
+             * @description Bad request — multipart parse failure, missing "audio" field, empty
+             *     payload, unsupported/undeterminable audio format, or body exceeded 25 MB.
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Missing or invalid bearer token. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Request entity too large (exceeded 25 MB). */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description STT provider or upstream failure. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
         };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Missing or invalid bearer token. */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Request entity too large (exceeded 25 MB). */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description STT provider or upstream failure. */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
     };
-  };
-  voiceTurn: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    voiceTurn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description One recorded voice utterance. Format inferred from filename
+                     *     extension (preferred) or Content-Type. Supported: wav, mp3, flac,
+                     *     m4a, ogg, webm, aac. Must be non-empty.
+                     */
+                    audio: string;
+                    /**
+                     * @description Optional BCP-47 language hint (e.g. "en-US").
+                     * @example en-US
+                     */
+                    language?: string;
+                    /**
+                     * Format: uuid
+                     * @description Optional existing conversation ID to append the turn to. When
+                     *     omitted, a new coach conversation is created and its ID is
+                     *     announced via a `conversation` SSE event.
+                     */
+                    conversationId?: string;
+                };
+            };
+        };
+        responses: {
+            /**
+             * @description SSE stream opened successfully. The response body is a sequence of
+             *     Server-Sent Events (see the operation description for ordering, terminal
+             *     events, and cancellation). The HTTP 200 + `text/event-stream` headers are
+             *     committed before processing begins, so subsequent failures appear as
+             *     `error` events rather than HTTP error statuses.
+             */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": Record<string, never>;
+                };
+            };
+            /**
+             * @description Bad request — multipart parse failure, missing "audio" field, empty audio
+             *     payload, unsupported/undeterminable audio format, or body exceeded 25 MB.
+             *     Returned as a regular JSON error (the SSE stream has not been committed
+             *     yet at this point).
+             */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Missing or invalid bearer token (returned before stream commit). */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Request entity too large (exceeded 25 MB). */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Upstream failure before the stream was committed. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        'multipart/form-data': {
-          /**
-           * Format: binary
-           * @description One recorded voice utterance. Format inferred from filename
-           *     extension (preferred) or Content-Type. Supported: wav, mp3, flac,
-           *     m4a, ogg, webm, aac. Must be non-empty.
-           */
-          audio: string;
-          /**
-           * @description Optional BCP-47 language hint (e.g. "en-US").
-           * @example en-US
-           */
-          language?: string;
-          /**
-           * Format: uuid
-           * @description Optional existing conversation ID to append the turn to. When
-           *     omitted, a new coach conversation is created and its ID is
-           *     announced via a `conversation` SSE event.
-           */
-          conversationId?: string;
-        };
-      };
-    };
-    responses: {
-      /**
-       * @description SSE stream opened successfully. The response body is a sequence of
-       *     Server-Sent Events (see the operation description for ordering, terminal
-       *     events, and cancellation). The HTTP 200 + `text/event-stream` headers are
-       *     committed before processing begins, so subsequent failures appear as
-       *     `error` events rather than HTTP error statuses.
-       */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'text/event-stream': Record<string, never>;
-        };
-      };
-      /**
-       * @description Bad request — multipart parse failure, missing "audio" field, empty audio
-       *     payload, unsupported/undeterminable audio format, or body exceeded 25 MB.
-       *     Returned as a regular JSON error (the SSE stream has not been committed
-       *     yet at this point).
-       */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Missing or invalid bearer token (returned before stream commit). */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Request entity too large (exceeded 25 MB). */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-      /** @description Upstream failure before the stream was committed. */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorResponse'];
-        };
-      };
-    };
-  };
 }

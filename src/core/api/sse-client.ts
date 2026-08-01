@@ -17,6 +17,8 @@
  * - Does not log stream content (the parser + callers must avoid logging
  *   conversation text, transcripts, coaching content, or audio).
  */
+import { fetch } from 'expo/fetch';
+
 import { tokenManager } from '../auth/token-manager';
 import { apiBaseUrl } from '../config/env';
 import { ApiError, fromFetchError, parseJsonApiError } from './errors';

@@ -1,6 +1,6 @@
+import { routeForOnboardingStatus, useSessionStore } from '@/core/auth/session';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
-import { useSessionStore } from '@/core/auth/session';
 
 /**
  * Public route group — sign in, register, check email, verify email,
@@ -17,12 +17,9 @@ export default function PublicLayout() {
     if (!isHydrated) return;
 
     if (isAuthenticated && user) {
-      // Redirect authenticated users away from public routes.
-      if (user.onboardingCompleted) {
-        router.replace('/(app)/(tabs)');
-      } else {
-        router.replace('/(onboarding)');
-      }
+      // Only an explicit incomplete status enters onboarding. An unavailable
+      // settings response should not restart an authenticated user's setup.
+      router.replace(routeForOnboardingStatus(user.onboardingCompleted));
     }
   }, [isAuthenticated, isHydrated, user, router, segments]);
 

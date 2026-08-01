@@ -9,10 +9,12 @@
  * Per AGENTS.md: one shared authenticated path (bearer token from the token
  * manager); no feature-local auth. Stream content is never logged.
  */
+import { fetch } from 'expo/fetch';
+
+import { personalizationEndpoints } from '@/core/api/endpoints';
+import { ApiError, fromFetchError, parseJsonApiError } from '@/core/api/errors';
 import { tokenManager } from '@/core/auth/token-manager';
 import { apiBaseUrl } from '@/core/config/env';
-import { ApiError, fromFetchError, parseJsonApiError } from '@/core/api/errors';
-import { personalizationEndpoints } from '@/core/api/endpoints';
 
 export interface VoiceTurnStreamOptions {
   fileUri: string;

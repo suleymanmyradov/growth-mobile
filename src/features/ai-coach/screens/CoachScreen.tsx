@@ -44,7 +44,9 @@ export function CoachScreen(): React.ReactNode {
   const { data: billing } = useBillingOverview();
   const startConversation = useStartConversation();
 
-  const conversations = conversationsData?.data ?? [];
+  const conversations = (conversationsData?.data ?? []).filter(
+    (conversation) => conversation.title.trim() || conversation.lastMessage.trim(),
+  );
 
   const handleStartText = async () => {
     const conv = await startConversation.mutateAsync({ type: 'coach' });

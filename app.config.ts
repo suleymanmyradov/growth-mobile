@@ -1,5 +1,7 @@
 import { ConfigContext, ExpoConfig } from 'expo/config';
 
+type ConfigPlugin = [string, Record<string, unknown>];
+
 /**
  * Growth mobile app configuration.
  *
@@ -72,6 +74,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-router',
     'expo-asset',
     [
+      'expo-audio',
+      {
+        microphonePermission: 'Allow $(PRODUCT_NAME) to access your microphone.',
+      },
+    ],
+    [
       'expo-splash-screen',
       {
         backgroundColor: '#208AEF',
@@ -87,6 +95,22 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         dsn: process.env.EXPO_PUBLIC_SENTRY_DSN || '',
       },
     ],
+    // Strip the aps-environment entitlement for local development builds so the
+    // app can be signed with a free Personal Apple Developer team (which cannot
+    // use the Push Notifications capability). EAS builds are unaffected because
+    // `EAS_BUILD_PROFILE` is set there. See plugins/stripPushForLocalDev.js.
+    ...((easProfile === 'development'
+      ? [
+          ['./plugins/stripPushForLocalDev', { enabled: true }],
+          // Tell the dev build where Metro is running so a physical device can
+          // reach it. Without this, RCTBundleURLProvider defaults to localhost.
+          // Set EXPO_PUBLIC_METRO_HOST in .env to your Mac's LAN IP.
+          [
+            './plugins/withDevBundleHost',
+            { host: process.env.EXPO_PUBLIC_METRO_HOST },
+          ],
+        ]
+      : []) as ConfigPlugin[]),
   ],
   experiments: {
     typedRoutes: true,

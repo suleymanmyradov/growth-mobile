@@ -21,12 +21,14 @@ export interface ConversationRowProps {
 export function ConversationRow({ conversation, onPress }: ConversationRowProps): ReactNode {
   const { colors, spacing } = useTheme();
   const { t } = useTranslation();
+  const title =
+    conversation.title.trim() || conversation.lastMessage.trim() || t('coach.untitledConversation');
 
   return (
     <Pressable
       onPress={() => onPress(conversation)}
       accessibilityRole="button"
-      accessibilityLabel={t('coach.openConversation', { title: conversation.title })}
+      accessibilityLabel={t('coach.openConversation', { title })}
       style={({ pressed }) => [
         styles.row,
         {
@@ -37,7 +39,7 @@ export function ConversationRow({ conversation, onPress }: ConversationRowProps)
     >
       <View style={{ gap: spacing.xs, flex: 1 }}>
         <ThemedText variant="cardTitle" numberOfLines={1}>
-          {conversation.title}
+          {title}
         </ThemedText>
         {conversation.lastMessage ? (
           <ThemedText variant="body" style={{ color: colors.mutedForeground }} numberOfLines={1}>

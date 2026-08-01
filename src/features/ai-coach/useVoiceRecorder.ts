@@ -107,6 +107,7 @@ export function useVoiceRecorder(): UseVoiceRecorderResult {
     try {
       await setAudioModeAsync({
         playsInSilentMode: true,
+        allowsRecording: true,
         shouldPlayInBackground: false,
         interruptionMode: 'duckOthers',
       });

@@ -441,7 +441,7 @@ export const NotificationSchema = z.object({
   id: z.string(),
   title: z.string(),
   message: z.string(),
-  itemType: z.string(),
+  type: z.string(),
   read: z.boolean(),
   userId: z.string(),
   createdAt: z.string(),
@@ -604,7 +604,7 @@ export type SaveItemRequest = z.infer<typeof SaveItemRequestSchema>;
 
 export const SearchResultSchema = z.object({
   id: z.string(),
-  itemType: z.string(),
+  type: z.string(),
   title: z.string(),
   description: z.string(),
   score: z.number(),

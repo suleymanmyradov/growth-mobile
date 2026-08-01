@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { apiRequest } from '@/core/api/client';
 import { settingsEndpoints } from '@/core/api/endpoints';
 import { SettingsResponseSchema } from '@/core/api/schemas';
-import { useSessionStore } from '@/core/auth/session';
+import { routeForOnboardingStatus, useSessionStore } from '@/core/auth/session';
 import { NoopAnalytics, type Analytics } from '@/core/telemetry/analytics';
 import { setSentryUser } from '@/core/telemetry/sentry';
 
@@ -64,16 +64,16 @@ export function authErrorKey(code: string): string | null {
 /**
  * Fetches onboarding status from settings. Uses core API primitives directly
  * (not the settings feature) to respect the AGENTS.md rule that features must
- * not import other features. Returns false on failure — the route guard will
- * send the user to onboarding, which is the safe default.
+ * not import other features. Returns null on failure so a valid authenticated
+ * session is not incorrectly restarted in onboarding when settings are unavailable.
  */
-async function fetchOnboardingCompleted(): Promise<boolean> {
+async function fetchOnboardingCompleted(): Promise<boolean | null> {
   try {
     const response = await apiRequest<unknown>({ method: 'GET', url: settingsEndpoints.get });
     const settings = SettingsResponseSchema.parse(response);
     return settings.data.onboardingCompleted;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -82,7 +82,7 @@ async function fetchOnboardingCompleted(): Promise<boolean> {
  */
 function setSessionFromProfile(
   user: { id: string; email: string; fullName: string; emailVerified?: boolean },
-  onboardingCompleted: boolean,
+  onboardingCompleted: boolean | null,
 ): void {
   useSessionStore.getState().setUser({
     id: user.id,
@@ -109,8 +109,8 @@ export function useLogin() {
     onSuccess: ({ authResponse, onboardingCompleted }) => {
       setSessionFromProfile(authResponse.user, onboardingCompleted);
       analytics.track('auth_login_succeeded');
-      // Navigate based on real onboarding status to avoid a flash.
-      router.replace(onboardingCompleted ? '/(app)/(tabs)' : '/(onboarding)');
+      // Navigate based on the explicit status; unknown stays in the app.
+      router.replace(routeForOnboardingStatus(onboardingCompleted));
     },
     onError: () => {
       analytics.track('auth_login_failed');
@@ -143,7 +143,7 @@ export function useVerifyEmail() {
     },
     onSuccess: ({ authResponse, onboardingCompleted }) => {
       setSessionFromProfile(authResponse.user, onboardingCompleted);
-      router.replace(onboardingCompleted ? '/(app)/(tabs)' : '/(onboarding)');
+      router.replace(routeForOnboardingStatus(onboardingCompleted));
     },
   });
 }

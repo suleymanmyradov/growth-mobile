@@ -38,7 +38,7 @@ export default function AppLayout() {
       return;
     }
 
-    if (user && !user.onboardingCompleted) {
+    if (user?.onboardingCompleted === false) {
       router.replace('/(onboarding)');
     }
   }, [isAuthenticated, isHydrated, user, router, segments]);

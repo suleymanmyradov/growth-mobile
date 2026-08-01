@@ -321,7 +321,7 @@ export function TodayScreen(): React.ReactNode {
               title={t('today.noHabitsTitle')}
               subtitle={t('today.noHabitsBody')}
               action={
-                <Button onPress={() => router.push('/(app)/(tabs)/plan')}>
+                <Button onPress={() => router.push('/(app)/(tabs)/plan?create=habit')}>
                   <Plus color={colors.accentForeground} size={16} /> {t('today.addFirstHabit')}
                 </Button>
               }

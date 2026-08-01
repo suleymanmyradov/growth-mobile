@@ -25,7 +25,7 @@ import type { SSEEvent } from '@/core/api/sse';
 
 // ─── Coaching stream (text) ───────────────────────────────────────────────────
 
-export type CoachingStreamPhase = 'thinking' | 'streaming' | 'complete' | 'error';
+export type CoachingStreamPhase = 'idle' | 'thinking' | 'streaming' | 'complete' | 'error';
 
 export interface CoachingStreamState {
   phase: CoachingStreamPhase;
@@ -42,7 +42,7 @@ export interface CoachingStreamState {
 }
 
 export const initialCoachingStreamState: CoachingStreamState = {
-  phase: 'thinking',
+  phase: 'idle',
   partialText: '',
   fullResponse: null,
   thinkingMessage: null,

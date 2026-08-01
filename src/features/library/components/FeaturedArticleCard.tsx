@@ -37,8 +37,8 @@ export function FeaturedArticleCard({
         {article.imageUrl ? (
           <Image
             source={{ uri: article.imageUrl }}
-            style={styles.image}
-            contentFit="cover"
+            style={[styles.image, { backgroundColor: colors.surface }]}
+            contentFit="contain"
             transition={200}
           />
         ) : null}

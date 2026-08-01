@@ -172,3 +172,11 @@ export function buildMarkdownStyle(
     },
   };
 }
+
+/** Removes a leading markdown title when the reader already renders the title header. */
+export function withoutDuplicateLeadingTitle(content: string, title: string): string {
+  const match = /^\s{0,3}#{1,6}\s+(.+?)(?:\s+#+)?\s*(?:\r?\n|$)/.exec(content);
+  if (!match || match[1]?.trim() !== title.trim()) return content;
+
+  return content.slice(match[0].length).replace(/^\s+/, '');
+}

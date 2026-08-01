@@ -15,6 +15,7 @@
  * hooks/components from `features/habits`, `features/goals`, `features/check-ins`,
  * and `features/categories`. Does not import feature internals.
  */
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CheckCircle2, Plus, Target } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,52 +25,60 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiError } from '@/core/api/errors';
 import type { Goal, Habit } from '@/core/api/schemas';
 import {
-  Button,
-  Card,
-  EmptyState,
-  ErrorState,
-  SectionLabel,
-  SegmentedTabs,
-  Sheet,
-  Skeleton,
-  ThemedText,
-  type Segment,
+    Button,
+    Card,
+    EmptyState,
+    ErrorState,
+    SectionLabel,
+    SegmentedTabs,
+    Sheet,
+    Skeleton,
+    ThemedText,
+    type Segment,
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useCreateCheckIn } from '@/features/check-ins';
 import {
-  GoalCard,
-  GoalForm,
-  useCreateGoal,
-  useDeleteGoal,
-  useGoals,
-  useToggleGoal,
-  useUpdateGoal,
-  type GoalFormValues,
+    GoalCard,
+    GoalForm,
+    useCreateGoal,
+    useDeleteGoal,
+    useGoals,
+    useToggleGoal,
+    useUpdateGoal,
+    type GoalFormValues,
 } from '@/features/goals';
 import {
-  HabitCard,
-  HabitForm,
-  useCreateHabit,
-  useDeleteHabit,
-  useHabits,
-  useUpdateHabit,
-  type HabitFormValues,
+    HabitCard,
+    HabitForm,
+    useCreateHabit,
+    useDeleteHabit,
+    useHabits,
+    useUpdateHabit,
+    type HabitFormValues,
 } from '@/features/habits';
 
 import { LinkGoalSheet } from '../components/LinkGoalSheet';
 import {
-  filterGoalsByLifecycle,
-  getHabitsForGoal,
-  getUntiedHabits,
-  type Filter,
+    filterGoalsByLifecycle,
+    getHabitsForGoal,
+    getUntiedHabits,
+    type Filter,
 } from '../grouping';
 
 type FormKind = 'habit' | 'goal';
 
 export function PlanScreen(): React.ReactNode {
   const { t } = useTranslation();
+  const router = useRouter();
   const { colors, spacing, radius } = useTheme();
+  const { create, name: tplName, description: tplDescription, category: tplCategory } =
+    useLocalSearchParams<{
+      create?: string;
+      name?: string;
+      description?: string;
+      category?: string;
+    }>();
 
   const {
     data: habits,
@@ -97,11 +106,26 @@ export function PlanScreen(): React.ReactNode {
 
   const [filter, setFilter] = useState<Filter>('all');
   const [fabOpen, setFabOpen] = useState(false);
-  const [formKind, setFormKind] = useState<FormKind | null>(null);
+  const [formKind, setFormKind] = useState<FormKind | null>(() =>
+    create === 'habit' ? 'habit' : create === 'goal' ? 'goal' : null,
+  );
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [linkHabit, setLinkHabit] = useState<Habit | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const activeFormKind: FormKind | null =
+    create === 'habit' ? 'habit' : create === 'goal' ? 'goal' : formKind;
+
+  // Template pre-fill values passed from the Library Templates segment.
+  const templateInitialValues = useMemo(() => {
+    if (!create) return undefined;
+    return {
+      name: tplName ?? undefined,
+      title: tplName ?? undefined,
+      description: tplDescription ?? undefined,
+      category: tplCategory ?? undefined,
+    };
+  }, [create, tplName, tplDescription, tplCategory]);
 
   // Map habit id → habit for nesting under goals.
   const habitById = useMemo(() => {
@@ -145,10 +169,10 @@ export function PlanScreen(): React.ReactNode {
     if (editingHabit) {
       updateHabit.mutate(
         { id: editingHabit.id, data: values },
-        { onSuccess: () => setFormKind(null) },
+        { onSuccess: () => closeForm() },
       );
     } else {
-      createHabit.mutate(values, { onSuccess: () => setFormKind(null) });
+      createHabit.mutate(values, { onSuccess: () => closeForm() });
     }
   };
 
@@ -156,10 +180,10 @@ export function PlanScreen(): React.ReactNode {
     if (editingGoal) {
       updateGoal.mutate(
         { id: editingGoal.id, data: values },
-        { onSuccess: () => setFormKind(null) },
+        { onSuccess: () => closeForm() },
       );
     } else {
-      createGoal.mutate(values, { onSuccess: () => setFormKind(null) });
+      createGoal.mutate(values, { onSuccess: () => closeForm() });
     }
   };
 
@@ -189,13 +213,14 @@ export function PlanScreen(): React.ReactNode {
     setFormKind(null);
     setEditingHabit(null);
     setEditingGoal(null);
+    if (create) router.replace('/(app)/(tabs)/plan');
   };
 
   const goalCount = goals?.length ?? 0;
   const habitCount = habits?.length ?? 0;
 
   // ─── Form overlay (full-screen) ────────────────────────────────────────────
-  if (formKind === 'habit') {
+  if (activeFormKind === 'habit') {
     return (
       <SafeAreaView
         style={[styles.container, { backgroundColor: colors.background }]}
@@ -220,7 +245,7 @@ export function PlanScreen(): React.ReactNode {
         </View>
         <ScrollView contentContainerStyle={{ padding: spacing.xl }}>
           <HabitForm
-            initialValues={editingHabit ?? undefined}
+            initialValues={editingHabit ?? templateInitialValues}
             onSubmit={handleHabitSubmit}
             onCancel={closeForm}
             submitting={createHabit.isPending || updateHabit.isPending}
@@ -230,7 +255,7 @@ export function PlanScreen(): React.ReactNode {
     );
   }
 
-  if (formKind === 'goal') {
+  if (activeFormKind === 'goal') {
     return (
       <SafeAreaView
         style={[styles.container, { backgroundColor: colors.background }]}
@@ -255,7 +280,7 @@ export function PlanScreen(): React.ReactNode {
         </View>
         <ScrollView contentContainerStyle={{ padding: spacing.xl }}>
           <GoalForm
-            initialValues={editingGoal ?? undefined}
+            initialValues={editingGoal ?? templateInitialValues}
             onSubmit={handleGoalSubmit}
             onCancel={closeForm}
             submitting={createGoal.isPending || updateGoal.isPending}

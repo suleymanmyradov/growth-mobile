@@ -27,13 +27,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiError } from '@/core/api/errors';
 import type { Article, SavedItemDetailed } from '@/core/api/schemas';
 import {
-  EmptyState,
-  ErrorState,
-  SectionLabel,
-  SegmentedTabs,
-  Skeleton,
-  ThemedText,
-  type Segment,
+    EmptyState,
+    ErrorState,
+    SectionLabel,
+    SegmentedTabs,
+    Skeleton,
+    ThemedText,
+    type Segment,
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useArticles, useFeaturedArticle } from '@/features/articles';
@@ -307,7 +307,17 @@ export function LibraryScreen(): React.ReactNode {
               name={item.kind === 'habit' ? item.name : item.title}
               description={item.description}
               categoryName={item.category?.name}
-              onPress={() => router.push('/(app)/(tabs)/plan')}
+              onPress={() =>
+                router.push({
+                  pathname: '/(app)/(tabs)/plan',
+                  params: {
+                    create: item.kind,
+                    name: item.kind === 'habit' ? item.name : item.title,
+                    description: item.description ?? '',
+                    category: item.category?.slug ?? '',
+                  },
+                })
+              }
             />
           </View>
         )}
@@ -356,15 +366,15 @@ export function LibraryScreen(): React.ReactNode {
     return (
       <FlashList
         data={searchResults}
-        keyExtractor={(item) => `${item.itemType}-${item.id}`}
+        keyExtractor={(item) => `${item.type}-${item.id}`}
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: spacing.xl }}>
             <SearchResultRow
               title={item.title}
               subtitle={item.description}
-              typeLabel={t(`library.savedType.${item.itemType}`)}
+              typeLabel={t(`library.savedType.${item.type}`)}
               onPress={() => {
-                if (item.itemType === 'article') openArticle(item.id);
+                if (item.type === 'article') openArticle(item.id);
                 else router.push('/(app)/(tabs)/plan');
               }}
             />

@@ -34,10 +34,10 @@ import { useTheme } from '@/design-system/theme';
 import { Composer } from '../components/Composer';
 import { MessageBubble } from '../components/MessageBubble';
 import {
-  useConversation,
-  useInvalidateConversation,
-  useMessages,
-  useStreamCoaching,
+    useConversation,
+    useInvalidateConversation,
+    useMessages,
+    useStreamCoaching,
 } from '../hooks';
 
 interface MessageListItem {
@@ -65,6 +65,7 @@ export function ConversationScreen(): React.ReactNode {
   const invalidateConversation = useInvalidateConversation();
 
   const [draft, setDraft] = useState('');
+  const lastSentMessage = useRef<string | null>(null);
   const listRef = useRef<FlashListRef<MessageListItem>>(null);
 
   // Build the render list: persisted messages + a streaming partial assistant
@@ -86,6 +87,15 @@ export function ConversationScreen(): React.ReactNode {
           id: '__streaming__',
           role: 'assistant',
           content: stream.state.partialText,
+          streaming: true,
+        });
+      } else if (stream.isStreaming) {
+        // During the thinking phase (before any deltas), show the thinking
+        // message so the user sees the coach is processing — not a blank screen.
+        base.push({
+          id: '__streaming__',
+          role: 'assistant',
+          content: stream.state.thinkingMessage ?? t('coach.thinking'),
           streaming: true,
         });
       }
@@ -113,97 +123,106 @@ export function ConversationScreen(): React.ReactNode {
   const handleSend = async () => {
     const text = draft.trim();
     if (!text || !conversationId || stream.isStreaming) return;
+    lastSentMessage.current = text;
     setDraft('');
     await stream.send({ userMessage: text, conversationId });
   };
 
   const handleStop = () => {
-    stream.stop();
-  };
-
-  const handleRetry = () => {
     stream.reset();
   };
 
+  const handleRetry = () => {
+    const text = lastSentMessage.current;
+    if (!text || !conversationId || stream.isStreaming) return;
+    void stream.send({ userMessage: text, conversationId });
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={0}
       >
-        {/* Header */}
-        <View
-          style={[
-            styles.header,
-            { paddingHorizontal: spacing.xl, borderBottomColor: colors.border },
-          ]}
-        >
-          <Pressable
-            onPress={() => router.back()}
-            accessibilityRole="button"
-            accessibilityLabel={t('common.back')}
-            hitSlop={8}
-            style={styles.backButton}
+        <View style={{ flex: 1 }}>
+          {/* Header */}
+          <View
+            style={[
+              styles.header,
+              { paddingHorizontal: spacing.xl, borderBottomColor: colors.border },
+            ]}
           >
-            <ArrowLeft color={colors.foreground} size={24} />
-          </Pressable>
-          <View style={{ flex: 1 }}>
-            <ThemedText variant="sectionTitle" numberOfLines={1}>
-              {convLoading
-                ? t('common.loading')
-                : (conversation?.title ?? t('screens.conversation.title'))}
-            </ThemedText>
+            <Pressable
+              onPress={() => router.back()}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.back')}
+              hitSlop={8}
+              style={styles.backButton}
+            >
+              <ArrowLeft color={colors.foreground} size={24} />
+            </Pressable>
+            <View style={{ flex: 1 }}>
+              <ThemedText variant="sectionTitle" numberOfLines={1}>
+                {convLoading
+                  ? t('common.loading')
+                  : (conversation?.title ?? t('screens.conversation.title'))}
+              </ThemedText>
+            </View>
           </View>
-        </View>
 
-        {/* Messages */}
-        {messagesError ? (
-          <ErrorState
-            message={
-              messagesErr instanceof ApiError ? messagesErr.message : t('common.errorGeneric')
-            }
-            onRetry={refetch}
-          />
-        ) : messagesLoading ? (
-          <View style={{ padding: spacing.xl, gap: spacing.sm }}>
-            {[0, 1, 2].map((i) => (
-              <Skeleton key={i} style={{ height: 48 }} radius={12} />
-            ))}
-          </View>
-        ) : (
-          <FlashList
-            ref={listRef}
-            data={items}
-            renderItem={({ item }) => (
-              <View style={{ paddingHorizontal: spacing.xl }}>
-                <MessageBubble role={item.role} content={item.content} streaming={item.streaming} />
-              </View>
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{ paddingVertical: spacing.md }}
-            ListEmptyComponent={
-              <View style={{ padding: spacing.xl, alignItems: 'center' }}>
-                <ThemedText
-                  variant="body"
-                  style={{ color: colors.mutedForeground, textAlign: 'center' }}
-                >
-                  {t('coach.emptyConversation')}
-                </ThemedText>
-              </View>
-            }
-          />
-        )}
-
-        {/* Streaming error + retry */}
-        {stream.state.phase === 'error' ? (
-          <View style={{ paddingHorizontal: spacing.xl, paddingVertical: spacing.sm }}>
+          {/* Messages */}
+          {messagesError ? (
             <ErrorState
-              message={stream.state.errorMessage ?? t('common.errorGeneric')}
-              onRetry={handleRetry}
+              message={
+                messagesErr instanceof ApiError ? messagesErr.message : t('common.errorGeneric')
+              }
+              onRetry={refetch}
             />
-          </View>
-        ) : null}
+          ) : messagesLoading ? (
+            <View style={{ padding: spacing.xl, gap: spacing.sm }}>
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} style={{ height: 48 }} radius={12} />
+              ))}
+            </View>
+          ) : (
+            <FlashList
+              ref={listRef}
+              data={items}
+              renderItem={({ item }) => (
+                <View style={{ paddingHorizontal: spacing.xl }}>
+                  <MessageBubble
+                    role={item.role}
+                    content={item.content}
+                    streaming={item.streaming}
+                  />
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={{ paddingVertical: spacing.md }}
+              ListEmptyComponent={
+                <View style={{ padding: spacing.xl, alignItems: 'center' }}>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground, textAlign: 'center' }}
+                  >
+                    {t('coach.emptyConversation')}
+                  </ThemedText>
+                </View>
+              }
+            />
+          )}
+
+          {/* Streaming error + retry */}
+          {stream.state.phase === 'error' ? (
+            <View style={{ paddingHorizontal: spacing.xl, paddingVertical: spacing.sm }}>
+              <ErrorState
+                message={stream.state.errorMessage ?? t('common.errorGeneric')}
+                onRetry={handleRetry}
+              />
+            </View>
+          ) : null}
+        </View>
 
         {/* Composer */}
         <Composer

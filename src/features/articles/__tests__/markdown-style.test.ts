@@ -9,7 +9,12 @@ import { describe, expect, it } from '@jest/globals';
 import type { TextStyle } from 'react-native';
 
 import type { Theme } from '@/design-system/theme';
-import { buildMarkdownStyle, READER_SIZE_MULTIPLIER, READER_SIZES } from '../markdown-style';
+import {
+  buildMarkdownStyle,
+  READER_SIZE_MULTIPLIER,
+  READER_SIZES,
+  withoutDuplicateLeadingTitle,
+} from '../markdown-style';
 
 const mockTheme: Theme = {
   colors: {
@@ -162,5 +167,16 @@ describe('buildMarkdownStyle', () => {
 
   it('READER_SIZES contains small, medium, large', () => {
     expect(READER_SIZES).toEqual(['small', 'medium', 'large']);
+  });
+
+  it('removes a duplicate leading markdown title', () => {
+    expect(withoutDuplicateLeadingTitle('# The Title\n\nBody copy.', 'The Title')).toBe(
+      'Body copy.',
+    );
+  });
+
+  it('keeps content when the leading heading differs', () => {
+    const content = '# Introduction\n\nBody copy.';
+    expect(withoutDuplicateLeadingTitle(content, 'The Title')).toBe(content);
   });
 });

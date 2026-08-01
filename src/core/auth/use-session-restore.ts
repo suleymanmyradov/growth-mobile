@@ -31,6 +31,8 @@ import { tokenManager } from './token-manager';
  * core session restore and the feature-owned API functions, so core never
  * imports features (per AGENTS.md dependency-direction rule).
  */
+const HYDRATION_FALLBACK_MS = 5_000;
+
 export interface SessionRestoreCallbacks {
   /** Validates the persisted session by fetching /profile/me. */
   fetchProfile: () => Promise<ProfileResponse>;
@@ -50,6 +52,7 @@ export function useSessionRestore(callbacks: SessionRestoreCallbacks): void {
     hasRestored.current = true;
 
     const { fetchProfile, fetchSettings } = callbacks;
+    const hydrationFallback = setTimeout(() => setHydrated(true), HYDRATION_FALLBACK_MS);
 
     (async () => {
       // 1. Configure the installation ID for X-Device-Id on login/register.
@@ -74,12 +77,13 @@ export function useSessionRestore(callbacks: SessionRestoreCallbacks): void {
         const profile = profileResponse.data;
 
         // 4. Fetch settings to determine onboarding status.
-        let onboardingCompleted = false;
+        let onboardingCompleted: boolean | null = null;
         try {
           const settingsResponse = await fetchSettings();
           onboardingCompleted = settingsResponse.data.onboardingCompleted;
         } catch {
-          // Settings fetch failure is non-fatal — default to incomplete onboarding.
+          // Settings failure is non-fatal; keep the status unknown rather than
+          // sending an authenticated user through onboarding unnecessarily.
         }
 
         setUser({
@@ -99,6 +103,8 @@ export function useSessionRestore(callbacks: SessionRestoreCallbacks): void {
         setHydrated(true);
       }
     })();
+
+    return () => clearTimeout(hydrationFallback);
   }, [setUser, setHydrated, clear, activeQueryClient, callbacks]);
 }
 

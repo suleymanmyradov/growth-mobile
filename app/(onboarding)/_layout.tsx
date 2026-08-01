@@ -1,6 +1,6 @@
+import { routeForOnboardingStatus, useSessionStore } from '@/core/auth/session';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
-import { useSessionStore } from '@/core/auth/session';
 
 /**
  * Onboarding route group — seven-step onboarding flow.
@@ -22,9 +22,9 @@ export default function OnboardingLayout() {
       return;
     }
 
-    // Redirect users who have completed onboarding to the app.
-    if (user?.onboardingCompleted) {
-      router.replace('/(app)/(tabs)');
+    // Unknown status is not enough to justify showing onboarding again.
+    if (user && user.onboardingCompleted !== false) {
+      router.replace(routeForOnboardingStatus(user.onboardingCompleted));
     }
   }, [isAuthenticated, isHydrated, user, router, segments]);
 
