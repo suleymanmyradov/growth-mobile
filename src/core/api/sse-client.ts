@@ -20,7 +20,7 @@
 import { fetch } from 'expo/fetch';
 
 import { tokenManager } from '../auth/token-manager';
-import { apiBaseUrl } from '../config/env';
+import { apiUrlFor } from '../config/env';
 import { ApiError, fromFetchError, parseJsonApiError } from './errors';
 
 export interface SSEStreamOptions {
@@ -52,7 +52,7 @@ export async function openSSEStream({
   signal,
   responseTimeoutMs = 30_000,
 }: SSEStreamOptions): Promise<ReadableStream<Uint8Array>> {
-  const url = `${apiBaseUrl()}${path}`;
+  const url = apiUrlFor(path);
   const token = tokenManager.getAccessToken();
 
   if (!token) {

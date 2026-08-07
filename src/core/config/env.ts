@@ -15,6 +15,12 @@ const envSchema = z.object({
   // API origin — absolute HTTPS origin in non-development builds.
   EXPO_PUBLIC_API_ORIGIN: z.string().url().default('http://localhost:8888'),
 
+  // AI-gateway origin — separate API service for AI/streaming routes (coaching,
+  // weekly reviews, conversations, voice). In production both services share a
+  // single origin via ingress; in local dev they run on separate ports.
+  // Empty = same as EXPO_PUBLIC_API_ORIGIN (production / single-origin).
+  EXPO_PUBLIC_AI_GATEWAY_ORIGIN: z.string().default(''),
+
   // OAuth client IDs (PLACEHOLDER — pending organizational decisions).
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: z.string().default(''),
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: z.string().default(''),
@@ -73,4 +79,59 @@ export function getEnv(): Env {
  */
 export function apiBaseUrl(): string {
   return `${getEnv().EXPO_PUBLIC_API_ORIGIN}/api/v1`;
+}
+
+/**
+ * The AI-gateway API base path (origin + /api/v1). Falls back to the main
+ * gateway origin when no separate AI-gateway origin is configured.
+ */
+export function apiBaseUrlAi(): string {
+  const { EXPO_PUBLIC_API_ORIGIN, EXPO_PUBLIC_AI_GATEWAY_ORIGIN } = getEnv();
+  const origin = EXPO_PUBLIC_AI_GATEWAY_ORIGIN || EXPO_PUBLIC_API_ORIGIN;
+  return `${origin}/api/v1`;
+}
+
+/**
+ * Path prefixes owned by the ai-gateway service. Used to route requests to the
+ * correct backend in local dev (where the two services run on separate ports).
+ * In production, ingress handles routing and `EXPO_PUBLIC_AI_GATEWAY_ORIGIN`
+ * can be empty (same origin).
+ *
+ * Keep in sync with services/ai-gateway/contract/main.api route groups.
+ */
+const AI_GATEWAY_PATH_PREFIXES = [
+  '/personalization/coaching',
+  '/personalization/coaching-stream',
+  '/personalization/onboarding-habits',
+  '/personalization/transcribe',
+  '/personalization/voice-turn',
+  '/weekly-reviews/generate',
+  '/weekly-reviews/generate-stream',
+  '/conversations',
+];
+
+/**
+ * Whether a given API path (without /api/v1 prefix) routes to the ai-gateway.
+ */
+export function isAiGatewayPath(path: string): boolean {
+  const { EXPO_PUBLIC_AI_GATEWAY_ORIGIN } = getEnv();
+  if (!EXPO_PUBLIC_AI_GATEWAY_ORIGIN) return false;
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return AI_GATEWAY_PATH_PREFIXES.some((prefix) =>
+    normalized === prefix || normalized.startsWith(`${prefix}/`),
+  );
+}
+
+/**
+ * Build the full URL for an API path, routing to the ai-gateway or main gateway
+ * based on the path prefix. Use this instead of `apiBaseUrl()` + path for
+ * calls that may hit AI routes.
+ */
+export function apiUrlFor(path: string): string {
+  const { EXPO_PUBLIC_API_ORIGIN, EXPO_PUBLIC_AI_GATEWAY_ORIGIN } = getEnv();
+  const origin = isAiGatewayPath(path)
+    ? EXPO_PUBLIC_AI_GATEWAY_ORIGIN
+    : EXPO_PUBLIC_API_ORIGIN;
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${origin}/api/v1${p}`;
 }

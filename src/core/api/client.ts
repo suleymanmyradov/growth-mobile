@@ -1,11 +1,11 @@
 import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    InternalAxiosRequestConfig,
 } from 'axios';
 import { tokenManager } from '../auth/token-manager';
-import { apiBaseUrl } from '../config/env';
+import { apiBaseUrl, apiBaseUrlAi, isAiGatewayPath } from '../config/env';
 import { ApiError, fromAxiosError } from './errors';
 
 /**
@@ -104,7 +104,9 @@ function createClient(): AxiosInstance {
     },
   });
 
-  // Request interceptor: attach Authorization and X-Device-Id.
+  // Request interceptor: attach Authorization and X-Device-Id, and rewrite
+  // the baseURL for AI-gateway routes (local dev only — in production both
+  // services share one origin via ingress).
   instance.interceptors.request.use((config) => {
     const token = tokenManager.getAccessToken();
     if (token) {
@@ -112,6 +114,10 @@ function createClient(): AxiosInstance {
     }
     if (installationId) {
       config.headers['X-Device-Id'] = installationId;
+    }
+    // Route AI paths to the ai-gateway origin when configured separately.
+    if (config.url && isAiGatewayPath(config.url)) {
+      config.baseURL = apiBaseUrlAi();
     }
     return config;
   });

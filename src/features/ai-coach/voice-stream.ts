@@ -14,7 +14,7 @@ import { fetch } from 'expo/fetch';
 import { personalizationEndpoints } from '@/core/api/endpoints';
 import { ApiError, fromFetchError, parseJsonApiError } from '@/core/api/errors';
 import { tokenManager } from '@/core/auth/token-manager';
-import { apiBaseUrl } from '@/core/config/env';
+import { apiUrlFor } from '@/core/config/env';
 
 export interface VoiceTurnStreamOptions {
   fileUri: string;
@@ -41,7 +41,7 @@ export async function openVoiceTurnStream({
   signal,
   responseTimeoutMs = 60_000,
 }: VoiceTurnStreamOptions): Promise<ReadableStream<Uint8Array>> {
-  const url = `${apiBaseUrl()}${personalizationEndpoints.voiceTurn}`;
+  const url = apiUrlFor(personalizationEndpoints.voiceTurn);
   const token = tokenManager.getAccessToken();
 
   if (!token) {
