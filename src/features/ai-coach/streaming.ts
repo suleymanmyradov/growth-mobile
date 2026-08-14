@@ -27,6 +27,26 @@ import type { SSEEvent } from '@/core/api/sse';
 
 export type CoachingStreamPhase = 'idle' | 'thinking' | 'streaming' | 'complete' | 'error';
 
+/**
+ * A proposal action emitted by the agentic coaching flow. The agent calls
+ * a propose_* tool to prepare a goal/habit create/update/delete; the
+ * backend forwards it as an SSE "proposal" event. The UI renders a confirm
+ * card and calls the existing CRUD endpoint on accept.
+ */
+export type ProposalAction =
+  | 'create_goal'
+  | 'update_goal'
+  | 'delete_goal'
+  | 'create_habit'
+  | 'update_habit'
+  | 'delete_habit';
+
+export interface CoachingProposal {
+  id: string;
+  action: ProposalAction;
+  payload: Record<string, unknown>;
+}
+
 export interface CoachingStreamState {
   phase: CoachingStreamPhase;
   /** Concatenated delta text so far (the partial assistant response). */
@@ -39,6 +59,8 @@ export interface CoachingStreamState {
   errorMessage: string | null;
   /** True once the terminal event (`complete` or fatal `error`) has arrived. */
   done: boolean;
+  /** Proposals collected during the stream (agent-prepared CRUD actions). */
+  proposals: CoachingProposal[];
 }
 
 export const initialCoachingStreamState: CoachingStreamState = {
@@ -48,6 +70,7 @@ export const initialCoachingStreamState: CoachingStreamState = {
   thinkingMessage: null,
   errorMessage: null,
   done: false,
+  proposals: [],
 };
 
 /**
@@ -70,6 +93,25 @@ export function reduceCoachingEvent(
         ...state,
         phase: state.phase === 'streaming' ? state.phase : 'thinking',
         thinkingMessage: parsed?.message ?? state.thinkingMessage,
+      };
+    }
+    case 'proposal': {
+      const parsed = safeParse(event.data) as {
+        id?: string;
+        action?: string;
+        payload?: Record<string, unknown>;
+      } | null;
+      if (!parsed?.id || !parsed?.action) return state;
+      return {
+        ...state,
+        proposals: [
+          ...state.proposals,
+          {
+            id: parsed.id,
+            action: parsed.action as ProposalAction,
+            payload: parsed.payload ?? {},
+          },
+        ],
       };
     }
     case 'delta': {

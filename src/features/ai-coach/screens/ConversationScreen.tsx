@@ -33,6 +33,7 @@ import { useTheme } from '@/design-system/theme';
 
 import { Composer } from '../components/Composer';
 import { MessageBubble } from '../components/MessageBubble';
+import { ProposalCard } from '../components/ProposalCard';
 import {
     useConversation,
     useInvalidateConversation,
@@ -212,6 +213,15 @@ export function ConversationScreen(): React.ReactNode {
               }
             />
           )}
+
+          {/* Pending proposals from the agent (confirm/cancel cards) */}
+          {stream.state.proposals.length > 0 ? (
+            <View style={{ paddingHorizontal: spacing.xl, paddingVertical: spacing.sm, gap: spacing.sm }}>
+              {stream.state.proposals.map((proposal) => (
+                <ProposalCard key={proposal.id} proposal={proposal} />
+              ))}
+            </View>
+          ) : null}
 
           {/* Streaming error + retry */}
           {stream.state.phase === 'error' ? (

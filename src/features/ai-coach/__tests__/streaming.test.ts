@@ -117,6 +117,57 @@ describe('reduceCoachingEvent', () => {
     const s2 = reduceCoachingEvent(s1, ev('unknown-event', '{"foo":"bar"}'));
     expect(s2).toEqual(s1);
   });
+
+  it('collects proposal events', () => {
+    const s1 = reduceCoachingEvent(
+      initialCoachingStreamState,
+      ev('proposal', '{"id":"p1","action":"create_goal","payload":{"title":"Read 12 books"}}'),
+    );
+    expect(s1.proposals).toHaveLength(1);
+    expect(s1.proposals[0]).toEqual({
+      id: 'p1',
+      action: 'create_goal',
+      payload: { title: 'Read 12 books' },
+    });
+  });
+
+  it('collects multiple proposals in order', () => {
+    const events: SSEEvent[] = [
+      ev('proposal', '{"id":"p1","action":"create_habit","payload":{"name":"Meditate"}}'),
+      ev('delta', '{"text":"I prepared two actions."}'),
+      ev('proposal', '{"id":"p2","action":"create_goal","payload":{"title":"Read more"}}'),
+      ev('complete', '{"fullResponse":"I prepared two actions."}'),
+    ];
+    const state = runCoachingReducer(events);
+    expect(state.proposals).toHaveLength(2);
+    expect(state.proposals[0]?.action).toBe('create_habit');
+    expect(state.proposals[1]?.action).toBe('create_goal');
+  });
+
+  it('ignores malformed proposal events (missing id)', () => {
+    const s1 = reduceCoachingEvent(
+      initialCoachingStreamState,
+      ev('proposal', '{"action":"create_goal","payload":{}}'),
+    );
+    expect(s1.proposals).toHaveLength(0);
+  });
+
+  it('ignores malformed proposal events (missing action)', () => {
+    const s1 = reduceCoachingEvent(
+      initialCoachingStreamState,
+      ev('proposal', '{"id":"p1","payload":{}}'),
+    );
+    expect(s1.proposals).toHaveLength(0);
+  });
+
+  it('defaults payload to empty object when missing', () => {
+    const s1 = reduceCoachingEvent(
+      initialCoachingStreamState,
+      ev('proposal', '{"id":"p1","action":"delete_goal"}'),
+    );
+    expect(s1.proposals).toHaveLength(1);
+    expect(s1.proposals[0]?.payload).toEqual({});
+  });
 });
 
 describe('reduceVoiceTurnEvent', () => {
