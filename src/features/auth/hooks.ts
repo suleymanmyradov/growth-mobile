@@ -171,12 +171,19 @@ export function useResetPassword() {
   });
 }
 
-export function useLogout() {
+export function useLogout(options?: { beforeLogout?: () => Promise<void> }) {
   const clear = useSessionStore((s) => s.clear);
   const router = useRouter();
 
   return useMutation({
-    mutationFn: () => logout(),
+    mutationFn: async () => {
+      try {
+        await options?.beforeLogout?.();
+      } catch {
+        void 0;
+      }
+      return logout();
+    },
     onSettled: () => {
       clear();
       setSentryUser(null);

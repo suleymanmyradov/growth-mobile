@@ -1,66 +1,85 @@
-/**
- * Push device registration — registers the Expo push token with the backend so
- * the notifications service can deliver push.
- *
- * Per AGENTS.md: push requires backend device registration. Actual push
- * delivery needs org configuration (Expo project ID, APNs/FCM credentials);
- * this module is best-effort and no-ops gracefully when no token can be
- * obtained (simulator, missing project id, offline). Tokens are never logged.
- *
- * Domain boundary: lives in `features/notifications` and uses the shared
- * installation id from `core/auth/installation`. It does not import other
- * features.
- */
 import * as Application from 'expo-application';
 import * as Device from 'expo-device';
+import * as Localization from 'expo-localization';
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 
 import { getExpoProjectId, getOrCreateInstallationId } from '@/core/auth/installation';
-import * as Localization from 'expo-localization';
 
-import { registerDevice } from './api';
+import { registerDevice, unregisterDevice } from './api';
 
 export interface RegisterPushTokenResult {
   registered: boolean;
-  /** The installation id used for registration, when registered. */
+  permissionGranted: boolean;
   installationId?: string;
 }
 
-/**
- * Obtains the Expo push token (when available) and registers it with the
- * backend against the installation id. Returns `{ registered: false }` when
- * no token could be obtained (e.g. simulator, missing project id, network
- * failure). Never throws — callers may invoke this fire-and-forget on app
- * foreground / auth.
- */
-export async function registerPushToken(): Promise<RegisterPushTokenResult> {
-  // Physical device is required for a real push token.
-  if (!Device.isDevice) {
-    return { registered: false };
-  }
+export async function ensureNotificationChannel(): Promise<void> {
+  if (Platform.OS !== 'android') return;
+  await Notifications.setNotificationChannelAsync('default', {
+    name: 'Growth reminders',
+    importance: Notifications.AndroidImportance.HIGH,
+    vibrationPattern: [0, 250, 250, 250],
+  });
+}
 
+export function notificationPermissionGranted(
+  permission: Notifications.NotificationPermissionsStatus,
+): boolean {
+  if (Platform.OS !== 'ios') return permission.status === 'granted';
+  const status = permission.ios?.status;
+  return (
+    status === Notifications.IosAuthorizationStatus.AUTHORIZED ||
+    status === Notifications.IosAuthorizationStatus.PROVISIONAL ||
+    status === Notifications.IosAuthorizationStatus.EPHEMERAL
+  );
+}
+
+let registrationInFlight: Promise<RegisterPushTokenResult> | null = null;
+
+export async function registerPushToken(options?: {
+  requestPermission?: boolean;
+}): Promise<RegisterPushTokenResult> {
+  if (registrationInFlight) {
+    const result = await registrationInFlight;
+    if (!options?.requestPermission || result.permissionGranted) return result;
+  }
+  const task = performPushRegistration(options);
+  registrationInFlight = task;
+  try {
+    return await task;
+  } finally {
+    if (registrationInFlight === task) registrationInFlight = null;
+  }
+}
+
+async function performPushRegistration(options?: {
+  requestPermission?: boolean;
+}): Promise<RegisterPushTokenResult> {
+  if (!Device.isDevice) {
+    return { registered: false, permissionGranted: false };
+  }
   const projectId = getExpoProjectId();
   if (!projectId) {
-    // No EAS project id configured — push cannot be addressed. Org blocker.
-    return { registered: false };
+    return { registered: false, permissionGranted: false };
   }
 
-  let token: string;
   try {
-    const result = await Notifications.getExpoPushTokenAsync({ projectId });
-    token = result.data;
-  } catch {
-    // Token fetch failed (offline, credentials missing, etc.). Best-effort.
-    return { registered: false };
-  }
+    await ensureNotificationChannel();
+    let permission = await Notifications.getPermissionsAsync();
+    if (!notificationPermissionGranted(permission) && options?.requestPermission) {
+      permission = await Notifications.requestPermissionsAsync();
+    }
+    if (!notificationPermissionGranted(permission)) {
+      return { registered: false, permissionGranted: false };
+    }
 
-  const installationId = await getOrCreateInstallationId();
-
-  try {
+    const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    const installationId = await getOrCreateInstallationId();
     await registerDevice(installationId, {
       pushToken: token,
       provider: 'expo',
-      platform: Device.osName?.toLowerCase() ?? 'unknown',
+      platform: Platform.OS,
       environment: __DEV__ ? 'development' : 'production',
       appId: Application.applicationId ?? undefined,
       appVersion: Application.nativeApplicationVersion ?? undefined,
@@ -68,9 +87,17 @@ export async function registerPushToken(): Promise<RegisterPushTokenResult> {
       locale: Localization.getLocales()[0]?.languageTag ?? undefined,
       timezone: Localization.getCalendars()[0]?.timeZone ?? undefined,
     });
-    return { registered: true, installationId };
+    return { registered: true, permissionGranted: true, installationId };
   } catch {
-    // Registration failed — best-effort; will retry on next foreground.
-    return { registered: false };
+    return { registered: false, permissionGranted: false };
   }
+}
+
+export async function requestAndRegisterPushToken(): Promise<RegisterPushTokenResult> {
+  return registerPushToken({ requestPermission: true });
+}
+
+export async function unregisterCurrentDevice(): Promise<void> {
+  const installationId = await getOrCreateInstallationId();
+  await unregisterDevice(installationId);
 }

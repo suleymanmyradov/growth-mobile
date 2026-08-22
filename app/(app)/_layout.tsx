@@ -1,5 +1,5 @@
 import { useSessionStore } from '@/core/auth/session';
-import { useRegisterPushTokenOnMount } from '@/features/notifications';
+import { useNotificationCoordinator, useRegisterPushTokenOnMount } from '@/features/notifications';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useEffect } from 'react';
 
@@ -29,6 +29,7 @@ export default function AppLayout() {
   // Register the Expo push token with the backend when authenticated.
   // Best-effort: no-ops on simulators or when push isn't configured.
   useRegisterPushTokenOnMount();
+  useNotificationCoordinator();
 
   useEffect(() => {
     if (!isHydrated) return;

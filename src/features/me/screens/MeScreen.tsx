@@ -50,10 +50,25 @@ import { useTheme, type ThemeMode } from '@/design-system/theme';
 import { useLogout } from '@/features/auth';
 import { useGoals } from '@/features/goals';
 import { useHabits } from '@/features/habits';
+import {
+  requestAndRegisterPushToken,
+  unregisterCurrentDevice,
+  useNotificationPreferences,
+  useUpdateNotificationPreferences,
+} from '@/features/notifications';
 import { useDeleteProfile, useProfile, useUpdateProfile } from '@/features/profile';
 import { useSettings, useUpdateSettings } from '@/features/settings';
 
 import { deriveMeSummary } from '../summary';
+
+type NotificationPreferenceUpdate = Partial<{
+  emailEnabled: boolean;
+  pushEnabled: boolean;
+  habitRemindersEnabled: boolean;
+  goalRemindersEnabled: boolean;
+  streakWarningsEnabled: boolean;
+  sundayReviewEnabled: boolean;
+}>;
 
 export function MeScreen(): React.ReactNode {
   const { t } = useTranslation();
@@ -64,11 +79,13 @@ export function MeScreen(): React.ReactNode {
   const { data: profile, isLoading, isError, error, refetch } = useProfile();
   const updateProfile = useUpdateProfile();
   const deleteProfile = useDeleteProfile();
-  const logout = useLogout();
+  const logout = useLogout({ beforeLogout: unregisterCurrentDevice });
   const { data: habits } = useHabits();
   const { data: goals } = useGoals();
   const { data: settings } = useSettings();
   const updateSettings = useUpdateSettings();
+  const { data: notificationPreferences } = useNotificationPreferences();
+  const updateNotificationPreferences = useUpdateNotificationPreferences();
 
   const [editing, setEditing] = useState(false);
 
@@ -123,6 +140,31 @@ export function MeScreen(): React.ReactNode {
 
   const handleUpdate = (partial: Parameters<typeof updateSettings.mutate>[0]) => {
     updateSettings.mutate(partial);
+  };
+
+  const updateNotificationPreference = (partial: NotificationPreferenceUpdate) => {
+    updateNotificationPreferences.mutate({
+      emailEnabled: notificationPreferences?.emailEnabled ?? false,
+      pushEnabled: notificationPreferences?.pushEnabled ?? false,
+      habitRemindersEnabled: notificationPreferences?.habitRemindersEnabled ?? true,
+      goalRemindersEnabled: notificationPreferences?.goalRemindersEnabled ?? false,
+      streakWarningsEnabled: notificationPreferences?.streakWarningsEnabled ?? false,
+      sundayReviewEnabled: notificationPreferences?.sundayReviewEnabled ?? false,
+      ...partial,
+    });
+  };
+
+  const handlePushNotificationToggle = async (enabled: boolean) => {
+    if (!enabled) {
+      updateNotificationPreference({ pushEnabled: false });
+      return;
+    }
+    const result = await requestAndRegisterPushToken();
+    if (!result.permissionGranted || !result.registered) {
+      Alert.alert(t('me.pushPermissionTitle'), t('me.pushPermissionBody'));
+      return;
+    }
+    updateNotificationPreference({ pushEnabled: true });
   };
 
   if (isLoading) {
@@ -354,29 +396,29 @@ export function MeScreen(): React.ReactNode {
             <View style={{ paddingHorizontal: spacing.lg }}>
               <ToggleRow
                 label={t('me.emailNotifications')}
-                value={settings?.emailNotifications ?? false}
-                onToggle={(v) => handleUpdate({ emailNotifications: v })}
+                value={notificationPreferences?.emailEnabled ?? false}
+                onToggle={(v) => updateNotificationPreference({ emailEnabled: v })}
                 accent={colors.accent}
                 input={colors.input}
               />
               <ToggleRow
                 label={t('me.pushNotifications')}
-                value={settings?.pushNotifications ?? false}
-                onToggle={(v) => handleUpdate({ pushNotifications: v })}
+                value={notificationPreferences?.pushEnabled ?? false}
+                onToggle={(v) => void handlePushNotificationToggle(v)}
                 accent={colors.accent}
                 input={colors.input}
               />
               <ToggleRow
-                label={t('me.habitReminders')}
-                value={settings?.habitReminders ?? false}
-                onToggle={(v) => handleUpdate({ habitReminders: v })}
+                label={t('me.weeklyReviewReminders')}
+                value={notificationPreferences?.sundayReviewEnabled ?? false}
+                onToggle={(v) => updateNotificationPreference({ sundayReviewEnabled: v })}
                 accent={colors.accent}
                 input={colors.input}
               />
               <ToggleRow
-                label={t('me.goalReminders')}
-                value={settings?.goalReminders ?? false}
-                onToggle={(v) => handleUpdate({ goalReminders: v })}
+                label={t('me.streakWarnings')}
+                value={notificationPreferences?.streakWarningsEnabled ?? false}
+                onToggle={(v) => updateNotificationPreference({ streakWarningsEnabled: v })}
                 accent={colors.accent}
                 input={colors.input}
                 separator={false}

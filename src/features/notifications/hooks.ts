@@ -5,9 +5,11 @@
  * both the list and the unread count so the badge stays in sync.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 
-import type { NotificationsResponse, RegisterDeviceRequest } from '@/core/api/schemas';
+import type { RegisterDeviceRequest } from '@/core/api/schemas';
 import { notificationKeys } from '@/core/query/query-keys';
 
 import {
@@ -21,6 +23,9 @@ import {
   updateNotificationPreferences,
 } from './api';
 import { registerPushToken } from './push-registration';
+
+type NotificationList = Awaited<ReturnType<typeof listNotifications>>;
+type UnreadCount = Awaited<ReturnType<typeof getUnreadNotificationCount>>;
 
 export function useNotifications(params?: { page?: number; limit?: number }) {
   return useQuery({
@@ -44,20 +49,17 @@ export function useMarkNotificationRead() {
     mutationFn: (id: string) => markNotificationRead(id),
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: notificationKeys.all });
-      const previous = queryClient.getQueriesData<NotificationsResponse>({
-        queryKey: notificationKeys.all,
+      const previous = queryClient.getQueriesData<NotificationList>({
+        queryKey: notificationKeys.lists(),
       });
-      queryClient.setQueriesData<NotificationsResponse | undefined>(
-        { queryKey: notificationKeys.all },
-        (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            data: old.data.map((n) => (n.id === id ? { ...n, read: true } : n)),
-          };
-        },
+      const previousCount = queryClient.getQueryData<UnreadCount>(notificationKeys.unreadCount());
+      queryClient.setQueriesData<NotificationList>({ queryKey: notificationKeys.lists() }, (old) =>
+        old?.map((n) => (n.id === id ? { ...n, read: true } : n)),
       );
-      return { previous };
+      queryClient.setQueryData<UnreadCount | undefined>(notificationKeys.unreadCount(), (old) =>
+        old ? { count: Math.max(0, old.count - 1) } : old,
+      );
+      return { previous, previousCount };
     },
     onError: (_error, _id, context) => {
       if (context?.previous) {
@@ -65,9 +67,13 @@ export function useMarkNotificationRead() {
           queryClient.setQueryData(key, value);
         }
       }
+      if (context?.previousCount) {
+        queryClient.setQueryData(notificationKeys.unreadCount(), context.previousCount);
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.unreadCount() });
     },
   });
 }
@@ -78,17 +84,15 @@ export function useMarkAllNotificationsRead() {
     mutationFn: () => markAllNotificationsRead(),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: notificationKeys.all });
-      const previous = queryClient.getQueriesData<NotificationsResponse>({
-        queryKey: notificationKeys.all,
+      const previous = queryClient.getQueriesData<NotificationList>({
+        queryKey: notificationKeys.lists(),
       });
-      queryClient.setQueriesData<NotificationsResponse | undefined>(
-        { queryKey: notificationKeys.all },
-        (old) => {
-          if (!old) return old;
-          return { ...old, data: old.data.map((n) => ({ ...n, read: true })) };
-        },
+      const previousCount = queryClient.getQueryData<UnreadCount>(notificationKeys.unreadCount());
+      queryClient.setQueriesData<NotificationList>({ queryKey: notificationKeys.lists() }, (old) =>
+        old?.map((n) => ({ ...n, read: true })),
       );
-      return { previous };
+      queryClient.setQueryData(notificationKeys.unreadCount(), { count: 0 });
+      return { previous, previousCount };
     },
     onError: (_error, _vars, context) => {
       if (context?.previous) {
@@ -96,9 +100,13 @@ export function useMarkAllNotificationsRead() {
           queryClient.setQueryData(key, value);
         }
       }
+      if (context?.previousCount) {
+        queryClient.setQueryData(notificationKeys.unreadCount(), context.previousCount);
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: notificationKeys.unreadCount() });
     },
   });
 }
@@ -148,17 +156,16 @@ export function useUnregisterDevice() {
  */
 export function useRegisterPushTokenOnMount(): void {
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const result = await registerPushToken();
-        if (cancelled || !result.registered) return;
-      } catch {
-        // Best-effort; ignore.
-      }
-    })();
+    void registerPushToken();
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') void registerPushToken();
+    });
+    const tokenSubscription = Notifications.addPushTokenListener(() => {
+      void registerPushToken();
+    });
     return () => {
-      cancelled = true;
+      appStateSubscription.remove();
+      tokenSubscription.remove();
     };
   }, []);
 }
