@@ -34,6 +34,7 @@ export function notificationTypeToDestination(itemType: string): DeepLinkDestina
     case 'habit_missed':
       return 'habit-detail';
     case 'goal_reminder':
+    case 'goal_deadline':
     case 'goal_progress':
     case 'goal_completed':
       return 'goal-detail';
@@ -47,7 +48,14 @@ export function notificationTypeToDestination(itemType: string): DeepLinkDestina
     case 'weekly_review_ready':
       return 'weekly-review';
     case 'activity':
+    case 'achievement':
+    case 'missed_check_in':
+    case 'encouragement':
+    case 'ai_feedback':
+    case 'streak_warning':
       return 'activity';
+    case 'system':
+      return 'notifications';
     default:
       return null;
   }
@@ -62,8 +70,9 @@ export function notificationTypeToDestination(itemType: string): DeepLinkDestina
  * resolve to their owning tab/list screen (e.g. `habit-detail` → Plan tab).
  */
 export function notificationToRoute(notification: Notification): string | null {
-  const destination = notificationTypeToDestination(notification.type);
+  const destination = notification.destination
+    ? validateDestination(notification.destination)
+    : notificationTypeToDestination(notification.type);
   if (!destination) return null;
-  if (!validateDestination(destination)) return null;
-  return destinationToRoute(destination);
+  return destinationToRoute(destination, notification.resourceId);
 }

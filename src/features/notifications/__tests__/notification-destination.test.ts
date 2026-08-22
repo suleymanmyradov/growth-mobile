@@ -29,6 +29,7 @@ describe('notificationTypeToDestination', () => {
     ['habit_completed', 'habit-detail'],
     ['habit_missed', 'habit-detail'],
     ['goal_reminder', 'goal-detail'],
+    ['goal_deadline', 'goal-detail'],
     ['goal_progress', 'goal-detail'],
     ['goal_completed', 'goal-detail'],
     ['article', 'article-detail'],
@@ -38,6 +39,10 @@ describe('notificationTypeToDestination', () => {
     ['weekly_review', 'weekly-review'],
     ['weekly_review_ready', 'weekly-review'],
     ['activity', 'activity'],
+    ['missed_check_in', 'activity'],
+    ['ai_feedback', 'activity'],
+    ['streak_warning', 'activity'],
+    ['system', 'notifications'],
   ])('maps %s to %s', (itemType, expected) => {
     expect(notificationTypeToDestination(itemType)).toBe(expected);
   });

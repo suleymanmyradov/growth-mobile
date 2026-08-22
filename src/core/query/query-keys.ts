@@ -70,8 +70,9 @@ export const weeklyReviewKeys = {
 
 export const notificationKeys = {
   all: ['notifications'] as const,
+  lists: () => [...notificationKeys.all, 'list'] as const,
   list: (params?: { page?: number; limit?: number }) =>
-    [...notificationKeys.all, 'list', params ?? {}] as const,
+    [...notificationKeys.lists(), params ?? {}] as const,
   unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
   preferences: () => [...notificationKeys.all, 'preferences'] as const,
 };

@@ -483,43 +483,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/conversations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** ListConversations */
-        get: operations["conversationsListConversations"];
-        put?: never;
-        /** StartConversation */
-        post: operations["conversationsStartConversation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/conversations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** GetConversation */
-        get: operations["conversationsGetConversation"];
-        put?: never;
-        post?: never;
-        /** DeleteConversation */
-        delete: operations["conversationsDeleteConversation"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/conversations/{id}/archive": {
+    "/api/v1/check-ins/today/{habitId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -527,45 +491,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** ArchiveConversation */
-        put: operations["conversationsArchiveConversation"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/conversations/{id}/messages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** GetMessages */
-        get: operations["conversationsGetMessages"];
         put?: never;
-        /** AppendMessage */
-        post: operations["conversationsAppendMessage"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/conversations/{id}/unarchive": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** UnarchiveConversation */
-        put: operations["conversationsUnarchiveConversation"];
         post?: never;
-        delete?: never;
+        /** DeleteCheckIn */
+        delete: operations["checkinDeleteCheckIn"];
         options?: never;
         head?: never;
         patch?: never;
@@ -643,6 +572,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/goals/{id}/milestones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CreateMilestone */
+        post: operations["goalsCreateMilestone"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}/milestones/{milestoneId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** DeleteMilestone */
+        delete: operations["goalsDeleteMilestone"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}/milestones/{milestoneId}/toggle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ToggleMilestone */
+        post: operations["goalsToggleMilestone"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/goals/{id}/progress": {
         parameters: {
             query?: never;
@@ -671,6 +651,23 @@ export interface paths {
         put?: never;
         /** ToggleGoal */
         post: operations["goalsToggleGoal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/goals/{id}/value": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** LogGoalValue */
+        put: operations["goalsLogGoalValue"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -834,23 +831,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/personalization/coaching": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** GeneratePersonalizedCoaching */
-        post: operations["personalizationGeneratePersonalizedCoaching"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/personalization/coaching-profile": {
         parameters: {
             query?: never;
@@ -886,23 +866,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/personalization/coaching-stream": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** StreamPersonalizedCoaching */
-        post: operations["personalizationStreamPersonalizedCoaching"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/personalization/context": {
         parameters: {
             query?: never;
@@ -914,23 +877,6 @@ export interface paths {
         get: operations["personalizationGetPersonalizationContext"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/personalization/onboarding-habits": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** GenerateOnboardingHabits */
-        post: operations["personalizationGenerateOnboardingHabits"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1179,6 +1125,145 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/weekly-reviews/{weekStart}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetWeeklyReview */
+        get: operations["weeklyreviewGetWeeklyReview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ListConversations */
+        get: operations["conversationsListConversations"];
+        put?: never;
+        /** StartConversation */
+        post: operations["conversationsStartConversation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetConversation */
+        get: operations["conversationsGetConversation"];
+        put?: never;
+        post?: never;
+        /** DeleteConversation */
+        delete: operations["conversationsDeleteConversation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** ArchiveConversation */
+        put: operations["conversationsArchiveConversation"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** GetMessages */
+        get: operations["conversationsGetMessages"];
+        put?: never;
+        /** AppendMessage */
+        post: operations["conversationsAppendMessage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{id}/unarchive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** UnarchiveConversation */
+        put: operations["conversationsUnarchiveConversation"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/coaching": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GeneratePersonalizedCoaching */
+        post: operations["personalizationGeneratePersonalizedCoaching"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personalization/onboarding-habits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** GenerateOnboardingHabits */
+        post: operations["personalizationGenerateOnboardingHabits"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/weekly-reviews/generate": {
         parameters: {
             query?: never;
@@ -1213,17 +1298,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/weekly-reviews/{weekStart}": {
+    "/api/v1/personalization/coaching-stream": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** GetWeeklyReview */
-        get: operations["weeklyreviewGetWeeklyReview"];
+        get?: never;
         put?: never;
-        post?: never;
+        /**
+         * Stream an agentic coaching response (SSE)
+         * @description Streams an AI-generated personalized coaching response as Server-Sent
+         *     Events. Uses an agentic flow (StreamAgent with on-demand tool calls)
+         *     so the model fetches user data (goals, habits, check-ins, weekly
+         *     reviews, articles) only when the user's message makes it relevant,
+         *     instead of eagerly stuffing all context into the prompt.
+         *
+         *     Requires authentication. The request body is JSON
+         *     (`application/json`). The response is `text/event-stream`.
+         *
+         *     ## SSE event types
+         *
+         *     - `reasoning` — `{"text":"..."}`: model reasoning/thinking deltas
+         *       (reasoning models only; never set for non-reasoning models).
+         *     - `thinking` — `{"message":"..."}`: status update while a tool
+         *       executes or the model processes before the first token.
+         *     - `delta` — `{"text":"..."}`: incremental coaching text. Concatenate
+         *       in order to build the full response.
+         *     - `proposal` — `{id, action, payload}`: a confirm/cancel card for a
+         *       proposed CRUD action (create/update/delete goal or habit). The
+         *       client should render a proposal card and let the user confirm or
+         *       cancel.
+         *     - `complete` — `{"fullResponse":"..."}`: the full assembled coaching
+         *       response (exactly one on success). Terminal success event.
+         *     - `error` — `{"message":"..."}`: error before stream end. Terminal
+         *       error event; the stream ends after this.
+         *
+         *     ## Event ordering
+         *
+         *     A typical successful stream: zero or more `reasoning` → zero or more
+         *     `thinking`/`delta`/`proposal` (interleaved as tools execute) → `delta`
+         *     chunks for the final answer → `complete`.
+         *
+         *     On a safety crisis (self-harm/suicide with high confidence), the
+         *     stream short-circuits: a deterministic crisis response is sent as
+         *     `delta` + `complete`, and no tools are called.
+         */
+        post: operations["streamPersonalizedCoaching"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1370,6 +1492,46 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        GeneratePersonalizedCoachingRequest: {
+            /**
+             * @description The user's message to the coach.
+             * @example I missed 3 consecutive check-ins, feeling demotivated
+             */
+            userMessage: string;
+            /**
+             * @description Optional free-form context string (legacy field, ignored by the agentic flow).
+             * @example User has been struggling with motivation
+             */
+            context?: string;
+            /**
+             * Format: uuid
+             * @description Optional existing conversation ID. When provided, prior message
+             *     history is fetched and the assistant response is persisted to this
+             *     conversation. When omitted, the response is not persisted.
+             */
+            conversationId?: string;
+            /** @description Optional file attachments (images, documents) passed to the model as multimodal content. */
+            attachments?: components["schemas"]["Attachment"][];
+        };
+        Attachment: {
+            /**
+             * @description Type of attachment: "image" or "document".
+             * @example image
+             */
+            attachmentType: string;
+            /**
+             * @description Filename of the attachment.
+             * @example screenshot.png
+             */
+            name: string;
+            /**
+             * @description MIME type of the attachment.
+             * @example image/png
+             */
+            contentType: string;
+            /** @description Base64-encoded file content. */
+            data: string;
+        };
         UploadResponse: {
             /**
              * Format: uri
@@ -1508,17 +1670,6 @@ export interface components {
                 "application/json": {
                     forceRegenerate?: boolean;
                     weekStart?: string;
-                };
-            };
-        };
-        personalizationGeneratePersonalizedCoachingBody: {
-            content: {
-                "application/json": {
-                    /** @example User has been struggling with motivation */
-                    context?: string;
-                    conversationId?: string;
-                    /** @example User missed 3 consecutive check-ins */
-                    userMessage: string;
                 };
             };
         };
@@ -2989,103 +3140,12 @@ export interface operations {
             };
         };
     };
-    conversationsListConversations: {
-        parameters: {
-            query: {
-                type?: string;
-                /** @example 1 */
-                page: number;
-                /** @example 20 */
-                limit: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            archived: boolean;
-                            createdAt: string;
-                            id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
-                            updatedAt: string;
-                            userId: string;
-                        }[];
-                        page?: {
-                            /** @example 20 */
-                            limit: number;
-                            /** @example 1 */
-                            page: number;
-                            /** @example 100 */
-                            total: number;
-                            /** @example 5 */
-                            totalPages: number;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsStartConversation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    initialMessage?: string;
-                    title?: string;
-                    type?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            archived: boolean;
-                            createdAt: string;
-                            id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
-                            updatedAt: string;
-                            userId: string;
-                        };
-                        initialMessage?: {
-                            content: string;
-                            conversationId: string;
-                            createdAt: string;
-                            id: string;
-                            role: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsGetConversation: {
+    checkinDeleteCheckIn: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                id: string;
+                habitId: string;
             };
             cookie?: never;
         };
@@ -3097,189 +3157,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: {
-                            archived: boolean;
+                        habit?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            /** @example 30 minutes of cardio every morning */
+                            description: string;
+                            /** @example habit-123 */
                             id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
+                            /** @example Morning Exercise */
+                            name: string;
+                            recentHistory?: boolean[];
+                            /** @example 7 */
+                            streak: number;
+                            /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
-                            userId: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsDeleteConversation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    conversationsArchiveConversation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            archived: boolean;
-                            createdAt: string;
-                            id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
-                            updatedAt: string;
-                            userId: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsGetMessages: {
-        parameters: {
-            query: {
-                /** @example 1 */
-                page: number;
-                /** @example 50 */
-                limit: number;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            content: string;
-                            conversationId: string;
-                            createdAt: string;
-                            id: string;
-                            role: string;
-                        }[];
-                        page?: {
-                            /** @example 20 */
-                            limit: number;
-                            /** @example 1 */
-                            page: number;
-                            /** @example 100 */
-                            total: number;
-                            /** @example 5 */
-                            totalPages: number;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsAppendMessage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    content: string;
-                    role?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        conversation?: {
-                            archived: boolean;
-                            createdAt: string;
-                            id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
-                            updatedAt: string;
-                            userId: string;
-                        };
-                        data?: {
-                            content: string;
-                            conversationId: string;
-                            createdAt: string;
-                            id: string;
-                            role: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    conversationsUnarchiveConversation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            archived: boolean;
-                            createdAt: string;
-                            id: string;
-                            lastMessage: string;
-                            title: string;
-                            type: string;
-                            updatedAt: string;
+                            /** @example user-123 */
                             userId: string;
                         };
                     };
@@ -3412,18 +3308,37 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -3456,14 +3371,23 @@ export interface operations {
                 "application/json": {
                     /** @example fitness */
                     category: string;
+                    currentValue?: number;
                     /** @example Complete a 42.195km marathon race */
                     description: string;
                     /** @example 2024-12-31T00:00:00Z */
                     dueDate?: string;
+                    /** @example milestone */
+                    measurement?: string;
+                    /** @example ["Pick a race date" */
+                    milestoneTitles?: string[];
                     /** @example ["habit-1" */
                     relatedHabitIds?: string[];
+                    startValue?: number;
+                    targetValue?: number;
                     /** @example Run a marathon */
                     title: string;
+                    /** @example kg */
+                    unit?: string;
                 };
             };
         };
@@ -3481,18 +3405,37 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -3527,18 +3470,37 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -3562,10 +3524,22 @@ export interface operations {
             content: {
                 "application/json": {
                     category?: string;
+                    currentValue?: number;
                     description?: string;
                     dueDate?: string;
+                    measurement?: string;
+                    milestoneTitles?: string[];
+                    milestones?: {
+                        /** @example ms-123 */
+                        id?: string;
+                        /** @example Pick a race date */
+                        title: string;
+                    }[];
                     relatedHabitIds?: string[];
+                    startValue?: number;
+                    targetValue?: number;
                     title?: string;
+                    unit?: string;
                 };
             };
         };
@@ -3583,18 +3557,37 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -3622,6 +3615,168 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    goalsCreateMilestone: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    sortOrder?: number;
+                    title: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            currentValue?: number;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example kg */
+                            unit?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsDeleteMilestone: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                milestoneId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success?: boolean;
+                    };
+                };
+            };
+        };
+    };
+    goalsToggleMilestone: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                milestoneId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            currentValue?: number;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example kg */
+                            unit?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
                 };
             };
         };
@@ -3656,18 +3811,37 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -3702,18 +3876,108 @@ export interface operations {
                             completed: boolean;
                             /** @example 2024-01-01T00:00:00Z */
                             createdAt: string;
+                            currentValue?: number;
                             /** @example Complete a 42.195km marathon race */
                             description: string;
                             /** @example 2024-12-31T00:00:00Z */
                             dueDate?: string;
                             /** @example goal-123 */
                             id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
                             /** @example 50 */
                             progress: number;
                             /** @example ["habit-1" */
                             relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
                             /** @example Run a marathon */
                             title: string;
+                            /** @example kg */
+                            unit?: string;
+                            /** @example 2024-01-15T00:00:00Z */
+                            updatedAt: string;
+                            /** @example user-123 */
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    goalsLogGoalValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    value: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @example fitness */
+                            category: string;
+                            /** @example false */
+                            completed: boolean;
+                            /** @example 2024-01-01T00:00:00Z */
+                            createdAt: string;
+                            currentValue?: number;
+                            /** @example Complete a 42.195km marathon race */
+                            description: string;
+                            /** @example 2024-12-31T00:00:00Z */
+                            dueDate?: string;
+                            /** @example goal-123 */
+                            id: string;
+                            /** @example milestone */
+                            measurement?: string;
+                            milestones?: {
+                                /** @example 2024-01-15T00:00:00Z */
+                                doneAt?: string;
+                                /** @example goal-123 */
+                                goalId: string;
+                                /** @example ms-123 */
+                                id: string;
+                                /** @example 0 */
+                                sortOrder: number;
+                                /** @example Pick a race date */
+                                title: string;
+                            }[];
+                            /** @example 50 */
+                            progress: number;
+                            /** @example ["habit-1" */
+                            relatedHabitIds?: string[];
+                            startValue?: number;
+                            targetValue?: number;
+                            /** @example Run a marathon */
+                            title: string;
+                            /** @example kg */
+                            unit?: string;
                             /** @example 2024-01-15T00:00:00Z */
                             updatedAt: string;
                             /** @example user-123 */
@@ -4023,6 +4287,10 @@ export interface operations {
                             habitRemindersEnabled: boolean;
                             /** @example false */
                             pushEnabled: boolean;
+                            /** @example false */
+                            streakWarningsEnabled: boolean;
+                            /** @example false */
+                            sundayReviewEnabled: boolean;
                         };
                     };
                 };
@@ -4048,6 +4316,10 @@ export interface operations {
                         habitRemindersEnabled: boolean;
                         /** @example false */
                         pushEnabled: boolean;
+                        /** @example false */
+                        streakWarningsEnabled: boolean;
+                        /** @example false */
+                        sundayReviewEnabled: boolean;
                     };
                 };
             };
@@ -4068,6 +4340,10 @@ export interface operations {
                             habitRemindersEnabled: boolean;
                             /** @example false */
                             pushEnabled: boolean;
+                            /** @example false */
+                            streakWarningsEnabled: boolean;
+                            /** @example false */
+                            sundayReviewEnabled: boolean;
                         };
                     };
                 };
@@ -4097,12 +4373,18 @@ export interface operations {
                         data?: {
                             /** @example 2024-01-15T08:00:00Z */
                             createdAt: string;
+                            /** @example weekly-review */
+                            destination?: string;
                             /** @example notif-123 */
                             id: string;
                             /** @example Don't forget to complete your morning exercise! */
                             message: string;
+                            /** @example {} */
+                            metadata?: string;
                             /** @example false */
                             read: boolean;
+                            /** @example 0192be94-1234-5678-9aaa-09876543210a */
+                            resourceId?: string;
                             /** @example Habit Reminder */
                             title: string;
                             /** @example habit_reminder */
@@ -4182,30 +4464,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": Record<string, never>;
-                };
-            };
-        };
-    };
-    personalizationGeneratePersonalizedCoaching: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["personalizationGeneratePersonalizedCoachingBody"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example I noticed you've missed a few check-ins lately... */
-                        coachingResponse?: string;
-                        /** @example User has been struggling with motivation */
-                        context?: string;
-                    };
                 };
             };
         };
@@ -4372,30 +4630,6 @@ export interface operations {
             };
         };
     };
-    personalizationStreamPersonalizedCoaching: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: components["requestBodies"]["personalizationGeneratePersonalizedCoachingBody"];
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example I noticed you've missed a few check-ins lately... */
-                        coachingResponse?: string;
-                        /** @example User has been struggling with motivation */
-                        context?: string;
-                    };
-                };
-            };
-        };
-    };
     personalizationGetPersonalizationContext: {
         parameters: {
             query: {
@@ -4422,18 +4656,37 @@ export interface operations {
                                 completed: boolean;
                                 /** @example 2024-01-01T00:00:00Z */
                                 createdAt: string;
+                                currentValue?: number;
                                 /** @example Complete a 42.195km marathon race */
                                 description: string;
                                 /** @example 2024-12-31T00:00:00Z */
                                 dueDate?: string;
                                 /** @example goal-123 */
                                 id: string;
+                                /** @example milestone */
+                                measurement?: string;
+                                milestones?: {
+                                    /** @example 2024-01-15T00:00:00Z */
+                                    doneAt?: string;
+                                    /** @example goal-123 */
+                                    goalId: string;
+                                    /** @example ms-123 */
+                                    id: string;
+                                    /** @example 0 */
+                                    sortOrder: number;
+                                    /** @example Pick a race date */
+                                    title: string;
+                                }[];
                                 /** @example 50 */
                                 progress: number;
                                 /** @example ["habit-1" */
                                 relatedHabitIds?: string[];
+                                startValue?: number;
+                                targetValue?: number;
                                 /** @example Run a marathon */
                                 title: string;
+                                /** @example kg */
+                                unit?: string;
                                 /** @example 2024-01-15T00:00:00Z */
                                 updatedAt: string;
                                 /** @example user-123 */
@@ -4580,47 +4833,6 @@ export interface operations {
                                 userId: string;
                             }[];
                         };
-                    };
-                };
-            };
-        };
-    };
-    personalizationGenerateOnboardingHabits: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @example balanced */
-                    accountabilityStyle?: string;
-                    /** @example Lack of time in the morning */
-                    blocker?: string;
-                    /** @example 30 */
-                    dailyMinutes: number;
-                    /** @example fitness */
-                    goalCategory?: string;
-                    /** @example Run a 5k */
-                    goalTitle: string;
-                    /** @example Improve my health and energy */
-                    motivation?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            description: string;
-                            name: string;
-                        }[];
                     };
                 };
             };
@@ -5135,18 +5347,37 @@ export interface operations {
                                 completed: boolean;
                                 /** @example 2024-01-01T00:00:00Z */
                                 createdAt: string;
+                                currentValue?: number;
                                 /** @example Complete a 42.195km marathon race */
                                 description: string;
                                 /** @example 2024-12-31T00:00:00Z */
                                 dueDate?: string;
                                 /** @example goal-123 */
                                 id: string;
+                                /** @example milestone */
+                                measurement?: string;
+                                milestones?: {
+                                    /** @example 2024-01-15T00:00:00Z */
+                                    doneAt?: string;
+                                    /** @example goal-123 */
+                                    goalId: string;
+                                    /** @example ms-123 */
+                                    id: string;
+                                    /** @example 0 */
+                                    sortOrder: number;
+                                    /** @example Pick a race date */
+                                    title: string;
+                                }[];
                                 /** @example 50 */
                                 progress: number;
                                 /** @example ["habit-1" */
                                 relatedHabitIds?: string[];
+                                startValue?: number;
+                                targetValue?: number;
                                 /** @example Run a marathon */
                                 title: string;
+                                /** @example kg */
+                                unit?: string;
                                 /** @example 2024-01-15T00:00:00Z */
                                 updatedAt: string;
                                 /** @example user-123 */
@@ -5548,6 +5779,455 @@ export interface operations {
             };
         };
     };
+    weeklyreviewGetWeeklyReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            aiSummary?: string;
+                            bestDay?: string;
+                            completedCheckIns: number;
+                            completionRate: number;
+                            energySummary: {
+                                [key: string]: number;
+                            };
+                            generatedAt: string;
+                            habitBreakdown: {
+                                category?: string;
+                                completedCount: number;
+                                completionRate: number;
+                                habitId: string;
+                                habitName: string;
+                                lastCheckInAt?: string;
+                                missedCount: number;
+                                totalCheckIns: number;
+                            }[];
+                            hardestDay?: string;
+                            id: string;
+                            missedCheckIns: number;
+                            moodSummary: {
+                                [key: string]: number;
+                            };
+                            nextWeekPlan: {
+                                commitments: string[];
+                                focus: string;
+                                recoveryActions: string[];
+                                risks: string[];
+                            };
+                            suggestedAdjustments: {
+                                adjustmentType: string;
+                                habitId?: string;
+                                habitName: string;
+                                reason: string;
+                                suggestion: string;
+                            }[];
+                            topBlocker?: string;
+                            totalHabits: number;
+                            userId: string;
+                            weekEnd: string;
+                            weekStart: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsListConversations: {
+        parameters: {
+            query: {
+                type?: string;
+                /** @example 1 */
+                page: number;
+                /** @example 20 */
+                limit: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsStartConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    initialMessage?: string;
+                    title?: string;
+                    type?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                        initialMessage?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsGetConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsDeleteConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    conversationsArchiveConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsGetMessages: {
+        parameters: {
+            query: {
+                /** @example 1 */
+                page: number;
+                /** @example 50 */
+                limit: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        }[];
+                        page?: {
+                            /** @example 20 */
+                            limit: number;
+                            /** @example 1 */
+                            page: number;
+                            /** @example 100 */
+                            total: number;
+                            /** @example 5 */
+                            totalPages: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsAppendMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    content: string;
+                    role?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        conversation?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                        data?: {
+                            content: string;
+                            conversationId: string;
+                            createdAt: string;
+                            id: string;
+                            role: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    conversationsUnarchiveConversation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            archived: boolean;
+                            createdAt: string;
+                            id: string;
+                            lastMessage: string;
+                            title: string;
+                            type: string;
+                            updatedAt: string;
+                            userId: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    personalizationGeneratePersonalizedCoaching: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    attachments?: {
+                        /** @example image */
+                        attachmentType: string;
+                        /** @example image/png */
+                        contentType: string;
+                        /** @example iVBORw0KGgo... */
+                        data: string;
+                        /** @example screenshot.png */
+                        name: string;
+                    }[];
+                    /** @example User has been struggling with motivation */
+                    context?: string;
+                    conversationId?: string;
+                    goalId?: string;
+                    regenerate?: boolean;
+                    /** @example User missed 3 consecutive check-ins */
+                    userMessage: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example I noticed you've missed a few check-ins lately... */
+                        coachingResponse?: string;
+                        /** @example User has been struggling with motivation */
+                        context?: string;
+                    };
+                };
+            };
+        };
+    };
+    personalizationGenerateOnboardingHabits: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @example balanced */
+                    accountabilityStyle?: string;
+                    /** @example Lack of time in the morning */
+                    blocker?: string;
+                    /** @example 30 */
+                    dailyMinutes: number;
+                    /** @example fitness */
+                    goalCategory?: string;
+                    /** @example Run a 5k */
+                    goalTitle: string;
+                    /** @example Improve my health and energy */
+                    motivation?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            description: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     weeklyreviewGenerateWeeklyReview: {
         parameters: {
             query?: never;
@@ -5676,66 +6356,48 @@ export interface operations {
             };
         };
     };
-    weeklyreviewGetWeeklyReview: {
+    streamPersonalizedCoaching: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GeneratePersonalizedCoachingRequest"];
+            };
+        };
         responses: {
+            /**
+             * @description SSE stream opened successfully. The response body is a sequence of
+             *     Server-Sent Events (see the operation description for event types
+             *     and ordering).
+             */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        data?: {
-                            aiSummary?: string;
-                            bestDay?: string;
-                            completedCheckIns: number;
-                            completionRate: number;
-                            energySummary: {
-                                [key: string]: number;
-                            };
-                            generatedAt: string;
-                            habitBreakdown: {
-                                category?: string;
-                                completedCount: number;
-                                completionRate: number;
-                                habitId: string;
-                                habitName: string;
-                                lastCheckInAt?: string;
-                                missedCount: number;
-                                totalCheckIns: number;
-                            }[];
-                            hardestDay?: string;
-                            id: string;
-                            missedCheckIns: number;
-                            moodSummary: {
-                                [key: string]: number;
-                            };
-                            nextWeekPlan: {
-                                commitments: string[];
-                                focus: string;
-                                recoveryActions: string[];
-                                risks: string[];
-                            };
-                            suggestedAdjustments: {
-                                adjustmentType: string;
-                                habitId?: string;
-                                habitName: string;
-                                reason: string;
-                                suggestion: string;
-                            }[];
-                            topBlocker?: string;
-                            totalHabits: number;
-                            userId: string;
-                            weekEnd: string;
-                            weekStart: string;
-                        };
-                    };
+                    "text/event-stream": Record<string, never>;
+                };
+            };
+            /** @description Missing or invalid bearer token. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Internal server error before the stream was committed. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

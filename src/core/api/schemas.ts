@@ -445,6 +445,9 @@ export const NotificationSchema = z.object({
   read: z.boolean(),
   userId: z.string(),
   createdAt: z.string(),
+  destination: z.string().optional(),
+  resourceId: z.string().optional(),
+  metadata: z.string().optional(),
 });
 
 export type Notification = z.infer<typeof NotificationSchema>;
@@ -466,6 +469,8 @@ export const NotificationPreferencesSchema = z.object({
   pushEnabled: z.boolean(),
   habitRemindersEnabled: z.boolean(),
   goalRemindersEnabled: z.boolean(),
+  streakWarningsEnabled: z.boolean(),
+  sundayReviewEnabled: z.boolean(),
 });
 
 export type NotificationPreferences = z.infer<typeof NotificationPreferencesSchema>;
