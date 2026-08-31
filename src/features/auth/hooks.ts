@@ -16,21 +16,25 @@ import { NoopAnalytics, type Analytics } from '@/core/telemetry/analytics';
 import { setSentryUser } from '@/core/telemetry/sentry';
 
 import {
-  forgotPassword,
-  login,
-  logout,
-  register,
-  resendVerification,
-  resetPassword,
-  verifyEmail,
+    appleLogin,
+    forgotPassword,
+    googleLogin,
+    login,
+    logout,
+    register,
+    resendVerification,
+    resetPassword,
+    verifyEmail,
 } from './api';
 import type {
-  ForgotPasswordRequest,
-  LoginRequest,
-  RegisterRequest,
-  ResendVerificationRequest,
-  ResetPasswordRequest,
-  VerifyEmailRequest,
+    AppleLoginRequest,
+    ForgotPasswordRequest,
+    GoogleLoginRequest,
+    LoginRequest,
+    RegisterRequest,
+    ResendVerificationRequest,
+    ResetPasswordRequest,
+    VerifyEmailRequest,
 } from './schemas';
 
 // Analytics instance — replaced with a real implementation when consent is wired.
@@ -126,6 +130,55 @@ export function useRegister() {
     },
     onError: () => {
       analytics.track('auth_register_failed');
+    },
+  });
+}
+
+/**
+ * Shared success handler for social login (Google/Apple). Fetches onboarding
+ * status, sets the session, and navigates — same flow as email/password login.
+ */
+function useSocialLoginSuccess() {
+  const router = useRouter();
+  return async (authResponse: Awaited<ReturnType<typeof login>>) => {
+    const onboardingCompleted = await fetchOnboardingCompleted();
+    setSessionFromProfile(authResponse.user, onboardingCompleted);
+    router.replace(routeForOnboardingStatus(onboardingCompleted));
+  };
+}
+
+export function useGoogleLogin() {
+  const onSuccess = useSocialLoginSuccess();
+
+  return useMutation({
+    mutationFn: async (data: GoogleLoginRequest) => {
+      const authResponse = await googleLogin(data);
+      return authResponse;
+    },
+    onSuccess: async (authResponse) => {
+      analytics.track('auth_google_login_succeeded');
+      await onSuccess(authResponse);
+    },
+    onError: () => {
+      analytics.track('auth_google_login_failed');
+    },
+  });
+}
+
+export function useAppleLogin() {
+  const onSuccess = useSocialLoginSuccess();
+
+  return useMutation({
+    mutationFn: async (data: AppleLoginRequest) => {
+      const authResponse = await appleLogin(data);
+      return authResponse;
+    },
+    onSuccess: async (authResponse) => {
+      analytics.track('auth_apple_login_succeeded');
+      await onSuccess(authResponse);
+    },
+    onError: () => {
+      analytics.track('auth_apple_login_failed');
     },
   });
 }

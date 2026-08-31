@@ -39,6 +39,7 @@ import { z } from 'zod';
 export type {
   AppendMessageRequest,
   AppendMessageResponse,
+  CoachingAttachment,
   Conversation,
   ConversationMessage,
   GeneratePersonalizedCoachingRequest,
@@ -55,11 +56,13 @@ export async function listConversations(params?: {
   type?: string;
   page?: number;
   limit?: number;
+  /** false (default) lists active conversations, true lists archived ones. */
+  archived?: boolean;
 }): Promise<ListConversationsResponse> {
   const response = await apiRequest<unknown>({
     method: 'GET',
     url: conversationEndpoints.list,
-    params: { page: 1, limit: 20, ...params },
+    params: { page: 1, limit: 20, archived: false, ...params },
   });
   return ListConversationsResponseSchema.parse(response);
 }

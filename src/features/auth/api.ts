@@ -15,28 +15,32 @@
 import { apiRequest, getBareClient } from '@/core/api/client';
 import { authEndpoints, profileEndpoints } from '@/core/api/endpoints';
 import {
-  AuthResponseSchema,
-  ProfileResponseSchema,
-  RegisterResponseSchema,
-  type AuthResponse,
-  type ProfileResponse,
-  type RegisterResponse,
+    AuthResponseSchema,
+    ProfileResponseSchema,
+    RegisterResponseSchema,
+    type AuthResponse,
+    type ProfileResponse,
+    type RegisterResponse,
 } from '@/core/api/schemas';
 import { tokenManager } from '@/core/auth/token-manager';
 
 import {
-  ForgotPasswordRequestSchema,
-  LoginRequestSchema,
-  RegisterRequestSchema,
-  ResendVerificationRequestSchema,
-  ResetPasswordRequestSchema,
-  VerifyEmailRequestSchema,
-  type ForgotPasswordRequest,
-  type LoginRequest,
-  type RegisterRequest,
-  type ResendVerificationRequest,
-  type ResetPasswordRequest,
-  type VerifyEmailRequest,
+    AppleLoginRequestSchema,
+    ForgotPasswordRequestSchema,
+    GoogleLoginRequestSchema,
+    LoginRequestSchema,
+    RegisterRequestSchema,
+    ResendVerificationRequestSchema,
+    ResetPasswordRequestSchema,
+    VerifyEmailRequestSchema,
+    type AppleLoginRequest,
+    type ForgotPasswordRequest,
+    type GoogleLoginRequest,
+    type LoginRequest,
+    type RegisterRequest,
+    type ResendVerificationRequest,
+    type ResetPasswordRequest,
+    type VerifyEmailRequest,
 } from './schemas';
 
 /**
@@ -140,4 +144,30 @@ export async function getCurrentUser(): Promise<ProfileResponse> {
     url: profileEndpoints.me,
   });
   return ProfileResponseSchema.parse(response);
+}
+
+/**
+ * Exchange a Google authorization code for app tokens. The code is obtained
+ * via expo-auth-session's Google sign-in flow; the backend exchanges it with
+ * Google server-side (no client secret in the app).
+ */
+export async function googleLogin(data: GoogleLoginRequest): Promise<AuthResponse> {
+  const validated = GoogleLoginRequestSchema.parse(data);
+  const response = await getBareClient().post<unknown>(authEndpoints.googleLogin, validated);
+  const parsed = AuthResponseSchema.parse(response.data);
+  await applyAuthResponse(parsed);
+  return parsed;
+}
+
+/**
+ * Exchange an Apple Sign-In identity token + authorization code for app tokens.
+ * The identity token and code come from expo-apple-authentication; the backend
+ * verifies them with Apple server-side (no client secret in the app).
+ */
+export async function appleLogin(data: AppleLoginRequest): Promise<AuthResponse> {
+  const validated = AppleLoginRequestSchema.parse(data);
+  const response = await getBareClient().post<unknown>(authEndpoints.appleLogin, validated);
+  const parsed = AuthResponseSchema.parse(response.data);
+  await applyAuthResponse(parsed);
+  return parsed;
 }

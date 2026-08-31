@@ -10,13 +10,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '@/core/api/errors';
-import { conversationKeys } from '@/core/query/query-keys';
 import type {
   AppendMessageRequest,
   Conversation,
   GeneratePersonalizedCoachingRequest,
   StartConversationRequest,
 } from '@/core/api/schemas';
+import { conversationKeys } from '@/core/query/query-keys';
 
 import {
   appendMessage,
@@ -29,6 +29,7 @@ import {
   streamCoaching,
   streamVoiceTurn,
   transcribeAudio,
+  unarchiveConversation,
 } from './api';
 import {
   initialCoachingStreamState,
@@ -41,7 +42,12 @@ import {
 
 // ─── Conversation queries ─────────────────────────────────────────────────────
 
-export function useConversations(params?: { type?: string; page?: number; limit?: number }) {
+export function useConversations(params?: {
+  type?: string;
+  page?: number;
+  limit?: number;
+  archived?: boolean;
+}) {
   return useQuery({
     queryKey: conversationKeys.list(params),
     queryFn: () => listConversations(params),
@@ -95,6 +101,17 @@ export function useArchiveConversation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => archiveConversation(id),
+    onSuccess: (_data, id) => {
+      queryClient.invalidateQueries({ queryKey: conversationKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: conversationKeys.lists() });
+    },
+  });
+}
+
+export function useUnarchiveConversation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => unarchiveConversation(id),
     onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: conversationKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: conversationKeys.lists() });

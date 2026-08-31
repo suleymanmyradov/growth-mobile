@@ -11,9 +11,16 @@
  * FAB opens a sheet to create a habit or goal. Paused/completed states use a
  * label + icon, not opacity alone.
  *
+ * Free plan limits: when the user reaches the habit or goal limit, a
+ * LimitUpgradePrompt card appears with "See Pro" (paywall) and "Archive"
+ * (ArchiveSheet to delete one and free a slot) actions. Create attempts past
+ * the limit are gated client-side via entitlements and server-side via the
+ * `plan_limit_reached` error code — both surface the same prompt.
+ *
  * Domain boundary: composition screen in `features/plan`. Imports only PUBLIC
  * hooks/components from `features/habits`, `features/goals`, `features/check-ins`,
- * and `features/categories`. Does not import feature internals.
+ * `features/categories`, and `features/billing`. Does not import feature
+ * internals.
  */
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CheckCircle2, Plus, Target } from 'lucide-react-native';
@@ -27,6 +34,7 @@ import type { Goal, Habit } from '@/core/api/schemas';
 import {
     Button,
     Card,
+    Chip,
     EmptyState,
     ErrorState,
     SectionLabel,
@@ -34,9 +42,10 @@ import {
     Sheet,
     Skeleton,
     ThemedText,
-    type Segment,
+    type Segment
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
+import { useBillingOverview, useTrackUpgradeEvent } from '@/features/billing';
 import { useCreateCheckIn } from '@/features/check-ins';
 import {
     GoalCard,
@@ -58,12 +67,17 @@ import {
     type HabitFormValues,
 } from '@/features/habits';
 
+import { ArchiveSheet, type ArchiveMode } from '../components/ArchiveSheet';
+import { LimitUpgradePrompt, type LimitTrigger } from '../components/LimitUpgradePrompt';
 import { LinkGoalSheet } from '../components/LinkGoalSheet';
 import {
+    filterAndSortHabits,
     filterGoalsByLifecycle,
+    getHabitCategories,
     getHabitsForGoal,
     getUntiedHabits,
     type Filter,
+    type SortBy,
 } from '../grouping';
 
 type FormKind = 'habit' | 'goal';
@@ -72,13 +86,17 @@ export function PlanScreen(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const { colors, spacing, radius } = useTheme();
-  const { create, name: tplName, description: tplDescription, category: tplCategory } =
-    useLocalSearchParams<{
-      create?: string;
-      name?: string;
-      description?: string;
-      category?: string;
-    }>();
+  const {
+    create,
+    name: tplName,
+    description: tplDescription,
+    category: tplCategory,
+  } = useLocalSearchParams<{
+    create?: string;
+    name?: string;
+    description?: string;
+    category?: string;
+  }>();
 
   const {
     data: habits,
@@ -104,7 +122,16 @@ export function PlanScreen(): React.ReactNode {
   const toggleGoal = useToggleGoal();
   const createCheckIn = useCreateCheckIn();
 
+  // Billing / entitlements — used to detect Free plan limits and gate creates
+  // client-side before the server rejects with `plan_limit_reached`.
+  const { data: billing } = useBillingOverview();
+  const trackUpgradeEvent = useTrackUpgradeEvent();
+  const entitlements = billing?.entitlements;
+  const isPro = billing?.subscription?.planCode === 'pro';
+
   const [filter, setFilter] = useState<Filter>('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortBy, setSortBy] = useState<SortBy>('streak');
   const [fabOpen, setFabOpen] = useState(false);
   const [formKind, setFormKind] = useState<FormKind | null>(() =>
     create === 'habit' ? 'habit' : create === 'goal' ? 'goal' : null,
@@ -113,6 +140,13 @@ export function PlanScreen(): React.ReactNode {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [linkHabit, setLinkHabit] = useState<Habit | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Limit-upgrade prompt + archive sheet state. The prompt is shown when the
+  // user reaches a Free plan limit (detected client-side via entitlements or
+  // server-side via the `plan_limit_reached` error code on create).
+  const [limitPrompt, setLimitPrompt] = useState<LimitTrigger | null>(null);
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveMode, setArchiveMode] = useState<ArchiveMode>('habit');
   const activeFormKind: FormKind | null =
     create === 'habit' ? 'habit' : create === 'goal' ? 'goal' : formKind;
 
@@ -143,7 +177,11 @@ export function PlanScreen(): React.ReactNode {
   ];
 
   const filteredGoals = useMemo(() => filterGoalsByLifecycle(goals ?? [], filter), [goals, filter]);
-  const filteredUntied = untiedHabits;
+  const habitCategories = useMemo(() => getHabitCategories(habits ?? []), [habits]);
+  const filteredUntied = useMemo(
+    () => filterAndSortHabits(untiedHabits, categoryFilter, sortBy),
+    [untiedHabits, categoryFilter, sortBy],
+  );
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -166,25 +204,68 @@ export function PlanScreen(): React.ReactNode {
   };
 
   const handleHabitSubmit = (values: HabitFormValues) => {
+    // Client-side entitlement gate — avoids a round-trip when the limit is known.
+    if (entitlements && !entitlements.canCreateHabit) {
+      setFormKind(null);
+      setEditingHabit(null);
+      showLimitPrompt('habit_limit');
+      return;
+    }
     if (editingHabit) {
-      updateHabit.mutate(
-        { id: editingHabit.id, data: values },
-        { onSuccess: () => closeForm() },
-      );
+      updateHabit.mutate({ id: editingHabit.id, data: values }, { onSuccess: () => closeForm() });
     } else {
-      createHabit.mutate(values, { onSuccess: () => closeForm() });
+      createHabit.mutate(values, {
+        onSuccess: () => closeForm(),
+        onError: (error) => {
+          if (error instanceof ApiError && error.code === 'plan_limit_reached') {
+            setFormKind(null);
+            showLimitPrompt('habit_limit');
+          }
+        },
+      });
     }
   };
 
   const handleGoalSubmit = (values: GoalFormValues) => {
-    if (editingGoal) {
-      updateGoal.mutate(
-        { id: editingGoal.id, data: values },
-        { onSuccess: () => closeForm() },
-      );
-    } else {
-      createGoal.mutate(values, { onSuccess: () => closeForm() });
+    // Client-side entitlement gate — avoids a round-trip when the limit is known.
+    if (entitlements && !entitlements.canCreateGoal) {
+      setFormKind(null);
+      setEditingGoal(null);
+      showLimitPrompt('goal_limit');
+      return;
     }
+    if (editingGoal) {
+      updateGoal.mutate({ id: editingGoal.id, data: values }, { onSuccess: () => closeForm() });
+    } else {
+      createGoal.mutate(values, {
+        onSuccess: () => closeForm(),
+        onError: (error) => {
+          if (error instanceof ApiError && error.code === 'plan_limit_reached') {
+            setFormKind(null);
+            showLimitPrompt('goal_limit');
+          }
+        },
+      });
+    }
+  };
+
+  /** Show the limit-upgrade prompt and track the view event for analytics. */
+  const showLimitPrompt = (trigger: LimitTrigger) => {
+    setLimitPrompt(trigger);
+    trackUpgradeEvent.mutate({
+      eventType: 'prompt_viewed',
+      surface: trigger === 'habit_limit' ? 'habit_create_limit' : 'goal_create_limit',
+      trigger,
+      planCode: 'pro',
+    });
+  };
+
+  /** Open the archive sheet in the mode matching the current limit prompt. */
+  const openArchiveFromPrompt = () => {
+    if (limitPrompt === 'goal_limit') setArchiveMode('goal');
+    else setArchiveMode('habit');
+    setArchiveOpen(true);
+    setLimitPrompt(null);
   };
 
   const handleDeleteHabit = (habit: Habit) => {
@@ -218,6 +299,18 @@ export function PlanScreen(): React.ReactNode {
 
   const goalCount = goals?.length ?? 0;
   const habitCount = habits?.length ?? 0;
+
+  // Free plan limit detection. The prompt is shown when the user is at the
+  // limit (not Pro, and used >= limit). The explicit `limitPrompt` state
+  // (set by create-error or entitlement gate) takes precedence over the
+  // passive at-limit card so a dismissed prompt does not reappear until the
+  // user triggers it again.
+  const goalLimit = entitlements?.activeGoalLimit ?? 3;
+  const habitLimit = entitlements?.activeHabitLimit ?? 5;
+  const atGoalLimit = !isPro && goalCount >= goalLimit;
+  const atHabitLimit = !isPro && habitCount >= habitLimit;
+  const showGoalLimitPrompt = limitPrompt === 'goal_limit' || (!limitPrompt && atGoalLimit);
+  const showHabitLimitPrompt = limitPrompt === 'habit_limit' || (!limitPrompt && atHabitLimit);
 
   // ─── Form overlay (full-screen) ────────────────────────────────────────────
   if (activeFormKind === 'habit') {
@@ -412,6 +505,40 @@ export function PlanScreen(): React.ReactNode {
         ) : filteredUntied.length > 0 ? (
           <View style={{ gap: spacing.md }}>
             <SectionLabel>{t('plan.untiedSection')}</SectionLabel>
+            {/* Category filter chips + sort control */}
+            {habitCategories.length > 0 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: spacing.xs, paddingVertical: 2 }}
+              >
+                <Chip
+                  selected={categoryFilter === 'all'}
+                  onPress={() => setCategoryFilter('all')}
+                >
+                  {t('plan.filterAll')}
+                </Chip>
+                {habitCategories.map((cat) => (
+                  <Chip
+                    key={cat}
+                    selected={categoryFilter === cat}
+                    onPress={() => setCategoryFilter(cat)}
+                  >
+                    {cat}
+                  </Chip>
+                ))}
+              </ScrollView>
+            ) : null}
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <SegmentedTabs
+                segments={[
+                  { id: 'streak', label: t('plan.sortStreak') },
+                  { id: 'name', label: t('plan.sortName') },
+                ]}
+                value={sortBy}
+                onChange={(id) => setSortBy(id as SortBy)}
+              />
+            </View>
             {filteredUntied.map((habit) => (
               <View key={habit.id} style={{ gap: spacing.xs }}>
                 <HabitCard
@@ -457,6 +584,33 @@ export function PlanScreen(): React.ReactNode {
             }
           />
         ) : null}
+
+        {/* Free plan limit upgrade prompts. Shown passively when at the limit
+            (not Pro, used >= limit) or actively after a create is gated. The
+            "See Pro" action opens the native paywall with the validated reason;
+            "Archive" opens the ArchiveSheet to delete one and free a slot. */}
+        {showGoalLimitPrompt ? (
+          <LimitUpgradePrompt
+            trigger="goal_limit"
+            used={goalCount}
+            limit={goalLimit}
+            onSeePro={() => router.push({ pathname: '/paywall', params: { reason: 'goal_limit' } })}
+            onArchive={openArchiveFromPrompt}
+            onDismiss={() => setLimitPrompt(null)}
+          />
+        ) : null}
+        {showHabitLimitPrompt ? (
+          <LimitUpgradePrompt
+            trigger="habit_limit"
+            used={habitCount}
+            limit={habitLimit}
+            onSeePro={() =>
+              router.push({ pathname: '/paywall', params: { reason: 'habit_limit' } })
+            }
+            onArchive={openArchiveFromPrompt}
+            onDismiss={() => setLimitPrompt(null)}
+          />
+        ) : null}
       </ScrollView>
 
       {/* Floating action button (56-unit sage) */}
@@ -499,6 +653,17 @@ export function PlanScreen(): React.ReactNode {
         open={linkHabit !== null}
         onClose={() => setLinkHabit(null)}
         habit={linkHabit}
+      />
+
+      {/* Archive sheet (from the limit-upgrade prompt's "Archive" action) */}
+      <ArchiveSheet
+        open={archiveOpen}
+        onClose={() => setArchiveOpen(false)}
+        mode={archiveMode}
+        habits={habits ?? []}
+        goals={goals ?? []}
+        onDeleteHabit={(id) => deleteHabit.mutate(id)}
+        onDeleteGoal={(id) => deleteGoal.mutate(id)}
       />
     </SafeAreaView>
   );

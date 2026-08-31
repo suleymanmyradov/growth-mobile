@@ -70,7 +70,8 @@ describe('TokenManager — persistSession', () => {
 
 describe('TokenManager — loadSession', () => {
   it('returns the persisted session when all keys are present', async () => {
-    jest.mocked(SecureStore.getItemAsync)
+    jest
+      .mocked(SecureStore.getItemAsync)
       .mockResolvedValueOnce('rt-loaded') // refresh_token
       .mockResolvedValueOnce('sid-loaded') // session_id
       .mockResolvedValueOnce('uid-loaded'); // user_id
@@ -84,7 +85,8 @@ describe('TokenManager — loadSession', () => {
   });
 
   it('returns null when refresh token is missing', async () => {
-    jest.mocked(SecureStore.getItemAsync)
+    jest
+      .mocked(SecureStore.getItemAsync)
       .mockResolvedValueOnce(null) // refresh_token
       .mockResolvedValueOnce('sid') // session_id
       .mockResolvedValueOnce('uid'); // user_id
@@ -94,7 +96,8 @@ describe('TokenManager — loadSession', () => {
   });
 
   it('returns null when session ID is missing', async () => {
-    jest.mocked(SecureStore.getItemAsync)
+    jest
+      .mocked(SecureStore.getItemAsync)
       .mockResolvedValueOnce('rt')
       .mockResolvedValueOnce(null) // session_id missing
       .mockResolvedValueOnce('uid');
@@ -104,7 +107,8 @@ describe('TokenManager — loadSession', () => {
   });
 
   it('returns null when user ID is missing', async () => {
-    jest.mocked(SecureStore.getItemAsync)
+    jest
+      .mocked(SecureStore.getItemAsync)
       .mockResolvedValueOnce('rt')
       .mockResolvedValueOnce('sid')
       .mockResolvedValueOnce(null); // user_id missing

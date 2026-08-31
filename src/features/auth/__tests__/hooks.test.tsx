@@ -20,15 +20,14 @@ import React from 'react';
 import { useSessionStore } from '@/core/auth/session';
 import { tokenManager } from '@/core/auth/token-manager';
 import {
-    useForgotPassword,
-    useLogin,
-    useLogout,
-    useRegister,
-    useResendVerification,
-    useResetPassword,
-    useVerifyEmail,
+  useForgotPassword,
+  useLogin,
+  useLogout,
+  useRegister,
+  useResendVerification,
+  useResetPassword,
+  useVerifyEmail,
 } from '../hooks';
-
 
 // --- Mocks ---
 

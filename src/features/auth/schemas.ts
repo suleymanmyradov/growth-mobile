@@ -67,3 +67,25 @@ export const ResetPasswordRequestSchema = z.object({
 });
 
 export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>;
+
+export const GoogleLoginRequestSchema = z.object({
+  authorizationCode: z.string().min(1, 'Authorization code is required'),
+  redirectUri: z.string().optional(),
+});
+
+export type GoogleLoginRequest = z.infer<typeof GoogleLoginRequestSchema>;
+
+export const AppleLoginRequestSchema = z.object({
+  authorizationCode: z.string().optional(),
+  identityToken: z.string().min(1, 'Identity token is required'),
+  nonce: z.string().optional(),
+  fullName: z
+    .object({
+      givenName: z.string().optional(),
+      familyName: z.string().optional(),
+    })
+    .optional(),
+  redirectUri: z.string().optional(),
+});
+
+export type AppleLoginRequest = z.infer<typeof AppleLoginRequestSchema>;

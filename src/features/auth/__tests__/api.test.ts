@@ -17,15 +17,15 @@ import * as SecureStore from 'expo-secure-store';
 
 import { tokenManager } from '@/core/auth/token-manager';
 import {
-    applyAuthResponse,
-    forgotPassword,
-    getCurrentUser,
-    login,
-    logout,
-    register,
-    resendVerification,
-    resetPassword,
-    verifyEmail,
+  applyAuthResponse,
+  forgotPassword,
+  getCurrentUser,
+  login,
+  logout,
+  register,
+  resendVerification,
+  resetPassword,
+  verifyEmail,
 } from '../api';
 
 // --- Mocks ---
@@ -146,16 +146,12 @@ describe('login', () => {
   });
 
   it('throws on invalid email format', async () => {
-    await expect(
-      login({ email: 'not-an-email', password: 'Password1!' }),
-    ).rejects.toThrow();
+    await expect(login({ email: 'not-an-email', password: 'Password1!' })).rejects.toThrow();
     expect(mockPost).not.toHaveBeenCalled();
   });
 
   it('throws on short password', async () => {
-    await expect(
-      login({ email: 'test@example.com', password: 'short' }),
-    ).rejects.toThrow();
+    await expect(login({ email: 'test@example.com', password: 'short' })).rejects.toThrow();
     expect(mockPost).not.toHaveBeenCalled();
   });
 
@@ -163,16 +159,14 @@ describe('login', () => {
     mockPost.mockResolvedValue({
       data: { ...VALID_AUTH_RESPONSE, accessToken: undefined },
     });
-    await expect(
-      login({ email: 'test@example.com', password: 'Password1!' }),
-    ).rejects.toThrow();
+    await expect(login({ email: 'test@example.com', password: 'Password1!' })).rejects.toThrow();
   });
 
   it('propagates network errors', async () => {
     mockPost.mockRejectedValue(new Error('Network error'));
-    await expect(
-      login({ email: 'test@example.com', password: 'Password1!' }),
-    ).rejects.toThrow('Network error');
+    await expect(login({ email: 'test@example.com', password: 'Password1!' })).rejects.toThrow(
+      'Network error',
+    );
   });
 });
 
@@ -336,15 +330,11 @@ describe('resetPassword', () => {
   });
 
   it('throws on empty token', async () => {
-    await expect(
-      resetPassword({ token: '', newPassword: 'NewPassword1!' }),
-    ).rejects.toThrow();
+    await expect(resetPassword({ token: '', newPassword: 'NewPassword1!' })).rejects.toThrow();
   });
 
   it('throws on weak password', async () => {
-    await expect(
-      resetPassword({ token: 'reset-token', newPassword: 'weak' }),
-    ).rejects.toThrow();
+    await expect(resetPassword({ token: 'reset-token', newPassword: 'weak' })).rejects.toThrow();
   });
 });
 

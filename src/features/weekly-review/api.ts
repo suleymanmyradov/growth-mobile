@@ -1,27 +1,30 @@
 /**
- * Weekly Review API — list, current, generate, detail.
+ * Weekly Review API — list, current, generate, detail, and streaming generation.
  *
- * Streaming generation (`/weekly-reviews/generate-stream`) is handled by the
- * SSE layer in `src/core/api/sse.ts` and is wired in Phase H alongside AI
- * coaching. This module covers only the JSON endpoints used by Progress.
+ * Streaming generation uses the SSE client (`src/core/api/sse-client.ts`) to
+ * open `/weekly-reviews/generate-stream` and consume SSE events. The stream
+ * emits `delta` events (partial AI summary text), a `complete` event with the
+ * full review, and `error` events.
  */
 import { apiRequest } from '@/core/api/client';
 import { weeklyReviewEndpoints } from '@/core/api/endpoints';
 import {
-  GenerateWeeklyReviewRequestSchema,
-  WeeklyReviewResponseSchema,
-  WeeklyReviewsResponseSchema,
-  type GenerateWeeklyReviewRequest,
-  type WeeklyReview,
-  type WeeklyReviewResponse,
-  type WeeklyReviewsResponse,
+    GenerateWeeklyReviewRequestSchema,
+    WeeklyReviewResponseSchema,
+    WeeklyReviewsResponseSchema,
+    type GenerateWeeklyReviewRequest,
+    type WeeklyReview,
+    type WeeklyReviewResponse,
+    type WeeklyReviewsResponse,
 } from '@/core/api/schemas';
+import { parseSSEStream } from '@/core/api/sse';
+import { openSSEStream } from '@/core/api/sse-client';
 
 export type {
-  GenerateWeeklyReviewRequest,
-  WeeklyReview,
-  WeeklyReviewResponse,
-  WeeklyReviewsResponse,
+    GenerateWeeklyReviewRequest,
+    WeeklyReview,
+    WeeklyReviewResponse,
+    WeeklyReviewsResponse
 };
 
 export async function listWeeklyReviews(params?: {
@@ -63,3 +66,47 @@ export async function generateWeeklyReview(
   });
   return WeeklyReviewResponseSchema.parse(response).data;
 }
+
+/**
+ * Streaming weekly review generation. Opens an SSE stream to
+ * `/weekly-reviews/generate-stream` and yields events as they arrive.
+ *
+ * Event types:
+ * - `delta`: `{ text: string }` — partial AI summary text
+ * - `complete`: `{ review: WeeklyReview }` — the full generated review
+ * - `error`: `{ message: string }` — stream error
+ */
+export async function* generateWeeklyReviewStream(
+  data: GenerateWeeklyReviewRequest | undefined,
+  signal?: AbortSignal,
+): AsyncGenerator<WeeklyReviewStreamEvent> {
+  const validated = GenerateWeeklyReviewRequestSchema.parse(data ?? {});
+  const body = await openSSEStream({
+    path: weeklyReviewEndpoints.generateStream,
+    body: validated,
+    signal,
+  });
+
+  for await (const event of parseSSEStream(body, signal)) {
+    if (event.event === 'delta' || event.event === 'complete' || event.event === 'error') {
+      try {
+        const data = event.data ? JSON.parse(event.data) : {};
+        if (event.event === 'delta') {
+          yield { type: 'delta', text: data.text ?? data.delta ?? '' };
+        } else if (event.event === 'complete') {
+          const review = WeeklyReviewResponseSchema.parse(data).data;
+          yield { type: 'complete', review };
+        } else {
+          yield { type: 'error', message: data.message ?? 'Stream error' };
+        }
+      } catch {
+        // Ignore malformed events — the stream continues.
+      }
+    }
+  }
+}
+
+export type WeeklyReviewStreamEvent =
+  | { type: 'delta'; text: string }
+  | { type: 'complete'; review: WeeklyReview }
+  | { type: 'error'; message: string };

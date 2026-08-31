@@ -11,6 +11,7 @@ import {
   BillingOverviewResponseSchema,
   CategorySchema,
   CheckInSchema,
+  CoachingAttachmentSchema,
   ConversationMessageSchema,
   ConversationSchema,
   CreateCheckInRequestSchema,
@@ -18,6 +19,7 @@ import {
   CreateCustomerPortalSessionResponseSchema,
   CreateHabitRequestSchema,
   GenerateOnboardingHabitsRequestSchema,
+  GeneratePersonalizedCoachingRequestSchema,
   GoalSchema,
   GoalTemplatesResponseSchema,
   HabitSchema,
@@ -875,5 +877,75 @@ describe('RegisterDeviceRequestSchema', () => {
         platform: 'ios',
       }),
     ).toThrow();
+  });
+});
+
+describe('CoachingAttachmentSchema', () => {
+  it('parses a valid image attachment', () => {
+    const parsed = CoachingAttachmentSchema.parse({
+      attachmentType: 'image',
+      name: 'screenshot.png',
+      contentType: 'image/png',
+      data: 'iVBORw0KGgo=',
+    });
+    expect(parsed.attachmentType).toBe('image');
+    expect(parsed.name).toBe('screenshot.png');
+  });
+
+  it('parses a valid document attachment', () => {
+    const parsed = CoachingAttachmentSchema.parse({
+      attachmentType: 'document',
+      name: 'report.pdf',
+      contentType: 'application/pdf',
+      data: 'JVBERi0=',
+    });
+    expect(parsed.attachmentType).toBe('document');
+  });
+
+  it('rejects an invalid attachmentType', () => {
+    expect(() =>
+      CoachingAttachmentSchema.parse({
+        attachmentType: 'video',
+        name: 'clip.mp4',
+        contentType: 'video/mp4',
+        data: 'AAAA',
+      }),
+    ).toThrow();
+  });
+});
+
+describe('GeneratePersonalizedCoachingRequestSchema', () => {
+  it('parses a minimal request with only a message', () => {
+    const parsed = GeneratePersonalizedCoachingRequestSchema.parse({
+      userMessage: 'Help me stay consistent.',
+    });
+    expect(parsed.userMessage).toBe('Help me stay consistent.');
+    expect(parsed.attachments).toBeUndefined();
+  });
+
+  it('parses a request with conversationId and attachments', () => {
+    const parsed = GeneratePersonalizedCoachingRequestSchema.parse({
+      userMessage: 'Look at this screenshot.',
+      conversationId: 'conv-1',
+      attachments: [
+        {
+          attachmentType: 'image',
+          name: 'screenshot.png',
+          contentType: 'image/png',
+          data: 'iVBORw0KGgo=',
+        },
+      ],
+      goalId: 'goal-1',
+      regenerate: false,
+      clientMessageId: 'msg-uuid-1',
+    });
+    expect(parsed.conversationId).toBe('conv-1');
+    expect(parsed.attachments).toHaveLength(1);
+    expect(parsed.goalId).toBe('goal-1');
+    expect(parsed.clientMessageId).toBe('msg-uuid-1');
+  });
+
+  it('rejects an empty userMessage', () => {
+    expect(() => GeneratePersonalizedCoachingRequestSchema.parse({ userMessage: '' })).toThrow();
   });
 });

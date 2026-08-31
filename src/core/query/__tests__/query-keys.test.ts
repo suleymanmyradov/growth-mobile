@@ -14,6 +14,7 @@ import {
   habitKeys,
   notificationKeys,
   profileKeys,
+  reportKeys,
   savedKeys,
   searchKeys,
   settingsKeys,
@@ -258,5 +259,11 @@ describe('billingKeys', () => {
 
   it('produces offerings key', () => {
     expect(billingKeys.offerings()).toEqual(['billing', 'offerings']);
+  });
+});
+
+describe('reportKeys', () => {
+  it('produces stable all key', () => {
+    expect(reportKeys.all).toEqual(['reports']);
   });
 });

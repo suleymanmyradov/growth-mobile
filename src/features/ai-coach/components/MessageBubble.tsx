@@ -4,9 +4,15 @@
  * Paper (`mobile.md` §8.4): user messages use a muted bubble; assistant
  * messages are visually quieter and need not use a bubble. Streaming partial
  * text renders the same way as a completed assistant message (no flicker).
+ *
+ * Actions: assistant messages have a Copy action; user messages have Copy,
+ * Edit, and (for the last user message) Regenerate. Actions are 44-unit
+ * targets rendered below the bubble.
  */
+import { Copy, Pencil, RefreshCw } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
@@ -16,9 +22,26 @@ export interface MessageBubbleProps {
   content: string;
   /** Optional accessibility label override (e.g. for streaming partials). */
   streaming?: boolean;
+  /** Whether this is the last user message (enables Regenerate). */
+  isLastUser?: boolean;
+  /** Called when the user taps Copy on any message. */
+  onCopy?: (content: string) => void;
+  /** Called when the user taps Edit on a user message. */
+  onEdit?: (content: string) => void;
+  /** Called when the user taps Regenerate on the last user message. */
+  onRegenerate?: () => void;
 }
 
-export function MessageBubble({ role, content, streaming }: MessageBubbleProps): ReactNode {
+export function MessageBubble({
+  role,
+  content,
+  streaming,
+  isLastUser,
+  onCopy,
+  onEdit,
+  onRegenerate,
+}: MessageBubbleProps): ReactNode {
+  const { t } = useTranslation();
   const { colors, spacing, radius } = useTheme();
   const isUser = role === 'user';
 
@@ -35,6 +58,8 @@ export function MessageBubble({ role, content, streaming }: MessageBubbleProps):
       </View>
     );
   }
+
+  const showActions = !streaming && content.length > 0 && (onCopy || onEdit || onRegenerate);
 
   return (
     <View style={[styles.wrap, isUser ? styles.userWrap : styles.assistantWrap]}>
@@ -60,6 +85,44 @@ export function MessageBubble({ role, content, streaming }: MessageBubbleProps):
           {content}
         </ThemedText>
       </View>
+
+      {showActions ? (
+        <View style={[styles.actions, isUser ? styles.userActions : styles.assistantActions]}>
+          {onCopy ? (
+            <Pressable
+              onPress={() => onCopy(content)}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.copy')}
+              hitSlop={8}
+              style={styles.actionButton}
+            >
+              <Copy color={colors.mutedForeground} size={14} />
+            </Pressable>
+          ) : null}
+          {isUser && onEdit ? (
+            <Pressable
+              onPress={() => onEdit(content)}
+              accessibilityRole="button"
+              accessibilityLabel={t('common.edit')}
+              hitSlop={8}
+              style={styles.actionButton}
+            >
+              <Pencil color={colors.mutedForeground} size={14} />
+            </Pressable>
+          ) : null}
+          {isUser && isLastUser && onRegenerate ? (
+            <Pressable
+              onPress={onRegenerate}
+              accessibilityRole="button"
+              accessibilityLabel={t('coach.regenerate')}
+              hitSlop={8}
+              style={styles.actionButton}
+            >
+              <RefreshCw color={colors.mutedForeground} size={14} />
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -70,4 +133,8 @@ const styles = StyleSheet.create({
   assistantWrap: { alignItems: 'flex-start' },
   bubble: {},
   systemWrap: { paddingVertical: 8, alignItems: 'center' },
+  actions: { flexDirection: 'row', gap: 4, paddingVertical: 2 },
+  userActions: { justifyContent: 'flex-end' },
+  assistantActions: { justifyContent: 'flex-start' },
+  actionButton: { padding: 8, minHeight: 36, justifyContent: 'center' },
 });

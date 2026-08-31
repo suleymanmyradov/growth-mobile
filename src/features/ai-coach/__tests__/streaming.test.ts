@@ -11,12 +11,12 @@ import { describe, expect, it } from '@jest/globals';
 
 import type { SSEEvent } from '@/core/api/sse';
 import {
-    initialCoachingStreamState,
-    initialVoiceTurnStreamState,
-    reduceCoachingEvent,
-    reduceVoiceTurnEvent,
-    runCoachingReducer,
-    runVoiceTurnReducer,
+  initialCoachingStreamState,
+  initialVoiceTurnStreamState,
+  reduceCoachingEvent,
+  reduceVoiceTurnEvent,
+  runCoachingReducer,
+  runVoiceTurnReducer,
 } from '../streaming';
 
 const ev = (event: string, data: string): SSEEvent => ({ event, data });

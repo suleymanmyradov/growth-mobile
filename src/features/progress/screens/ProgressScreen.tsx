@@ -3,39 +3,53 @@
  *
  * Paper (`mobile.md` §8.3): Progress replaces separate weekly-review/activity
  * entry points in the primary IA, but underlying feature/API ownership stays
- * separate. Shows week label, check-in total, consistency metric, per-habit
- * breakdown, coach interpretation (from `weeklyReview.aiSummary` only — never
- * fabricated from unrelated fields), and recent activity. Pull-to-refresh,
- * cached offline view, last-updated timestamp, Retry, skeleton, empty, and
- * error states are required.
+ * separate. Shows week label, metric cards (check-ins, consistency, missed,
+ * total habits), per-day check-in chart, coach interpretation (streaming
+ * during generation), per-habit breakdown, patterns (mood/energy/best/hardest
+ * day), suggested adjustments, next-week plan, past reviews (Pro-gated),
+ * upgrade prompt for free users, and recent activity. Pull-to-refresh, cached
+ * offline view, last-updated timestamp, Retry, skeleton, empty, and error
+ * states are required.
  *
  * Domain boundary: composition screen in `features/progress`. Imports only
- * PUBLIC hooks from `features/weekly-review` and `features/activity`. Weekly-
- * review generation/streaming is a dedicated domain operation (Phase H) and is
- * not triggered here; this screen only reads the current/generated review.
+ * PUBLIC hooks from `features/weekly-review`, `features/activity`, and
+ * `features/billing`.
  */
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, View } from 'react-native';
 
 import { ApiError } from '@/core/api/errors';
 import {
-  Button,
-  Card,
-  EmptyState,
-  ErrorState,
-  ProgressBar,
-  Screen,
-  SectionLabel,
-  Skeleton,
-  ThemedText,
+    Button,
+    Card,
+    EmptyState,
+    ErrorState,
+    ProgressBar,
+    Screen,
+    SectionLabel,
+    Skeleton,
+    ThemedText,
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useActivity } from '@/features/activity';
-import { useCurrentWeeklyReview, useGenerateWeeklyReview } from '@/features/weekly-review';
+import { useBillingOverview } from '@/features/billing';
+import {
+    useCurrentWeeklyReview,
+    useGenerateWeeklyReviewStream,
+    useWeeklyReviews,
+} from '@/features/weekly-review';
 
+import { AdjustmentsCard } from '../components/AdjustmentsCard';
+import { MetricCard } from '../components/MetricCard';
+import { NextPlanCard } from '../components/NextPlanCard';
+import { PastReviews } from '../components/PastReviews';
+import { PatternsCard } from '../components/PatternsCard';
+import { StreamingCoachCard } from '../components/StreamingCoachCard';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 import { formatWeekLabel } from '../date-format';
+
 export function ProgressScreen(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
@@ -50,13 +64,19 @@ export function ProgressScreen(): React.ReactNode {
     dataUpdatedAt: reviewUpdatedAt,
   } = useCurrentWeeklyReview();
   const {
+    data: pastReviewsData,
+  } = useWeeklyReviews({ page: 1, limit: 10 });
+  const {
     data: activity,
     isLoading: activityLoading,
     isError: activityError,
     error: activityErr,
     refetch: refetchActivity,
   } = useActivity({ page: 1, limit: 10 });
-  const generateReview = useGenerateWeeklyReview();
+  const { data: billing } = useBillingOverview();
+  const isPro = billing?.subscription?.planCode === 'pro';
+
+  const stream = useGenerateWeeklyReviewStream();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -70,12 +90,26 @@ export function ProgressScreen(): React.ReactNode {
   };
 
   const handleGenerate = () => {
-    generateReview.mutate(undefined);
+    stream.generate({ forceRegenerate: true });
   };
 
   const lastUpdated = reviewUpdatedAt ? new Date(reviewUpdatedAt).toLocaleString() : undefined;
 
   const weekLabel = review ? formatWeekLabel(review.weekStart, review.weekEnd) : null;
+
+  // Past reviews (exclude the current week).
+  const pastReviews = useMemo(() => {
+    const all = pastReviewsData?.data ?? [];
+    if (!review) return all;
+    return all.filter((r) => r.id !== review.id);
+  }, [pastReviewsData, review]);
+
+  // Show streaming card during streaming, otherwise the persisted aiSummary.
+  const showStreamingCard = stream.isStreaming || stream.partialSummary.length > 0;
+  const effectiveSummary = stream.completedReview?.aiSummary ?? review?.aiSummary;
+
+  // Upgrade prompt: show for free users with completion rate > 50%.
+  const showUpgradePrompt = !isPro && review && review.completionRate > 0.5;
 
   return (
     <Screen title={t('screens.progress.title')} onBack={() => router.back()} scrollable={false}>
@@ -111,51 +145,37 @@ export function ProgressScreen(): React.ReactNode {
               {weekLabel ?? t('progress.currentWeek')}
             </ThemedText>
 
-            <Card>
-              <View style={{ gap: spacing.md }}>
-                <View style={{ flexDirection: 'row', gap: spacing.lg }}>
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <ThemedText
-                      variant="numeric"
-                      style={{ color: colors.foreground, fontSize: 24, lineHeight: 30 }}
-                    >
-                      {review.completedCheckIns}
-                    </ThemedText>
-                    <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
-                      {t('progress.checkInsCompleted')}
-                    </ThemedText>
-                  </View>
-                  <View style={{ flex: 1, minWidth: 96, gap: 2, alignItems: 'flex-end' }}>
-                    <ThemedText
-                      variant="numeric"
-                      style={{ color: colors.accent, fontSize: 24, lineHeight: 30 }}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.8}
-                    >
-                      {t('today.percent', { percent: Math.round(review.completionRate * 100) })}
-                    </ThemedText>
-                    <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
-                      {t('progress.consistency')}
-                    </ThemedText>
-                  </View>
-                </View>
-                <ProgressBar value={review.completionRate} />
-                {review.missedCheckIns > 0 ? (
-                  <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
-                    {t('progress.missed', { count: review.missedCheckIns })}
-                  </ThemedText>
-                ) : null}
-              </View>
-            </Card>
+            {/* Metric cards */}
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <MetricCard
+                label={t('progress.checkInsCompleted')}
+                value={review.completedCheckIns}
+              />
+              <MetricCard
+                label={t('progress.consistency')}
+                value={t('today.percent', { percent: Math.round(review.completionRate * 100) })}
+                accent
+              />
+            </View>
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <MetricCard label={t('progress.missedLabel')} value={review.missedCheckIns} />
+              <MetricCard label={t('progress.totalHabits')} value={review.totalHabits} />
+            </View>
 
-            {/* Coach interpretation — only from aiSummary, never fabricated */}
-            {review.aiSummary ? (
+            <ProgressBar value={review.completionRate} />
+
+            {/* Streaming coach card or persisted AI summary */}
+            {showStreamingCard ? (
+              <StreamingCoachCard
+                partialText={stream.partialSummary}
+                isStreaming={stream.isStreaming}
+              />
+            ) : effectiveSummary ? (
               <View style={{ gap: spacing.sm }}>
                 <SectionLabel>{t('progress.coachInterpretation')}</SectionLabel>
                 <Card>
                   <ThemedText variant="body" style={{ color: colors.foreground }}>
-                    {review.aiSummary}
+                    {effectiveSummary}
                   </ThemedText>
                 </Card>
               </View>
@@ -195,27 +215,64 @@ export function ProgressScreen(): React.ReactNode {
               </View>
             ) : null}
 
-            {/* Regenerate (non-streaming) */}
-            <Button
-              variant="outline"
-              onPress={handleGenerate}
-              loading={generateReview.isPending}
-              disabled={generateReview.isPending}
-            >
-              {t('progress.regenerate')}
-            </Button>
+            {/* Patterns card */}
+            <PatternsCard review={review} />
+
+            {/* Suggested adjustments */}
+            <AdjustmentsCard adjustments={review.suggestedAdjustments} />
+
+            {/* Next-week plan */}
+            <NextPlanCard plan={review.nextWeekPlan} />
+
+            {/* Regenerate (streaming) */}
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              <Button
+                variant="outline"
+                onPress={handleGenerate}
+                loading={stream.isStreaming}
+                disabled={stream.isStreaming}
+                fullWidth
+              >
+                {stream.isStreaming ? t('common.saving') : t('progress.regenerate')}
+              </Button>
+              {stream.isStreaming ? (
+                <Button
+                  variant="ghost"
+                  onPress={stream.cancel}
+                  disabled={!stream.isStreaming}
+                >
+                  {t('coach.stop')}
+                </Button>
+              ) : null}
+            </View>
+
+            {/* Upgrade prompt for free users */}
+            <UpgradePrompt
+              shouldShow={showUpgradePrompt ?? false}
+              trigger="progress_completion_rate"
+            />
+
+            {/* Stream error */}
+            {stream.error ? (
+              <ThemedText variant="caption" style={{ color: colors.destructive }}>
+                {stream.error}
+              </ThemedText>
+            ) : null}
           </View>
         ) : (
           <EmptyState
             title={t('progress.noReviewTitle')}
             subtitle={t('progress.noReviewBody')}
             action={
-              <Button onPress={handleGenerate} loading={generateReview.isPending}>
+              <Button onPress={handleGenerate} loading={stream.isStreaming}>
                 {t('progress.generate')}
               </Button>
             }
           />
         )}
+
+        {/* Past reviews (Pro-gated) */}
+        <PastReviews reviews={pastReviews} isPro={isPro} />
 
         {/* Recent activity */}
         <View style={{ gap: spacing.md }}>

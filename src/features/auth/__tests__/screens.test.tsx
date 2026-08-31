@@ -95,9 +95,7 @@ function renderWithQueryClient(ui: React.ReactNode) {
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   activeQueryClient = queryClient;
-  return renderWithTheme(
-    React.createElement(QueryClientProvider, { client: queryClient }, ui),
-  );
+  return renderWithTheme(React.createElement(QueryClientProvider, { client: queryClient }, ui));
 }
 
 beforeEach(() => {
@@ -118,9 +116,7 @@ afterEach(() => {
 
 describe('SignInScreen', () => {
   it('renders email and password inputs with accessibility labels', async () => {
-    const { getByLabelText } = await renderWithQueryClient(
-      React.createElement(SignInScreen),
-    );
+    const { getByLabelText } = await renderWithQueryClient(React.createElement(SignInScreen));
 
     expect(getByLabelText('auth.email')).toBeTruthy();
     expect(getByLabelText('auth.password')).toBeTruthy();
@@ -137,9 +133,7 @@ describe('SignInScreen', () => {
   });
 
   it('renders the sign-in button', async () => {
-    const { getAllByRole } = await renderWithQueryClient(
-      React.createElement(SignInScreen),
-    );
+    const { getAllByRole } = await renderWithQueryClient(React.createElement(SignInScreen));
     // At least 2 buttons: submit + forgot password
     expect(getAllByRole('button').length).toBeGreaterThanOrEqual(2);
   });
@@ -160,9 +154,7 @@ describe('SignInScreen', () => {
 
 describe('RegisterScreen', () => {
   it('renders all form fields with accessibility labels', async () => {
-    const { getByLabelText } = await renderWithQueryClient(
-      React.createElement(RegisterScreen),
-    );
+    const { getByLabelText } = await renderWithQueryClient(React.createElement(RegisterScreen));
 
     expect(getByLabelText('auth.fullName')).toBeTruthy();
     expect(getByLabelText('auth.username')).toBeTruthy();
@@ -176,9 +168,7 @@ describe('RegisterScreen', () => {
   });
 
   it('renders the create account button', async () => {
-    const { getAllByRole } = await renderWithQueryClient(
-      React.createElement(RegisterScreen),
-    );
+    const { getAllByRole } = await renderWithQueryClient(React.createElement(RegisterScreen));
     expect(getAllByRole('button').length).toBeGreaterThanOrEqual(1);
   });
 
@@ -232,9 +222,7 @@ describe('ForgotPasswordScreen', () => {
   });
 
   it('renders a back to sign-in link', async () => {
-    const { getByText } = await renderWithQueryClient(
-      React.createElement(ForgotPasswordScreen),
-    );
+    const { getByText } = await renderWithQueryClient(React.createElement(ForgotPasswordScreen));
     expect(getByText('auth.backToSignIn')).toBeTruthy();
   });
 
@@ -278,9 +266,7 @@ describe('ResetPasswordScreen', () => {
   });
 
   it('renders password hint text', async () => {
-    const { getByText } = await renderWithQueryClient(
-      React.createElement(ResetPasswordScreen),
-    );
+    const { getByText } = await renderWithQueryClient(React.createElement(ResetPasswordScreen));
     expect(getByText('auth.passwordHint')).toBeTruthy();
   });
 });

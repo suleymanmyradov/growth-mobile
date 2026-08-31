@@ -1,19 +1,27 @@
 /**
- * Check-ins API — create, today, history, checked-today.
+ * Check-ins API — create, today, history, checked-today, delete (undo).
  */
 import { apiRequest } from '@/core/api/client';
 import { checkInEndpoints } from '@/core/api/endpoints';
 import {
+  CheckInsResponseSchema,
   CreateCheckInRequestSchema,
   CreateCheckInResponseSchema,
-  CheckInsResponseSchema,
+  DeleteCheckInResponseSchema,
   type CheckIn,
   type CheckInsResponse,
   type CreateCheckInRequest,
   type CreateCheckInResponse,
+  type DeleteCheckInResponse,
 } from '@/core/api/schemas';
 
-export type { CheckIn, CreateCheckInRequest, CreateCheckInResponse, CheckInsResponse };
+export type {
+  CheckIn,
+  CheckInsResponse,
+  CreateCheckInRequest,
+  CreateCheckInResponse,
+  DeleteCheckInResponse,
+};
 
 export async function createCheckIn(data: CreateCheckInRequest): Promise<CreateCheckInResponse> {
   const validated = CreateCheckInRequestSchema.parse(data);
@@ -43,4 +51,16 @@ export async function getCheckInHistory(params: {
   });
   const parsed = CheckInsResponseSchema.parse(response);
   return parsed.data;
+}
+
+/**
+ * Delete (undo) today's check-in for a habit.
+ * Backend: DELETE /check-ins/today/:habitId → { habit: Habit }
+ */
+export async function deleteCheckIn(habitId: string): Promise<DeleteCheckInResponse> {
+  const response = await apiRequest<unknown>({
+    method: 'DELETE',
+    url: checkInEndpoints.deleteToday(encodeURIComponent(habitId)),
+  });
+  return DeleteCheckInResponseSchema.parse(response);
 }

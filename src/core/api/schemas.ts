@@ -142,7 +142,37 @@ export const UpdateHabitRequestSchema = z.object({
 
 export type UpdateHabitRequest = z.infer<typeof UpdateHabitRequestSchema>;
 
+/** Normalizes go-zero's empty-string serialization for optional enums. */
+const optionalEnum = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((v) => (v === '' || v === null ? undefined : v), schema.optional());
+
 // ─── Goal ─────────────────────────────────────────────────────────────────────
+
+export const GoalMeasurementSchema = z.enum(['binary', 'numeric', 'milestone', 'habit', 'manual']);
+export type GoalMeasurement = z.infer<typeof GoalMeasurementSchema>;
+
+export const GoalMilestoneSchema = z.object({
+  id: z.string(),
+  goalId: z.string(),
+  title: z.string(),
+  sortOrder: z.number().int(),
+  doneAt: z.string().optional(),
+});
+
+export type GoalMilestone = z.infer<typeof GoalMilestoneSchema>;
+
+/** Form-state shape for milestone steps (id optional for new entries). */
+export const MilestoneInputSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1),
+});
+
+export type MilestoneInput = z.infer<typeof MilestoneInputSchema>;
+
+const optionalNumber = z.preprocess(
+  (v) => (v === '' || v === null ? undefined : v),
+  z.number().optional(),
+);
 
 export const GoalSchema = z.object({
   id: z.string(),
@@ -155,6 +185,15 @@ export const GoalSchema = z.object({
   relatedHabitIds: z.preprocess(
     (v) => (v === null ? undefined : v),
     z.array(z.string()).optional(),
+  ),
+  measurement: optionalEnum(GoalMeasurementSchema),
+  startValue: optionalNumber,
+  currentValue: optionalNumber,
+  targetValue: optionalNumber,
+  unit: z.string().max(32).optional(),
+  milestones: z.preprocess(
+    (v) => (v === null ? undefined : v),
+    z.array(GoalMilestoneSchema).optional(),
   ),
   userId: z.string(),
   createdAt: z.string(),
@@ -179,6 +218,12 @@ export const CreateGoalRequestSchema = z.object({
   category: z.string().min(1).max(50),
   dueDate: z.string().optional(),
   relatedHabitIds: z.array(z.string()).optional(),
+  measurement: GoalMeasurementSchema.optional(),
+  startValue: z.number().optional(),
+  currentValue: z.number().optional(),
+  targetValue: z.number().optional(),
+  unit: z.string().max(32).optional(),
+  milestoneTitles: z.array(z.string()).optional(),
 });
 
 export type CreateGoalRequest = z.infer<typeof CreateGoalRequestSchema>;
@@ -189,15 +234,44 @@ export const UpdateGoalRequestSchema = z.object({
   category: z.string().min(1).max(50).optional(),
   dueDate: z.string().optional(),
   relatedHabitIds: z.array(z.string()).optional(),
+  measurement: GoalMeasurementSchema.optional(),
+  startValue: z.number().optional(),
+  currentValue: z.number().optional(),
+  targetValue: z.number().optional(),
+  unit: z.string().max(32).optional(),
+  milestoneTitles: z.array(z.string()).optional(),
+  milestones: z.array(MilestoneInputSchema).optional(),
 });
 
 export type UpdateGoalRequest = z.infer<typeof UpdateGoalRequestSchema>;
 
+export const LogGoalValueRequestSchema = z.object({
+  value: z.number(),
+});
+
+export type LogGoalValueRequest = z.infer<typeof LogGoalValueRequestSchema>;
+
+export const CreateMilestoneRequestSchema = z.object({
+  title: z.string().min(1),
+  sortOrder: z.number().int().optional(),
+});
+
+export type CreateMilestoneRequest = z.infer<typeof CreateMilestoneRequestSchema>;
+
+export const DeleteMilestoneResponseSchema = z.object({
+  success: z.boolean(),
+});
+
+export type DeleteMilestoneResponse = z.infer<typeof DeleteMilestoneResponseSchema>;
+
 // ─── Check-In ─────────────────────────────────────────────────────────────────
 
 export const CheckInStatusSchema = z.enum(['completed', 'missed']);
+export type CheckInStatus = z.infer<typeof CheckInStatusSchema>;
 export const CheckInMoodSchema = z.enum(['great', 'okay', 'low', 'stressed']);
+export type CheckInMood = z.infer<typeof CheckInMoodSchema>;
 export const CheckInEnergySchema = z.enum(['high', 'medium', 'low']);
+export type CheckInEnergy = z.infer<typeof CheckInEnergySchema>;
 export const CheckInBlockerSchema = z.enum([
   'lack_of_time',
   'low_motivation',
@@ -205,10 +279,7 @@ export const CheckInBlockerSchema = z.enum([
   'unclear_plan',
   'other',
 ]);
-
-/** Normalizes go-zero's empty-string serialization for optional enums. */
-const optionalEnum = <T extends z.ZodTypeAny>(schema: T) =>
-  z.preprocess((v) => (v === '' || v === null ? undefined : v), schema.optional());
+export type CheckInBlocker = z.infer<typeof CheckInBlockerSchema>;
 
 export const CheckInSchema = z.object({
   id: z.string(),
@@ -249,6 +320,12 @@ export const CheckInsResponseSchema = z.union([
 ]);
 
 export type CheckInsResponse = z.infer<typeof CheckInsResponseSchema>;
+
+export const DeleteCheckInResponseSchema = z.object({
+  habit: HabitSchema,
+});
+
+export type DeleteCheckInResponse = z.infer<typeof DeleteCheckInResponseSchema>;
 
 // ─── Category ─────────────────────────────────────────────────────────────────
 
@@ -743,12 +820,206 @@ export const AppendMessageResponseSchema = z.object({
 
 export type AppendMessageResponse = z.infer<typeof AppendMessageResponseSchema>;
 
+// ─── Data export ──────────────────────────────────────────────────────────────
+
+export const ExportDataResponseSchema = z.object({
+  downloadUrl: z.string().url(),
+});
+
+export type ExportDataResponse = z.infer<typeof ExportDataResponseSchema>;
+
+// ─── Coaching profile ─────────────────────────────────────────────────────────
+
+export const AccountabilityStyleSchema = z.enum(['gentle', 'balanced', 'strict']);
+export type AccountabilityStyle = z.infer<typeof AccountabilityStyleSchema>;
+
+export const PreferredToneSchema = z.enum([
+  'supportive',
+  'direct',
+  'warm',
+  'practical',
+  'challenging',
+]);
+export type PreferredTone = z.infer<typeof PreferredToneSchema>;
+
+export const DifficultyPreferenceSchema = z.enum(['easy', 'adaptive', 'ambitious']);
+export type DifficultyPreference = z.infer<typeof DifficultyPreferenceSchema>;
+
+export const CoachingProfileSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  accountabilityStyle: AccountabilityStyleSchema,
+  preferredTone: PreferredToneSchema,
+  difficultyPreference: DifficultyPreferenceSchema,
+  primaryMotivation: z.string().optional(),
+  commonBlockers: z.array(z.string()).optional(),
+  coachingNotes: z.record(z.string(), z.string()).optional(),
+  lastContextRefreshAt: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type CoachingProfile = z.infer<typeof CoachingProfileSchema>;
+
+export const CoachingProfileResponseSchema = ApiResponseSchema(CoachingProfileSchema);
+export type CoachingProfileResponse = z.infer<typeof CoachingProfileResponseSchema>;
+
+export const UpdateCoachingProfilePreferencesRequestSchema = z.object({
+  accountabilityStyle: AccountabilityStyleSchema,
+  preferredTone: PreferredToneSchema,
+  difficultyPreference: DifficultyPreferenceSchema,
+});
+
+export type UpdateCoachingProfilePreferencesRequest = z.infer<
+  typeof UpdateCoachingProfilePreferencesRequestSchema
+>;
+
+// ─── Plan adjustment suggestions ──────────────────────────────────────────────
+// Backend contract: /personalization/plan-adjustments (see generated api-types).
+// The AI coach produces suggestions to adjust the user's plan (reduce difficulty,
+// change time, pause a habit, etc.). The user can accept/dismiss the suggestion
+// or apply it (apply mutates the underlying habit/goal).
+
+export const AdjustmentTypeSchema = z.enum([
+  'reduce_difficulty',
+  'increase_difficulty',
+  'change_time',
+  'clarify_plan',
+  'pause',
+  'keep_same',
+]);
+export type AdjustmentType = z.infer<typeof AdjustmentTypeSchema>;
+
+export const SuggestionStatusSchema = z.enum(['pending', 'accepted', 'dismissed', 'applied']);
+export type SuggestionStatus = z.infer<typeof SuggestionStatusSchema>;
+
+export const SuggestionSourceSchema = z.enum([
+  'check_in',
+  'weekly_review',
+  'assistant',
+  'pattern_analysis',
+]);
+export type SuggestionSource = z.infer<typeof SuggestionSourceSchema>;
+
+export const PlanAdjustmentSuggestionSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  goalId: z.string().optional(),
+  habitId: z.string().optional(),
+  source: SuggestionSourceSchema,
+  adjustmentType: AdjustmentTypeSchema,
+  reason: z.string().optional(),
+  suggestion: z.string(),
+  status: SuggestionStatusSchema,
+  metadata: z.record(z.string(), z.string()).optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export type PlanAdjustmentSuggestion = z.infer<typeof PlanAdjustmentSuggestionSchema>;
+
+export const PlanAdjustmentSuggestionsResponseSchema = ApiResponseSchema(
+  z.array(PlanAdjustmentSuggestionSchema),
+);
+export type PlanAdjustmentSuggestionsResponse = z.infer<
+  typeof PlanAdjustmentSuggestionsResponseSchema
+>;
+
+export const PlanAdjustmentSuggestionResponseSchema = ApiResponseSchema(
+  PlanAdjustmentSuggestionSchema,
+);
+export type PlanAdjustmentSuggestionResponse = z.infer<
+  typeof PlanAdjustmentSuggestionResponseSchema
+>;
+
+export const UpdatePlanAdjustmentSuggestionStatusRequestSchema = z.object({
+  status: SuggestionStatusSchema,
+});
+export type UpdatePlanAdjustmentSuggestionStatusRequest = z.infer<
+  typeof UpdatePlanAdjustmentSuggestionStatusRequestSchema
+>;
+
+// ─── File upload ──────────────────────────────────────────────────────────────
+
+export const UploadResponseSchema = z.object({
+  url: z.string(),
+  key: z.string(),
+});
+
+export type UploadResponse = z.infer<typeof UploadResponseSchema>;
+
+// ─── Memory Facts (curated long-term memory) ──────────────────────────────────
+
+export const MemoryFactCategorySchema = z.enum([
+  'commitment',
+  'preference',
+  'constraint',
+  'context',
+]);
+
+export type MemoryFactCategory = z.infer<typeof MemoryFactCategorySchema>;
+
+export const MemoryFactSchema = z.object({
+  id: z.string(),
+  fact: z.string(),
+  category: MemoryFactCategorySchema,
+  confidence: z.number(),
+  userAuthored: z.boolean(),
+  createdAt: z.string(),
+});
+
+export type MemoryFact = z.infer<typeof MemoryFactSchema>;
+
+export const ListMemoryFactsResponseSchema = ApiResponseSchema(z.array(MemoryFactSchema)).extend({
+  page: PageResponseSchema,
+});
+
+export type ListMemoryFactsResponse = z.infer<typeof ListMemoryFactsResponseSchema>;
+
+export const MemoryFactResponseSchema = ApiResponseSchema(MemoryFactSchema);
+
+export type MemoryFactResponse = z.infer<typeof MemoryFactResponseSchema>;
+
+export const AddMemoryFactRequestSchema = z.object({
+  fact: z.string().min(1).max(500),
+  category: MemoryFactCategorySchema,
+  supersedesId: z.string().optional(),
+});
+
+export type AddMemoryFactRequest = z.infer<typeof AddMemoryFactRequestSchema>;
+
+export const ForgetAllMemoryFactsResponseSchema = ApiResponseSchema(
+  z.object({ forgotten: z.boolean() }),
+);
+
+export type ForgetAllMemoryFactsResponse = z.infer<typeof ForgetAllMemoryFactsResponseSchema>;
+
 // ─── Personalization / coaching ───────────────────────────────────────────────
+
+/**
+ * Coaching attachment — matches the backend `Attachment` type.
+ *
+ * `data` is a base64-encoded string (no data-URL prefix). Images and PDFs are
+ * sent as base64 in the coaching-stream JSON body; text documents are inlined
+ * into the user message by the caller instead.
+ */
+export const CoachingAttachmentSchema = z.object({
+  attachmentType: z.enum(['image', 'document']),
+  name: z.string(),
+  contentType: z.string(),
+  data: z.string(),
+});
+
+export type CoachingAttachment = z.infer<typeof CoachingAttachmentSchema>;
 
 export const GeneratePersonalizedCoachingRequestSchema = z.object({
   userMessage: z.string().min(1),
   context: z.string().optional(),
   conversationId: z.string().optional(),
+  goalId: z.string().optional(),
+  attachments: z.array(CoachingAttachmentSchema).optional(),
+  regenerate: z.boolean().optional(),
+  // Makes the user turn idempotent so a retry does not create a second copy.
+  clientMessageId: z.string().optional(),
 });
 
 export type GeneratePersonalizedCoachingRequest = z.infer<
@@ -883,3 +1154,18 @@ export type RegisterDeviceRequest = z.infer<typeof RegisterDeviceRequestSchema>;
 export const UnregisterDeviceRequestSchema = z.object({});
 
 export type UnregisterDeviceRequest = z.infer<typeof UnregisterDeviceRequestSchema>;
+
+// ─── Report ────────────────────────────────────────────────────────────────────
+
+export const ReportTypeSchema = z.enum(['bug', 'feedback', 'abuse']);
+
+export type ReportType = z.infer<typeof ReportTypeSchema>;
+
+export const ReportRequestSchema = z.object({
+  type: ReportTypeSchema,
+  title: z.string().min(1).max(200),
+  description: z.string().min(1).max(5000),
+  email: z.string().email().optional(),
+});
+
+export type ReportRequest = z.infer<typeof ReportRequestSchema>;

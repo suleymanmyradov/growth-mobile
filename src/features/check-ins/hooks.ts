@@ -7,10 +7,10 @@
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { checkInKeys, habitKeys, activityKeys } from '@/core/query/query-keys';
 import type { HabitsResponse } from '@/core/api/schemas';
+import { activityKeys, checkInKeys, habitKeys } from '@/core/query/query-keys';
 
-import { createCheckIn, getTodayCheckIns, type CreateCheckInRequest } from './api';
+import { createCheckIn, deleteCheckIn, getTodayCheckIns, type CreateCheckInRequest } from './api';
 
 export function useTodayCheckIns() {
   return useQuery({
@@ -87,6 +87,50 @@ export function useCheckInAll() {
       return { previous };
     },
     onError: (_error, _vars, context) => {
+      if (context?.previous) {
+        for (const [key, value] of context.previous) {
+          queryClient.setQueryData(key, value);
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: checkInKeys.all });
+      queryClient.invalidateQueries({ queryKey: habitKeys.all });
+      queryClient.invalidateQueries({ queryKey: activityKeys.all });
+    },
+  });
+}
+
+/**
+ * Undo (delete) today's check-in for a habit.
+ *
+ * Optimistically reverts the habit to not-completed and decrements the streak.
+ * A 404 "not_found" means there was no check-in to undo (e.g. already undone
+ * from another session) — the optimistic state is already correct, so we
+ * invalidate without rolling back.
+ */
+export function useDeleteCheckIn() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (habitId: string) => deleteCheckIn(habitId),
+    onMutate: async (habitId: string) => {
+      await queryClient.cancelQueries({ queryKey: habitKeys.lists() });
+      const previous = queryClient.getQueriesData<HabitsResponse>({ queryKey: habitKeys.lists() });
+      queryClient.setQueriesData<HabitsResponse | undefined>(
+        { queryKey: habitKeys.lists() },
+        (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            data: old.data.map((h) =>
+              h.id === habitId ? { ...h, completed: false, streak: Math.max(0, h.streak - 1) } : h,
+            ),
+          };
+        },
+      );
+      return { previous };
+    },
+    onError: (_error, _habitId, context) => {
       if (context?.previous) {
         for (const [key, value] of context.previous) {
           queryClient.setQueryData(key, value);

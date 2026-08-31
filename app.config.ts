@@ -105,10 +105,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           // Tell the dev build where Metro is running so a physical device can
           // reach it. Without this, RCTBundleURLProvider defaults to localhost.
           // Set EXPO_PUBLIC_METRO_HOST in .env to your Mac's LAN IP.
-          [
-            './plugins/withDevBundleHost',
-            { host: process.env.EXPO_PUBLIC_METRO_HOST },
-          ],
+          ['./plugins/withDevBundleHost', { host: process.env.EXPO_PUBLIC_METRO_HOST }],
         ]
       : []) as ConfigPlugin[]),
   ],

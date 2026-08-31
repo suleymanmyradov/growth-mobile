@@ -3,7 +3,8 @@
  *
  * Paper: in-flow row with hairline separator, title, last message preview
  * (truncated), and relative timestamp. Tap navigates to the conversation
- * stack screen. Does not log message content.
+ * stack screen. Long-press opens the conversation actions sheet (archive /
+ * unarchive / delete). Does not log message content.
  */
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +17,14 @@ import { useTheme } from '@/design-system/theme';
 export interface ConversationRowProps {
   conversation: Conversation;
   onPress: (conversation: Conversation) => void;
+  onLongPress?: (conversation: Conversation) => void;
 }
 
-export function ConversationRow({ conversation, onPress }: ConversationRowProps): ReactNode {
+export function ConversationRow({
+  conversation,
+  onPress,
+  onLongPress,
+}: ConversationRowProps): ReactNode {
   const { colors, spacing } = useTheme();
   const { t } = useTranslation();
   const title =
@@ -27,6 +33,7 @@ export function ConversationRow({ conversation, onPress }: ConversationRowProps)
   return (
     <Pressable
       onPress={() => onPress(conversation)}
+      onLongPress={() => onLongPress?.(conversation)}
       accessibilityRole="button"
       accessibilityLabel={t('coach.openConversation', { title })}
       style={({ pressed }) => [

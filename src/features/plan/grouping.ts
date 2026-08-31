@@ -9,6 +9,37 @@
 import type { Goal, Habit } from '@/core/api/schemas';
 
 export type Filter = 'all' | 'active' | 'completed';
+export type SortBy = 'streak' | 'name';
+
+/**
+ * Unique habit categories from a list of habits, sorted alphabetically.
+ */
+export function getHabitCategories(habits: Habit[]): string[] {
+  const set = new Set<string>();
+  for (const h of habits) {
+    if (h.category) set.add(h.category);
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
+}
+
+/**
+ * Filter and sort habits by category and sort key.
+ * Mirrors the web frontend's `useHabitsFilters` logic.
+ */
+export function filterAndSortHabits(
+  habits: Habit[],
+  categoryFilter: string,
+  sortBy: SortBy,
+): Habit[] {
+  let filtered = habits;
+  if (categoryFilter !== 'all') {
+    filtered = filtered.filter((h) => h.category === categoryFilter);
+  }
+  return [...filtered].sort((a, b) => {
+    if (sortBy === 'streak') return b.streak - a.streak;
+    return a.name.localeCompare(b.name);
+  });
+}
 
 /**
  * Habits that are referenced by at least one goal's `relatedHabitIds`.

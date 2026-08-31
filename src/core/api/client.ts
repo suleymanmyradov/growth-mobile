@@ -1,8 +1,8 @@
 import axios, {
-    AxiosError,
-    AxiosInstance,
-    AxiosRequestConfig,
-    InternalAxiosRequestConfig,
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
 } from 'axios';
 import { tokenManager } from '../auth/token-manager';
 import { apiBaseUrl, apiBaseUrlAi, isAiGatewayPath } from '../config/env';

@@ -8,54 +8,68 @@
  * collapses during scroll (220 ms, instant with reduced motion). Pull-to-
  * refresh uses native refresh behavior.
  *
+ * Check-in details: a long-press on a habit row opens the full check-in sheet
+ * (mood/energy/blocker/note/missed). Tapping a completed row's check-in circle
+ * or "Undo" button undoes (deletes) the check-in via the backend contract.
+ *
  * Domain boundary: this is a composition screen in `features/home`. It imports
  * only PUBLIC hooks from `features/habits`, `features/check-ins`, `features/goals`,
  * and `features/notifications`. It does not import feature internals, stores,
  * or repositories. Coach insight data is deferred to Phase H (placeholder).
- *
- * Undo note: a per-habit user-initiated un-check requires a backend delete-
- * check-in contract that does not exist yet. Until then a completed row shows
- * the "done" state and the check-in control is disabled (no fake undo). The
- * optimistic mutation's onError rolls back failed check-ins automatically.
  */
 import { useRouter } from 'expo-router';
 import { Bell, Plus } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Animated,
-  Easing,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
+    Animated,
+    Easing,
+    Pressable,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from '@/core/api/errors';
-import type { Habit } from '@/core/api/schemas';
+import type { CheckIn, Habit } from '@/core/api/schemas';
 import {
-  Button,
-  Card,
-  EmptyState,
-  ErrorState,
-  SectionLabel,
-  Skeleton,
-  ThemedText,
-  type CheckInState,
+    Button,
+    Card,
+    EmptyState,
+    ErrorState,
+    SectionLabel,
+    Skeleton,
+    ThemedText,
+    type CheckInState,
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useReducedMotion } from '@/design-system/theme/use-reduced-motion';
-import { useCheckInAll, useCreateCheckIn } from '@/features/check-ins';
+import { useArticles } from '@/features/articles';
+import {
+    CheckInSheet,
+    useCheckInAll,
+    useCreateCheckIn,
+    useDeleteCheckIn,
+    useTodayCheckIns,
+} from '@/features/check-ins';
+import {
+    useApplyPlanAdjustment,
+    useDismissPlanAdjustment,
+    usePlanAdjustments,
+} from '@/features/coaching';
 import { useGoals } from '@/features/goals';
 import { useHabits } from '@/features/habits';
 import { useUnreadNotificationCount } from '@/features/notifications';
+import { useProfile } from '@/features/profile';
 
 import { deriveCheckInState } from '../check-in-state';
+import { ArticlesSection } from '../components/ArticlesSection';
 import { CoachInsightCard } from '../components/CoachInsightCard';
 import { TodayGoalCard } from '../components/TodayGoalCard';
 import { TodayHabitRow } from '../components/TodayHabitRow';
+import { useArticleActions } from '../use-article-actions';
 
 const COLLAPSE_THRESHOLD = 48;
 
@@ -82,6 +96,31 @@ export function TodayScreen(): React.ReactNode {
   const { data: unread } = useUnreadNotificationCount();
   const createCheckIn = useCreateCheckIn();
   const checkInAll = useCheckInAll();
+  const deleteCheckIn = useDeleteCheckIn();
+  const { data: todayCheckIns } = useTodayCheckIns();
+
+  // Articles — "Worth reading tonight" section.
+  const { data: articles = [] } = useArticles({ limit: 6 });
+  const articleActions = useArticleActions();
+
+  // Check-in sheet state — opened via long-press on a habit row.
+  // The `key` forces a remount each time the sheet opens so the form
+  // initializes with the correct pre-fill data (avoids setState-in-effect).
+  const [checkInSheetOpen, setCheckInSheetOpen] = useState(false);
+  const [checkInSheetHabit, setCheckInSheetHabit] = useState<Habit | null>(null);
+  const [checkInSheetKey, setCheckInSheetKey] = useState(0);
+
+  // Profile — for the personalized headline.
+  const { data: profile } = useProfile();
+  const firstName = profile?.fullName?.split(' ')[0] ?? '';
+  // i18next can't conditionally prefix, so build the ", Name" suffix here.
+  const nameSuffix = firstName ? `, ${firstName}` : '';
+
+  // Plan adjustment suggestions — the first pending one drives the coach nudge.
+  const { data: suggestions = [] } = usePlanAdjustments();
+  const applyPlanAdjustment = useApplyPlanAdjustment();
+  const dismissPlanAdjustment = useDismissPlanAdjustment();
+  const coachNudge = suggestions[0];
 
   const [refreshing, setRefreshing] = useState(false);
   const [failedHabitIds, setFailedHabitIds] = useState<Set<string>>(new Set());
@@ -89,6 +128,30 @@ export function TodayScreen(): React.ReactNode {
   const scrollY = useMemo(() => new Animated.Value(0), []);
 
   const incompleteHabits = useMemo(() => habits?.filter((h) => !h.completed) ?? [], [habits]);
+
+  // Derived check-in summary for the personalized headline + counter.
+  const totalCount = habits?.length ?? 0;
+  const completedCount = habits?.filter((h) => h.completed).length ?? 0;
+  const remainingCount = incompleteHabits.length;
+  const allDone = totalCount > 0 && remainingCount === 0;
+
+  const headline = habitsLoading
+    ? ''
+    : allDone
+      ? t('today.headlineAllDone', { name: nameSuffix })
+      : totalCount === 0
+        ? t('today.headlineWelcome', { name: nameSuffix })
+        : t('today.headlineRemaining', { count: remainingCount, name: nameSuffix });
+
+  const subtitle = habitsLoading
+    ? ''
+    : allDone
+      ? t('today.subtitleAllDone')
+      : totalCount === 0
+        ? t('today.subtitleNoHabits')
+        : remainingCount <= 2
+          ? t('today.subtitleFewLeft')
+          : t('today.subtitleSomeLeft');
 
   const handleCheckIn = (habit: Habit) => {
     setFailedHabitIds((prev) => {
@@ -140,6 +203,37 @@ export function TodayScreen(): React.ReactNode {
       setRefreshing(false);
     }
   };
+
+  const handleUndoCheckIn = (habit: Habit) => {
+    deleteCheckIn.mutate(habit.id);
+  };
+
+  const handleOpenCheckInSheet = (habit: Habit) => {
+    setCheckInSheetHabit(habit);
+    setCheckInSheetKey((k) => k + 1);
+    setCheckInSheetOpen(true);
+  };
+
+  const handleCloseCheckInSheet = () => {
+    setCheckInSheetOpen(false);
+    setCheckInSheetHabit(null);
+  };
+
+  const handleSubmitCheckIn = (data: {
+    habitId: string;
+    status: 'completed' | 'missed';
+    mood?: 'great' | 'okay' | 'low' | 'stressed';
+    energy?: 'high' | 'medium' | 'low';
+    blocker?: 'lack_of_time' | 'low_motivation' | 'too_distracted' | 'unclear_plan' | 'other';
+    note?: string;
+  }) => {
+    createCheckIn.mutate(data, { onSuccess: handleCloseCheckInSheet });
+  };
+
+  // Today's check-in for the sheet's habit (pre-fills mood/energy/note).
+  const existingCheckInForSheet: CheckIn | null = checkInSheetHabit
+    ? (todayCheckIns?.find((c) => c.habitId === checkInSheetHabit.id) ?? null)
+    : null;
 
   const toggleNote = (id: string) => {
     setExpandedNotes((prev) => {
@@ -205,7 +299,7 @@ export function TodayScreen(): React.ReactNode {
         ]}
       >
         <View style={styles.headerTop}>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, gap: 2 }}>
             <Animated.View
               style={{ opacity: eyebrowOpacity, height: eyebrowHeight, overflow: 'hidden' }}
             >
@@ -216,9 +310,40 @@ export function TodayScreen(): React.ReactNode {
                 {dateEyebrow}
               </ThemedText>
             </Animated.View>
-            <ThemedText variant="screenTitle">{t('tabs.today')}</ThemedText>
+            <ThemedText variant="screenTitle" numberOfLines={2}>
+              {headline || t('tabs.today')}
+            </ThemedText>
+            {subtitle ? (
+              <ThemedText
+                variant="caption"
+                style={{ color: colors.mutedForeground }}
+                numberOfLines={2}
+              >
+                {subtitle}
+              </ThemedText>
+            ) : null}
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+            {totalCount > 0 ? (
+              <View style={{ alignItems: 'flex-end' }}>
+                <ThemedText
+                  variant="numeric"
+                  style={{ color: colors.foreground }}
+                  accessibilityLabel={t('today.checkedInCount', {
+                    completed: completedCount,
+                    total: totalCount,
+                  })}
+                >
+                  {completedCount}
+                  <ThemedText variant="meta" style={{ color: colors.mutedForeground }}>
+                    /{totalCount}
+                  </ThemedText>
+                </ThemedText>
+                <ThemedText variant="meta" style={{ color: colors.mutedForeground }}>
+                  {t('today.checkedIn')}
+                </ThemedText>
+              </View>
+            ) : null}
             <Pressable
               onPress={() => router.push('/progress')}
               accessibilityRole="button"
@@ -269,10 +394,26 @@ export function TodayScreen(): React.ReactNode {
           gap: spacing.xxl,
         }}
       >
-        {/* Coach insight (placeholder until Phase H) */}
+        {/* Coach insight — real plan-adjustment nudge when available, else placeholder */}
         <CoachInsightCard
-          primaryActionLabel={t('today.talkToCoach')}
-          onPrimaryAction={() => router.push('/(app)/(tabs)/coach')}
+          headline={coachNudge ? t('today.coachNudgeHeadline') : undefined}
+          body={coachNudge?.suggestion}
+          primaryActionLabel={
+            coachNudge
+              ? applyPlanAdjustment.isPending
+                ? t('common.saving')
+                : t('today.coachNudgeApply')
+              : t('today.talkToCoach')
+          }
+          onPrimaryAction={
+            coachNudge
+              ? () => applyPlanAdjustment.mutate(coachNudge.id)
+              : () => router.push('/(app)/(tabs)/coach')
+          }
+          secondaryActionLabel={coachNudge ? t('today.coachNudgeDismiss') : undefined}
+          onSecondaryAction={
+            coachNudge ? () => dismissPlanAdjustment.mutate(coachNudge.id) : undefined
+          }
         />
 
         {/* Check-in section */}
@@ -334,6 +475,9 @@ export function TodayScreen(): React.ReactNode {
                     habit={habit}
                     checkInState={checkInStateFor(habit)}
                     onCheckIn={() => handleCheckIn(habit)}
+                    onUndo={() => handleUndoCheckIn(habit)}
+                    onLogDetails={() => handleOpenCheckInSheet(habit)}
+                    isUndoPending={deleteCheckIn.isPending}
                     noteExpanded={expandedNotes.has(habit.id)}
                     onToggleNote={() => toggleNote(habit.id)}
                   />
@@ -374,7 +518,29 @@ export function TodayScreen(): React.ReactNode {
             ))}
           </View>
         ) : null}
+
+        {/* Worth reading tonight */}
+        {articles.length > 0 ? (
+          <ArticlesSection
+            articles={articles}
+            onLike={articleActions.handleLike}
+            onToggleSave={articleActions.handleToggleSave}
+            isLikePendingFor={articleActions.isLikePendingFor}
+            getIsSaved={articleActions.getIsSaved}
+          />
+        ) : null}
       </ScrollView>
+
+      {/* Full check-in sheet — opened via long-press on a habit row */}
+      <CheckInSheet
+        key={checkInSheetKey}
+        open={checkInSheetOpen}
+        onClose={handleCloseCheckInSheet}
+        habit={checkInSheetHabit}
+        existingCheckIn={existingCheckInForSheet}
+        onSubmit={handleSubmitCheckIn}
+        isSubmitting={createCheckIn.isPending}
+      />
     </SafeAreaView>
   );
 }

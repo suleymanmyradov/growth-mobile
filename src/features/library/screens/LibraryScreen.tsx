@@ -2,31 +2,34 @@
  * LibraryScreen — the Library tab composition.
  *
  * Paper (`mobile.md` §8.5): consolidates discovery without collapsing feature
- * boundaries. Segments: Explore, Saved, Templates. People is deferred — there
- * is no backend contract for people search, so it is hidden rather than
- * populated with fake content. A 44-unit search field searches articles via
- * the gateway search endpoint; results are debounced and cancelable so stale
- * results never render over a newer query. Explore shows a featured article,
- * article rows with save state, and template cards. Saved and result lists
- * use FlashList and preserve scroll/query state per segment. Article rows
- * navigate to `article/[id]`; template actions route to the native creation
- * flow (Plan tab create).
+ * boundaries. Segments: Explore, Saved, Templates. Community is deferred per
+ * `AGENTS.md` (`/community` — "Defer until the backend and product behavior
+ * are real; do not invent it") and People is deferred (no backend contract for
+ * people search); both are hidden rather than populated with fake content. A
+ * 44-unit search field searches articles via the gateway search endpoint;
+ * results are debounced and cancelable so stale results never render over a
+ * newer query. Explore shows category filter chips (derived from the DB
+ * categories table, "All" first), a featured article, article rows with save
+ * state, and template cards. Saved and result lists use FlashList and preserve
+ * scroll/query state per segment. Article rows navigate to `article/[id]`;
+ * template actions route to the native creation flow (Plan tab create).
  *
  * Domain boundary: composition screen in `features/library`. Imports only
  * PUBLIC hooks/components from `features/articles`, `features/saved`,
- * `features/search`, and `features/templates`. Does not import feature
- * internals.
+ * `features/search`, `features/templates`, and `features/categories`. Does not
+ * import feature internals.
  */
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from '@/core/api/errors';
 import type { Article, SavedItemDetailed } from '@/core/api/schemas';
 import {
+    Chip,
     EmptyState,
     ErrorState,
     SectionLabel,
@@ -37,6 +40,7 @@ import {
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useArticles, useFeaturedArticle } from '@/features/articles';
+import { useCategories } from '@/features/categories';
 import { useRemoveSaved, useSaveItem, useSavedDetailed } from '@/features/saved';
 import { useDebouncedQuery, useSearch } from '@/features/search';
 import { useGoalTemplates, useHabitTemplates } from '@/features/templates';
@@ -58,6 +62,18 @@ export function LibraryScreen(): React.ReactNode {
   const [rawQuery, setRawQuery] = useState('');
   const { debounced, pending: debouncePending } = useDebouncedQuery(rawQuery);
   const isSearching = debounced.trim().length > 0;
+
+  // Category filter for the Explore segment. "all" shows every article;
+  // a category slug filters client-side (the article list is small enough
+  // that a round-trip per category is not warranted). Chips are derived from
+  // the DB categories table (source of truth), sorted by sortOrder, with
+  // "All" always first — matching the web explore tab.
+  const [categorySlug, setCategorySlug] = useState<string>('all');
+  const { data: categories } = useCategories('article');
+  const sortedCategories = useMemo(
+    () => [...(categories ?? [])].sort((a, b) => a.sortOrder - b.sortOrder),
+    [categories],
+  );
 
   const {
     data: articles,
@@ -177,17 +193,54 @@ export function LibraryScreen(): React.ReactNode {
         />
       );
     }
-    if ((!articles || articles.length === 0) && !featured) {
+    // Filter articles by the selected category chip (client-side).
+    const filteredArticles =
+      categorySlug === 'all'
+        ? (articles ?? [])
+        : (articles ?? []).filter((a) => a.category?.slug === categorySlug);
+    const selectedCategoryName =
+      categorySlug === 'all'
+        ? undefined
+        : sortedCategories.find((c) => c.slug === categorySlug)?.name;
+
+    if (filteredArticles.length === 0 && !featured) {
       return (
-        <EmptyState
-          title={t('library.exploreEmptyTitle')}
-          subtitle={t('library.exploreEmptyBody')}
-        />
+        <View style={{ gap: spacing.md, padding: spacing.xl }}>
+          {/* Category chips remain visible even in the empty state. */}
+          <CategoryChips
+            categories={sortedCategories}
+            selected={categorySlug}
+            onSelect={setCategorySlug}
+          />
+          <EmptyState
+            title={t('library.exploreEmptyTitle')}
+            subtitle={
+              selectedCategoryName
+                ? t('library.noArticlesInCategory', { category: selectedCategoryName })
+                : t('library.exploreEmptyBody')
+            }
+            action={
+              selectedCategoryName ? (
+                <Pressable
+                  onPress={() => setCategorySlug('all')}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('library.clearCategory')}
+                  hitSlop={8}
+                  style={{ padding: 8, minHeight: 44, justifyContent: 'center' }}
+                >
+                  <ThemedText variant="label" style={{ color: colors.accent }}>
+                    {t('library.clearCategory')}
+                  </ThemedText>
+                </Pressable>
+              ) : undefined
+            }
+          />
+        </View>
       );
     }
     return (
       <FlashList
-        data={articles ?? []}
+        data={filteredArticles}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: spacing.xl }}>
@@ -203,6 +256,11 @@ export function LibraryScreen(): React.ReactNode {
           <View
             style={{ paddingHorizontal: spacing.xl, paddingVertical: spacing.md, gap: spacing.md }}
           >
+            <CategoryChips
+              categories={sortedCategories}
+              selected={categorySlug}
+              onSelect={setCategorySlug}
+            />
             {featured ? <FeaturedArticleCard article={featured} onPress={openArticle} /> : null}
             <SectionLabel>{t('library.allArticles')}</SectionLabel>
           </View>
@@ -374,8 +432,14 @@ export function LibraryScreen(): React.ReactNode {
               subtitle={item.description}
               typeLabel={t(`library.savedType.${item.type}`)}
               onPress={() => {
-                if (item.type === 'article') openArticle(item.id);
-                else router.push('/(app)/(tabs)/plan');
+                if (item.type === 'article') {
+                  openArticle(item.id);
+                } else if (item.type === 'conversation') {
+                  router.push(`/(app)/conversation/${item.id}`);
+                } else {
+                  // Goals and habits route to the Plan tab.
+                  router.push('/(app)/(tabs)/plan');
+                }
               }}
             />
           </View>
@@ -413,6 +477,48 @@ export function LibraryScreen(): React.ReactNode {
               : renderTemplates()}
       </View>
     </SafeAreaView>
+  );
+}
+
+/**
+ * CategoryChips — a horizontally scrollable row of category filter pills.
+ *
+ * "All" is always first and selected by default. Chips come from the DB
+ * categories table (passed in sorted by sortOrder). Uses the design-system
+ * `Chip` primitive for 44-unit touch targets and accent-when-selected.
+ * Kept local to the composition screen since it is only used in Explore.
+ */
+function CategoryChips({
+  categories,
+  selected,
+  onSelect,
+}: {
+  categories: { id: string; name: string; slug: string }[];
+  selected: string;
+  onSelect: (slug: string) => void;
+}): React.ReactNode {
+  const { t } = useTranslation();
+  const { spacing } = useTheme();
+  const chips = [{ id: 'all', name: t('library.categoryAll'), slug: 'all' }, ...categories];
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ gap: spacing.sm, paddingHorizontal: 0 }}
+      accessibilityRole="tablist"
+    >
+      {chips.map((chip) => (
+        <Chip
+          key={chip.id}
+          selected={selected === chip.slug}
+          onPress={() => onSelect(chip.slug)}
+          accessibilityLabel={chip.name}
+          accessibilityState={{ selected: selected === chip.slug }}
+        >
+          {chip.name}
+        </Chip>
+      ))}
+    </ScrollView>
   );
 }
 

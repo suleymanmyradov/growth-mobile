@@ -46,6 +46,23 @@ export const settingsKeys = {
   get: () => [...settingsKeys.all] as const,
 };
 
+export const coachingProfileKeys = {
+  all: ['coachingProfile'] as const,
+  get: () => [...coachingProfileKeys.all] as const,
+};
+
+export const planAdjustmentKeys = {
+  all: ['planAdjustments'] as const,
+  pending: () => [...planAdjustmentKeys.all, 'pending'] as const,
+};
+
+export const memoryFactKeys = {
+  all: ['memoryFacts'] as const,
+  lists: () => [...memoryFactKeys.all, 'list'] as const,
+  list: (params?: { page?: number; limit?: number }) =>
+    [...memoryFactKeys.lists(), params ?? {}] as const,
+};
+
 export const activityKeys = {
   all: ['activities'] as const,
   list: (params?: { page?: number; limit?: number }) =>
@@ -117,4 +134,8 @@ export const conversationKeys = {
   details: () => [...conversationKeys.all, 'detail'] as const,
   detail: (id: string) => [...conversationKeys.details(), id] as const,
   messages: (id: string) => [...conversationKeys.detail(id), 'messages'] as const,
+};
+
+export const reportKeys = {
+  all: ['reports'] as const,
 };

@@ -22,6 +22,7 @@ import { useTheme } from '@/design-system/theme';
 import { AuthHeader } from '../components/AuthHeader';
 import { AuthShell } from '../components/AuthShell';
 import { PasswordInput } from '../components/PasswordInput';
+import { SocialLoginButtons } from '../components/SocialLoginButtons';
 import { authErrorKey, useRegister } from '../hooks';
 import { RegisterRequestSchema, type RegisterRequest } from '../schemas';
 
@@ -152,6 +153,10 @@ export function RegisterScreen() {
           </Button>
         </View>
       </Card>
+
+      <SocialLoginButtons
+        onError={(msg) => setServerError(msg)}
+      />
 
       <View style={styles.footer}>
         <ThemedText variant="body" style={{ color: colors.mutedForeground }}>

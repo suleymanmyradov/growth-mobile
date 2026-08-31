@@ -13,13 +13,13 @@ import { useEffect } from 'react';
  *
  * Phase D navigation (`mobile.md` §6): the Stack hosts the `(tabs)` group
  * (Today/Plan/Coach/Library/Me) plus pushed stack routes (`progress`,
- * `article/[id]`, `conversation/[conversationId]`, `conversation/voice`) and
- * modal/sheet routes (`paywall` modal, `notifications` form sheet). Phase G
- * folded settings into the Me tab, so the standalone `settings` stack route was
- * removed. Phase E folded goals into the Plan tab, so the standalone `goals`
- * stack route was removed. Stack headers are hidden; each screen renders its
- * own header via the `Screen` primitive so back affordance and titles stay
- * consistent.
+ * `article/[id]`, `conversation/[conversationId]`, `conversation/voice`,
+ * `report`, `help`) and modal/sheet routes (`paywall` modal, `notifications`
+ * form sheet). Phase G folded settings into the Me tab, so the standalone
+ * `settings` stack route was removed. Phase E folded goals into the Plan tab,
+ * so the standalone `goals` stack route was removed. Stack headers are hidden;
+ * each screen renders its own header via the `Screen` primitive so back
+ * affordance and titles stay consistent.
  */
 export default function AppLayout() {
   const router = useRouter();
@@ -53,6 +53,8 @@ export default function AppLayout() {
       <Stack.Screen name="conversation/voice" />
       <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
       <Stack.Screen name="notifications" options={{ presentation: 'formSheet' }} />
+      <Stack.Screen name="report" />
+      <Stack.Screen name="help" />
     </Stack>
   );
 }

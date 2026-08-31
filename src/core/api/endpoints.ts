@@ -31,6 +31,7 @@ export const profileEndpoints = {
   me: '/profile/me',
   update: '/profile',
   delete: '/profile',
+  export: '/profile/export',
 } as const;
 
 // ─── Habits ───────────────────────────────────────────────────────────────────
@@ -48,6 +49,11 @@ export const goalEndpoints = {
   detail: (id: string) => `/goals/${id}`,
   toggle: (id: string) => `/goals/${id}/toggle`,
   progress: (id: string) => `/goals/${id}/progress`,
+  value: (id: string) => `/goals/${id}/value`,
+  milestones: (id: string) => `/goals/${id}/milestones`,
+  milestoneToggle: (id: string, milestoneId: string) =>
+    `/goals/${id}/milestones/${milestoneId}/toggle`,
+  milestone: (id: string, milestoneId: string) => `/goals/${id}/milestones/${milestoneId}`,
 } as const;
 
 // ─── Check-Ins ────────────────────────────────────────────────────────────────
@@ -55,6 +61,7 @@ export const goalEndpoints = {
 export const checkInEndpoints = {
   create: '/check-ins',
   today: '/check-ins/today',
+  deleteToday: (habitId: string) => `/check-ins/today/${habitId}`,
   history: '/check-ins/history',
   checkedToday: '/check-ins/checked-today',
 } as const;
@@ -72,6 +79,20 @@ export const settingsEndpoints = {
   update: '/settings',
 } as const;
 
+// ─── Memory Facts ─────────────────────────────────────────────────────────────
+
+export const memoryFactEndpoints = {
+  list: '/memory/facts',
+  create: '/memory/facts',
+  detail: (id: string) => `/memory/facts/${id}`,
+} as const;
+
+// ─── Files ────────────────────────────────────────────────────────────────────
+
+export const fileEndpoints = {
+  upload: '/files/upload',
+} as const;
+
 // ─── Personalization / Onboarding / Coaching ──────────────────────────────────
 
 export const personalizationEndpoints = {
@@ -83,6 +104,10 @@ export const personalizationEndpoints = {
   // SSE stream (POST, text/event-stream) — handled by the SSE client, not axios.
   coachingStream: '/personalization/coaching-stream',
   planAdjustments: '/personalization/plan-adjustments',
+  planAdjustmentApply: (id: string) =>
+    `/personalization/plan-adjustments/${encodeURIComponent(id)}/apply`,
+  planAdjustmentStatus: (id: string) =>
+    `/personalization/plan-adjustments/${encodeURIComponent(id)}/status`,
   // Custom multipart transport (POST multipart → JSON).
   transcribe: '/personalization/transcribe',
   // Custom multipart + SSE transport (POST multipart → text/event-stream).
@@ -173,4 +198,10 @@ export const searchEndpoints = {
 export const templateEndpoints = {
   habitTemplates: '/habit-templates',
   goalTemplates: '/goal-templates',
+} as const;
+
+// ─── Report ────────────────────────────────────────────────────────────────────
+
+export const reportEndpoints = {
+  submit: '/report',
 } as const;

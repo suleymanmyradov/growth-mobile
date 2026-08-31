@@ -117,8 +117,8 @@ export function isAiGatewayPath(path: string): boolean {
   const { EXPO_PUBLIC_AI_GATEWAY_ORIGIN } = getEnv();
   if (!EXPO_PUBLIC_AI_GATEWAY_ORIGIN) return false;
   const normalized = path.startsWith('/') ? path : `/${path}`;
-  return AI_GATEWAY_PATH_PREFIXES.some((prefix) =>
-    normalized === prefix || normalized.startsWith(`${prefix}/`),
+  return AI_GATEWAY_PATH_PREFIXES.some(
+    (prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`),
   );
 }
 
@@ -129,9 +129,7 @@ export function isAiGatewayPath(path: string): boolean {
  */
 export function apiUrlFor(path: string): string {
   const { EXPO_PUBLIC_API_ORIGIN, EXPO_PUBLIC_AI_GATEWAY_ORIGIN } = getEnv();
-  const origin = isAiGatewayPath(path)
-    ? EXPO_PUBLIC_AI_GATEWAY_ORIGIN
-    : EXPO_PUBLIC_API_ORIGIN;
+  const origin = isAiGatewayPath(path) ? EXPO_PUBLIC_AI_GATEWAY_ORIGIN : EXPO_PUBLIC_API_ORIGIN;
   const p = path.startsWith('/') ? path : `/${path}`;
   return `${origin}/api/v1${p}`;
 }

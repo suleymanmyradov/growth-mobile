@@ -15,15 +15,19 @@
  * `features/habits`, and `features/goals`. It does not import feature internals.
  */
 import { zodResolver } from '@hookform/resolvers/zod';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { LogOut, Trash2 } from 'lucide-react-native';
+import { Camera, Download, Flag, LifeBuoy, LogOut, Trash2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
   KeyboardAvoidingView,
+  Linking,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
@@ -31,7 +35,12 @@ import {
 } from 'react-native';
 
 import { ApiError } from '@/core/api/errors';
-import { UpdateProfileRequestSchema, type UpdateProfileRequest } from '@/core/api/schemas';
+import {
+  UpdateProfileRequestSchema,
+  type DifficultyPreference,
+  type PreferredTone,
+  type UpdateProfileRequest,
+} from '@/core/api/schemas';
 import { useSessionStore } from '@/core/auth/session';
 import {
   Avatar,
@@ -48,6 +57,7 @@ import {
 } from '@/design-system';
 import { useTheme, type ThemeMode } from '@/design-system/theme';
 import { useLogout } from '@/features/auth';
+import { useCoachingProfile, useUpdateCoachingProfilePreferences } from '@/features/coaching';
 import { useGoals } from '@/features/goals';
 import { useHabits } from '@/features/habits';
 import {
@@ -56,9 +66,16 @@ import {
   useNotificationPreferences,
   useUpdateNotificationPreferences,
 } from '@/features/notifications';
-import { useDeleteProfile, useProfile, useUpdateProfile } from '@/features/profile';
+import {
+  useDeleteProfile,
+  useExportData,
+  useProfile,
+  useUpdateProfile,
+  useUploadAvatar,
+} from '@/features/profile';
 import { useSettings, useUpdateSettings } from '@/features/settings';
 
+import { MemorySection } from '../components/MemorySection';
 import { deriveMeSummary } from '../summary';
 
 type NotificationPreferenceUpdate = Partial<{
@@ -79,6 +96,8 @@ export function MeScreen(): React.ReactNode {
   const { data: profile, isLoading, isError, error, refetch } = useProfile();
   const updateProfile = useUpdateProfile();
   const deleteProfile = useDeleteProfile();
+  const uploadAvatar = useUploadAvatar();
+  const exportMutation = useExportData();
   const logout = useLogout({ beforeLogout: unregisterCurrentDevice });
   const { data: habits } = useHabits();
   const { data: goals } = useGoals();
@@ -86,9 +105,14 @@ export function MeScreen(): React.ReactNode {
   const updateSettings = useUpdateSettings();
   const { data: notificationPreferences } = useNotificationPreferences();
   const updateNotificationPreferences = useUpdateNotificationPreferences();
+  const { data: coachingProfile } = useCoachingProfile();
+  const updateCoachingPreferences = useUpdateCoachingProfilePreferences();
 
   const [editing, setEditing] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatarUrl ?? '');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
+  const displayName = profile?.fullName ?? sessionUser?.fullName ?? '';
   const summary = deriveMeSummary(habits, goals);
 
   const {
@@ -138,8 +162,96 @@ export function MeScreen(): React.ReactNode {
     updateSettings.mutate({ theme: mode });
   };
 
-  const handleUpdate = (partial: Parameters<typeof updateSettings.mutate>[0]) => {
-    updateSettings.mutate(partial);
+  const handlePickAvatar = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert(t('me.avatarPermissionTitle'), t('me.avatarPermissionBody'));
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (result.canceled || !result.assets?.[0]) return;
+
+    setUploadingAvatar(true);
+    try {
+      // Resize/compress to a reasonable avatar size before uploading.
+      const manipulated = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 256, height: 256 } }],
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG },
+      );
+      const upload = await uploadAvatar.mutateAsync({
+        fileUri: manipulated.uri,
+        mimeType: 'image/jpeg',
+      });
+      setAvatarUrl(upload.url);
+    } catch (err) {
+      Alert.alert(t('me.avatarUploadError'), err instanceof ApiError ? err.message : undefined);
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      const { downloadUrl } = await exportMutation.mutateAsync();
+      const supported = await Linking.canOpenURL(downloadUrl);
+      if (supported) {
+        await Linking.openURL(downloadUrl);
+      } else {
+        Alert.alert(t('me.exportDataError'), t('me.exportDataOpenError'));
+      }
+    } catch (err) {
+      Alert.alert(t('me.exportDataError'), err instanceof ApiError ? err.message : undefined);
+    }
+  };
+
+  const handleEditCheckInTime = () => {
+    const current = settings?.checkInTime ?? '09:00';
+    if (Platform.OS === 'ios') {
+      Alert.prompt(
+        t('me.checkInTime'),
+        t('me.checkInTimeHint'),
+        (value) => {
+          if (value && /^\d{2}:\d{2}$/.test(value)) {
+            updateSettings.mutate({ checkInTime: value });
+          }
+        },
+        'plain-text',
+        current,
+        'default',
+      );
+    } else {
+      Alert.alert(t('me.checkInTime'), `${t('me.checkInTimeHint')} (${current})`, [
+        { text: t('common.cancel'), style: 'cancel' },
+      ]);
+    }
+  };
+
+  const handleEditTimezone = () => {
+    const current = settings?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (Platform.OS === 'ios') {
+      Alert.prompt(
+        t('me.timezone'),
+        t('me.timezoneHint'),
+        (value) => {
+          if (value && value.trim()) {
+            updateSettings.mutate({ timezone: value.trim() });
+          }
+        },
+        'plain-text',
+        current,
+        'default',
+      );
+    } else {
+      Alert.alert(t('me.timezone'), `${t('me.timezoneHint')} (${current})`, [
+        { text: t('common.cancel'), style: 'cancel' },
+      ]);
+    }
   };
 
   const updateNotificationPreference = (partial: NotificationPreferenceUpdate) => {
@@ -192,7 +304,10 @@ export function MeScreen(): React.ReactNode {
 
   if (editing) {
     const onSubmit = (data: UpdateProfileRequest) => {
-      updateProfile.mutate(data, { onSuccess: () => setEditing(false) });
+      updateProfile.mutate(
+        { ...data, avatarUrl: avatarUrl || undefined },
+        { onSuccess: () => setEditing(false) },
+      );
     };
 
     return (
@@ -209,6 +324,33 @@ export function MeScreen(): React.ReactNode {
             }}
             keyboardShouldPersistTaps="handled"
           >
+            {/* Avatar picker */}
+            <View style={{ alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.md }}>
+              <Pressable
+                onPress={handlePickAvatar}
+                disabled={uploadingAvatar}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel={t('me.changePhoto')}
+              >
+                <Avatar uri={avatarUrl || undefined} name={displayName} size={88} />
+                <View
+                  style={[
+                    styles.avatarCameraButton,
+                    {
+                      backgroundColor: colors.accent,
+                      borderColor: colors.background,
+                    },
+                  ]}
+                >
+                  <Camera color={colors.accentForeground} size={16} />
+                </View>
+              </Pressable>
+              <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                {uploadingAvatar ? t('me.uploadingPhoto') : t('me.changePhoto')}
+              </ThemedText>
+            </View>
+
             <Controller
               control={control}
               name="fullName"
@@ -298,7 +440,35 @@ export function MeScreen(): React.ReactNode {
     { id: 'strict', label: t('settings.styleStrict') },
   ];
 
-  const displayName = profile?.fullName ?? sessionUser?.fullName ?? '';
+  const toneSegments: { id: PreferredTone; label: string }[] = [
+    { id: 'supportive', label: t('me.toneSupportive') },
+    { id: 'direct', label: t('me.toneDirect') },
+    { id: 'warm', label: t('me.toneWarm') },
+    { id: 'practical', label: t('me.tonePractical') },
+    { id: 'challenging', label: t('me.toneChallenging') },
+  ];
+
+  const difficultySegments: { id: DifficultyPreference; label: string }[] = [
+    { id: 'easy', label: t('me.difficultyEasy') },
+    { id: 'adaptive', label: t('me.difficultyAdaptive') },
+    { id: 'ambitious', label: t('me.difficultyAmbitious') },
+  ];
+
+  const handleCoachingPreferenceChange = (
+    overrides: Partial<{
+      accountabilityStyle: 'gentle' | 'balanced' | 'strict';
+      preferredTone: PreferredTone;
+      difficultyPreference: DifficultyPreference;
+    }>,
+  ) => {
+    const current = {
+      accountabilityStyle: coachingProfile?.accountabilityStyle ?? 'balanced',
+      preferredTone: coachingProfile?.preferredTone ?? 'supportive',
+      difficultyPreference: coachingProfile?.difficultyPreference ?? 'adaptive',
+    };
+    updateCoachingPreferences.mutate({ ...current, ...overrides });
+  };
+
   const email = profile?.email ?? sessionUser?.email ?? '';
 
   return (
@@ -373,9 +543,53 @@ export function MeScreen(): React.ReactNode {
                 </ThemedText>
                 <SegmentedTabs
                   segments={styleSegments}
-                  value={settings?.accountabilityStyle ?? 'balanced'}
+                  value={
+                    coachingProfile?.accountabilityStyle ??
+                    settings?.accountabilityStyle ??
+                    'balanced'
+                  }
                   onChange={(id) =>
-                    handleUpdate({ accountabilityStyle: id as 'gentle' | 'balanced' | 'strict' })
+                    handleCoachingPreferenceChange({
+                      accountabilityStyle: id as 'gentle' | 'balanced' | 'strict',
+                    })
+                  }
+                />
+              </View>
+              <View>
+                <ThemedText variant="label" style={{ marginBottom: spacing.xs }}>
+                  {t('me.preferredTone')}
+                </ThemedText>
+                <ThemedText
+                  variant="caption"
+                  style={{ color: colors.mutedForeground, marginBottom: spacing.xs }}
+                >
+                  {t('me.preferredToneHint')}
+                </ThemedText>
+                <SegmentedTabs
+                  segments={toneSegments}
+                  value={coachingProfile?.preferredTone ?? 'supportive'}
+                  onChange={(id) =>
+                    handleCoachingPreferenceChange({ preferredTone: id as PreferredTone })
+                  }
+                />
+              </View>
+              <View>
+                <ThemedText variant="label" style={{ marginBottom: spacing.xs }}>
+                  {t('me.difficultyPreference')}
+                </ThemedText>
+                <ThemedText
+                  variant="caption"
+                  style={{ color: colors.mutedForeground, marginBottom: spacing.xs }}
+                >
+                  {t('me.difficultyPreferenceHint')}
+                </ThemedText>
+                <SegmentedTabs
+                  segments={difficultySegments}
+                  value={coachingProfile?.difficultyPreference ?? 'adaptive'}
+                  onChange={(id) =>
+                    handleCoachingPreferenceChange({
+                      difficultyPreference: id as DifficultyPreference,
+                    })
                   }
                 />
               </View>
@@ -388,6 +602,9 @@ export function MeScreen(): React.ReactNode {
             </View>
           </Card>
         </View>
+
+        {/* Memory */}
+        <MemorySection />
 
         {/* Reminders */}
         <View style={{ gap: spacing.sm }}>
@@ -409,6 +626,20 @@ export function MeScreen(): React.ReactNode {
                 input={colors.input}
               />
               <ToggleRow
+                label={t('me.habitReminders')}
+                value={notificationPreferences?.habitRemindersEnabled ?? true}
+                onToggle={(v) => updateNotificationPreference({ habitRemindersEnabled: v })}
+                accent={colors.accent}
+                input={colors.input}
+              />
+              <ToggleRow
+                label={t('me.goalReminders')}
+                value={notificationPreferences?.goalRemindersEnabled ?? false}
+                onToggle={(v) => updateNotificationPreference({ goalRemindersEnabled: v })}
+                accent={colors.accent}
+                input={colors.input}
+              />
+              <ToggleRow
                 label={t('me.weeklyReviewReminders')}
                 value={notificationPreferences?.sundayReviewEnabled ?? false}
                 onToggle={(v) => updateNotificationPreference({ sundayReviewEnabled: v })}
@@ -421,8 +652,47 @@ export function MeScreen(): React.ReactNode {
                 onToggle={(v) => updateNotificationPreference({ streakWarningsEnabled: v })}
                 accent={colors.accent}
                 input={colors.input}
-                separator={false}
               />
+              <ListRow
+                onPress={handleEditCheckInTime}
+                accessibilityLabel={t('me.checkInTime')}
+                separator
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <ThemedText variant="body">{t('me.checkInTime')}</ThemedText>
+                  <ThemedText variant="body" style={{ color: colors.mutedForeground }}>
+                    {settings?.checkInTime ?? '09:00'}
+                  </ThemedText>
+                </View>
+              </ListRow>
+              <ListRow
+                onPress={handleEditTimezone}
+                accessibilityLabel={t('me.timezone')}
+                separator={false}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <ThemedText variant="body">{t('me.timezone')}</ThemedText>
+                  <ThemedText
+                    variant="body"
+                    style={{ color: colors.mutedForeground }}
+                    numberOfLines={1}
+                  >
+                    {settings?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone}
+                  </ThemedText>
+                </View>
+              </ListRow>
             </View>
           </Card>
         </View>
@@ -455,6 +725,14 @@ export function MeScreen(): React.ReactNode {
                 <ThemedText variant="body">{t('me.planBilling')}</ThemedText>
               </ListRow>
               <ListRow
+                onPress={() => void handleExportData()}
+                accessibilityLabel={t('me.exportData')}
+                leading={<Download color={colors.foreground} size={20} />}
+                separator
+              >
+                <ThemedText variant="body">{t('me.exportData')}</ThemedText>
+              </ListRow>
+              <ListRow
                 onPress={handleLogout}
                 accessibilityLabel={t('me.logout')}
                 leading={<LogOut color={colors.foreground} size={20} />}
@@ -471,6 +749,31 @@ export function MeScreen(): React.ReactNode {
                 <ThemedText variant="body" style={{ color: colors.destructive }}>
                   {t('me.deleteAccount')}
                 </ThemedText>
+              </ListRow>
+            </View>
+          </Card>
+        </View>
+
+        {/* Support */}
+        <View style={{ gap: spacing.sm }}>
+          <SectionLabel>{t('me.sectionSupport')}</SectionLabel>
+          <Card padded={false}>
+            <View style={{ paddingHorizontal: spacing.lg }}>
+              <ListRow
+                onPress={() => router.push('/help')}
+                accessibilityLabel={t('me.helpGuide')}
+                leading={<LifeBuoy color={colors.foreground} size={20} />}
+                separator
+              >
+                <ThemedText variant="body">{t('me.helpGuide')}</ThemedText>
+              </ListRow>
+              <ListRow
+                onPress={() => router.push('/report')}
+                accessibilityLabel={t('me.reportProblem')}
+                leading={<Flag color={colors.foreground} size={20} />}
+                separator={false}
+              >
+                <ThemedText variant="body">{t('me.reportProblem')}</ThemedText>
               </ListRow>
             </View>
           </Card>
@@ -578,5 +881,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     minHeight: 44,
+  },
+  avatarCameraButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

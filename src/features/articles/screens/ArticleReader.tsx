@@ -3,19 +3,34 @@
  *
  * Paper (`mobile.md` §8.7): renders supported markdown with
  * `react-native-markdown-display`; never uses arbitrary HTML in a WebView.
- * Header actions are Back, Save, native Share, and reading size — all 44-unit
- * targets. A three-unit reading progress line sits below the header. Three
- * reader-size choices are persisted as a non-secret preference and scroll
- * position is restored per article. The article title is NOT repeated in the
- * navigation header.
+ * Header actions are Back, Save, Like, native Share, and reading size — all
+ * 44-unit targets. A three-unit reading progress line sits below the header.
+ * Three reader-size choices are persisted as a non-secret preference and
+ * scroll position is restored per article. The article title is NOT repeated
+ * in the navigation header.
+ *
+ * Below the markdown body: tags, an action bar (like count + Report link), a
+ * "Make this a habit" CTA card, and a "Next" article card. The hero image
+ * renders between the title/metadata and the body. The author row uses an
+ * Avatar monogram.
  *
  * Domain boundary: this screen lives in `features/articles`. It imports the
- * public `useArticle`, `useLikeArticle`, and `useShareArticle` hooks from this
- * feature and `useSaveItem`/`useRemoveSaved` from `features/saved`. It does
+ * public `useArticle`, `useArticles`, `useLikeArticle`, and `useShareArticle`
+ * hooks from this feature and `useSaveItem` from `features/saved`. It does
  * not import feature internals.
  */
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Bookmark, Share as ShareIcon, Type } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bookmark,
+  Flag,
+  Heart,
+  Plus,
+  Share as ShareIcon,
+  Type,
+} from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -33,12 +48,20 @@ import Markdown from 'react-native-markdown-display';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from '@/core/api/errors';
-import { EmptyState, ErrorState, Skeleton, ThemedText } from '@/design-system';
+import {
+  Avatar,
+  Button,
+  Card,
+  EmptyState,
+  ErrorState,
+  Skeleton,
+  ThemedText,
+} from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useReducedMotion } from '@/design-system/theme/use-reduced-motion';
 import { useSaveItem } from '@/features/saved';
 
-import { useArticle, useShareArticle } from '../hooks';
+import { useArticle, useArticles, useLikeArticle, useShareArticle } from '../hooks';
 import {
   READER_SIZES,
   buildMarkdownStyle,
@@ -53,6 +76,7 @@ import {
 } from '../reader-preferences';
 
 const PROGRESS_LINE_HEIGHT = 3;
+const HERO_ASPECT = 16 / 7;
 
 export type ArticleReaderProps = {
   id: string;
@@ -62,12 +86,14 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
   const theme = useTheme();
-  const { colors, spacing } = theme;
+  const { colors, spacing, radius } = theme;
   const reduced = useReducedMotion();
 
   const { data: article, isLoading, isError, error, refetch } = useArticle(id);
+  const { data: articlesPage } = useArticles({ limit: 20 });
   const shareArticle = useShareArticle();
   const saveItem = useSaveItem();
+  const likeArticle = useLikeArticle();
 
   const [readerSize, setReaderSizeState] = useState<ReaderSize>('medium');
   const [progress, setProgress] = useState(0);
@@ -107,6 +133,19 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
 
   const markdownStyle = useMemo(() => buildMarkdownStyle(theme, readerSize), [theme, readerSize]);
 
+  // Pick the next article from the already-fetched list (same logic as web).
+  const nextArticle = useMemo(() => {
+    const all = articlesPage ?? [];
+    const currentIndex = all.findIndex((a) => a.id === id);
+    if (currentIndex >= 0 && currentIndex < all.length - 1) {
+      return all[currentIndex + 1] ?? null;
+    }
+    if (all.length > 0 && all[0]?.id !== id) {
+      return all[0] ?? null;
+    }
+    return null;
+  }, [articlesPage, id]);
+
   const handleSave = () => {
     if (!article) return;
     if (article.isSaved) {
@@ -120,6 +159,11 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
       return;
     }
     saveItem.mutate({ itemType: 'article', itemId: article.id });
+  };
+
+  const handleLike = () => {
+    if (!article) return;
+    likeArticle.mutate(article.id);
   };
 
   const handleShare = async () => {
@@ -175,6 +219,30 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
     return false;
   };
 
+  const handleMakeHabit = () => {
+    if (!article) return;
+    const params = new URLSearchParams();
+    params.set('create', 'habit');
+    params.set('name', article.title);
+    if (article.excerpt) params.set('description', article.excerpt);
+    if (article.category?.slug) params.set('category', article.category.slug);
+    router.push(`/(app)/(tabs)/plan?${params.toString()}`);
+  };
+
+  const handleReport = () => {
+    if (!article) return;
+    const params = new URLSearchParams();
+    params.set('type', 'abuse');
+    if (article.title) params.set('title', article.title);
+    // Cast to satisfy typed routes — `/report` is a new route whose typed
+    // declaration is regenerated on the next dev-server start.
+    router.push(`/(app)/report?${params.toString()}` as Parameters<typeof router.push>[0]);
+  };
+
+  const openNext = (nextId: string) => {
+    router.push(`/(app)/article/${encodeURIComponent(nextId)}`);
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView
@@ -184,10 +252,12 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
         <ReaderHeader
           onBack={() => router.back()}
           onSave={handleSave}
+          onLike={handleLike}
           onShare={handleShare}
           onSize={cycleReaderSize}
           saveLabel={t('article.save')}
           shareLabel={t('article.share')}
+          likeLabel={t('article.like')}
           sizeLabel={t('article.readingSize')}
           backLabel={t('common.back')}
           colors={colors}
@@ -214,10 +284,12 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
         <ReaderHeader
           onBack={() => router.back()}
           onSave={handleSave}
+          onLike={handleLike}
           onShare={handleShare}
           onSize={cycleReaderSize}
           saveLabel={t('article.save')}
           shareLabel={t('article.share')}
+          likeLabel={t('article.like')}
           sizeLabel={t('article.readingSize')}
           backLabel={t('common.back')}
           colors={colors}
@@ -240,10 +312,12 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
         <ReaderHeader
           onBack={() => router.back()}
           onSave={handleSave}
+          onLike={handleLike}
           onShare={handleShare}
           onSize={cycleReaderSize}
           saveLabel={t('article.save')}
           shareLabel={t('article.share')}
+          likeLabel={t('article.like')}
           sizeLabel={t('article.readingSize')}
           backLabel={t('common.back')}
           colors={colors}
@@ -254,6 +328,9 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
     );
   }
 
+  const publishedDate = formatPublishedDate(article.publishedAt);
+  const tags = article.tags ?? [];
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
@@ -262,15 +339,18 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
       <ReaderHeader
         onBack={() => router.back()}
         onSave={handleSave}
+        onLike={handleLike}
         onShare={handleShare}
         onSize={cycleReaderSize}
         saveLabel={t('article.save')}
         shareLabel={t('article.share')}
+        likeLabel={t('article.like')}
         sizeLabel={t('article.readingSize')}
         backLabel={t('common.back')}
         colors={colors}
         spacing={spacing}
         saved={article.isSaved}
+        liked={article.isLiked}
       />
       {/* Reading progress line (3 units) below the header. */}
       <View style={{ height: PROGRESS_LINE_HEIGHT, backgroundColor: colors.muted }}>
@@ -294,7 +374,7 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
         ref={scrollRef}
         onScroll={onScroll}
         scrollEventThrottle={16}
-        contentContainerStyle={{ paddingVertical: spacing.lg }}
+        contentContainerStyle={{ paddingVertical: spacing.lg, paddingBottom: spacing.xxxl }}
       >
         {/* Article title + metadata (not in the nav header per §8.7). */}
         <View style={{ paddingHorizontal: 20, marginBottom: spacing.md, gap: spacing.xs }}>
@@ -304,39 +384,246 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
             </ThemedText>
           ) : null}
           <ThemedText variant="articleTitle">{article.title}</ThemedText>
-          <View style={{ flexDirection: 'row', gap: spacing.sm, alignItems: 'center' }}>
-            <ThemedText variant="meta" style={{ color: colors.mutedForeground }}>
-              {article.author}
+          {article.excerpt ? (
+            <ThemedText variant="bodySmall" style={{ color: colors.mutedForeground }}>
+              {article.excerpt}
             </ThemedText>
-            <ThemedText variant="meta" style={{ color: colors.mutedForeground }}>
-              · {article.readTime} {t('library.minRead')}
-            </ThemedText>
+          ) : null}
+          {/* Author row with avatar monogram + date + read time. */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: spacing.sm,
+              marginTop: spacing.xs,
+            }}
+          >
+            <Avatar name={article.author} size={30} />
+            <View style={{ flex: 1, gap: 1 }}>
+              <ThemedText variant="label" style={{ color: colors.foreground }}>
+                {article.author || 'Growth'}
+              </ThemedText>
+              <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                {publishedDate ? `${publishedDate} · ` : ''}
+                {article.readTime} {t('library.minRead')}
+              </ThemedText>
+            </View>
           </View>
         </View>
+
+        {/* Hero image (16:7, rounded, with border). */}
+        {article.imageUrl ? (
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginBottom: spacing.lg,
+              aspectRatio: HERO_ASPECT,
+              borderRadius: radius.card,
+              borderWidth: 1,
+              borderColor: colors.border,
+              backgroundColor: colors.muted,
+              overflow: 'hidden',
+            }}
+          >
+            <Image
+              source={{ uri: article.imageUrl }}
+              style={{ width: '100%', height: '100%' }}
+              contentFit="cover"
+              transition={150}
+              accessibilityLabel={article.title}
+            />
+          </View>
+        ) : null}
 
         <Markdown style={markdownStyle} onLinkPress={handleLinkPress}>
           {withoutDuplicateLeadingTitle(article.content, article.title)}
         </Markdown>
+
+        {/* Tags */}
+        {tags.length > 0 ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: spacing.sm,
+              paddingHorizontal: 20,
+              marginTop: spacing.lg,
+            }}
+          >
+            {tags.map((tag) => (
+              <View
+                key={tag}
+                style={[
+                  styles.tagPill,
+                  {
+                    backgroundColor: colors.muted,
+                    borderRadius: radius.pill,
+                  },
+                ]}
+              >
+                <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                  {tag}
+                </ThemedText>
+              </View>
+            ))}
+          </View>
+        ) : null}
+
+        {/* Action bar: like count + Report link. */}
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: spacing.sm,
+            paddingHorizontal: 20,
+            marginTop: spacing.xxl,
+          }}
+        >
+          <View
+            style={[
+              styles.actionPill,
+              {
+                borderColor: colors.border,
+                backgroundColor: colors.surface,
+                borderRadius: radius.pill,
+              },
+            ]}
+          >
+            <Pressable
+              onPress={handleLike}
+              accessibilityRole="button"
+              accessibilityLabel={article.isLiked ? t('article.liked') : t('article.like')}
+              accessibilityState={{ selected: article.isLiked }}
+              hitSlop={8}
+              disabled={likeArticle.isPending}
+              style={{ padding: 4 }}
+            >
+              <Heart
+                color={article.isLiked ? colors.accent : colors.mutedForeground}
+                fill={article.isLiked ? colors.accent : 'none'}
+                size={16}
+              />
+            </Pressable>
+            <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+              {article.likeCount}
+            </ThemedText>
+          </View>
+
+          <Pressable
+            onPress={handleReport}
+            accessibilityRole="link"
+            accessibilityLabel={t('article.report')}
+            hitSlop={8}
+            style={[
+              styles.actionPill,
+              {
+                borderColor: colors.border,
+                backgroundColor: colors.surface,
+                borderRadius: radius.pill,
+              },
+            ]}
+          >
+            <Flag color={colors.mutedForeground} size={14} />
+            <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+              {t('article.report')}
+            </ThemedText>
+          </Pressable>
+        </View>
+
+        {/* "Make this a habit" CTA card. */}
+        <View style={{ paddingHorizontal: 20, marginTop: spacing.xxl }}>
+          <Card>
+            <View style={{ gap: spacing.xs }}>
+              <ThemedText
+                variant="caption"
+                style={{ color: colors.mutedForeground, letterSpacing: 1.2 }}
+              >
+                {t('article.makeHabitEyebrow')}
+              </ThemedText>
+              <ThemedText variant="cardTitle">{t('article.makeHabitTitle')}</ThemedText>
+              <ThemedText variant="bodySmall" style={{ color: colors.mutedForeground }}>
+                {t('article.makeHabitBody')}
+              </ThemedText>
+              <View style={{ marginTop: spacing.sm }}>
+                <Button size="sm" onPress={handleMakeHabit}>
+                  <Plus color={colors.accentForeground} size={16} /> {t('article.makeHabitCta')}
+                </Button>
+              </View>
+            </View>
+          </Card>
+        </View>
+
+        {/* Next article card. */}
+        {nextArticle ? (
+          <View style={{ paddingHorizontal: 20, marginTop: spacing.xxl }}>
+            <ThemedText
+              variant="caption"
+              style={{
+                color: colors.mutedForeground,
+                letterSpacing: 1.2,
+                marginBottom: spacing.xs,
+              }}
+            >
+              {t('article.nextArticle')}
+            </ThemedText>
+            <Pressable
+              onPress={() => openNext(nextArticle.id)}
+              accessibilityRole="link"
+              accessibilityLabel={`${t('article.nextArticle')}: ${nextArticle.title}`}
+              style={({ pressed }) => [
+                styles.nextCard,
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.surface,
+                  borderRadius: radius.card,
+                  opacity: pressed ? 0.6 : 1,
+                },
+              ]}
+            >
+              <View style={{ flex: 1, gap: spacing.xs }}>
+                <ThemedText variant="rowTitle" numberOfLines={3}>
+                  {nextArticle.title}
+                </ThemedText>
+                {nextArticle.category ? (
+                  <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                    {nextArticle.category.name}
+                  </ThemedText>
+                ) : null}
+              </View>
+              <ArrowRight color={colors.mutedForeground} size={20} />
+            </Pressable>
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+function formatPublishedDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
 /**
- * ReaderHeader — the article reader header with Back, Save, Share, and reading
- * size actions. All are 44-unit targets. The article title is NOT shown here
- * per `mobile.md` §8.7.
+ * ReaderHeader — the article reader header with Back, Save, Like, Share, and
+ * reading size actions. All are 44-unit targets. The article title is NOT
+ * shown here per `mobile.md` §8.7.
  */
 type ReaderHeaderProps = {
   onBack: () => void;
   onSave: () => void;
+  onLike: () => void;
   onShare: () => void;
   onSize: () => void;
   saveLabel: string;
   shareLabel: string;
+  likeLabel: string;
   sizeLabel: string;
   backLabel: string;
   saved?: boolean;
+  liked?: boolean;
   colors: import('@/design-system/tokens').ColorTokens;
   spacing: import('@/design-system/tokens').SpacingTokens;
 };
@@ -344,13 +631,16 @@ type ReaderHeaderProps = {
 function ReaderHeader({
   onBack,
   onSave,
+  onLike,
   onShare,
   onSize,
   saveLabel,
   shareLabel,
+  likeLabel,
   sizeLabel,
   backLabel,
   saved,
+  liked,
   colors,
   spacing,
 }: ReaderHeaderProps): React.ReactNode {
@@ -387,9 +677,24 @@ function ReaderHeader({
         <Type color={colors.foreground} size={22} />
       </Pressable>
       <Pressable
+        onPress={onLike}
+        accessibilityRole="button"
+        accessibilityLabel={likeLabel}
+        accessibilityState={{ selected: liked }}
+        hitSlop={8}
+        style={headerStyles.action}
+      >
+        <Heart
+          color={liked ? colors.accent : colors.foreground}
+          fill={liked ? colors.accent : 'none'}
+          size={22}
+        />
+      </Pressable>
+      <Pressable
         onPress={onSave}
         accessibilityRole="button"
         accessibilityLabel={saveLabel}
+        accessibilityState={{ selected: saved }}
         hitSlop={8}
         style={headerStyles.action}
       >
@@ -419,4 +724,22 @@ const headerStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  tagPill: { paddingHorizontal: 10, paddingVertical: 4 },
+  actionPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    minHeight: 36,
+  },
+  nextCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    minHeight: 44,
+  },
 });

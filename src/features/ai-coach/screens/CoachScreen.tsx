@@ -8,31 +8,58 @@
  * screen (creating a conversation first via the start endpoint). Voice entry
  * navigates to the voice screen.
  *
+ * Conversation management: a search field filters the loaded list client-side
+ * (by title/lastMessage, matching the web behavior — there is no dedicated
+ * conversation search endpoint). Segmented tabs switch between Active and
+ * Archived lists (`archived` query param). Long-pressing a row opens an action
+ * sheet with Archive/Unarchive/Delete (delete requires confirmation).
+ *
  * Domain boundary: composition screen in `features/ai-coach`. Imports only
  * PUBLIC hooks from `features/ai-coach` and `features/billing`. Does not import
  * feature internals beyond its own components.
  */
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import { MessageCircle, Mic } from 'lucide-react-native';
+import { MessageCircle, Mic, Search, X } from 'lucide-react-native';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ApiError } from '@/core/api/errors';
 import type { Conversation } from '@/core/api/schemas';
-import { EmptyState, ErrorState, SectionLabel, Skeleton, ThemedText } from '@/design-system';
+import {
+  EmptyState,
+  ErrorState,
+  SectionLabel,
+  SegmentedTabs,
+  Skeleton,
+  ThemedText,
+} from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useBillingOverview } from '@/features/billing';
 
+import { ConversationActionsSheet } from '../components/ConversationActionsSheet';
 import { ConversationRow } from '../components/ConversationRow';
 import { EntitlementBanner } from '../components/EntitlementBanner';
-import { useConversations, useStartConversation } from '../hooks';
+import {
+  useArchiveConversation,
+  useConversations,
+  useDeleteConversation,
+  useStartConversation,
+  useUnarchiveConversation,
+} from '../hooks';
+
+type Tab = 'active' | 'archived';
 
 export function CoachScreen(): React.ReactNode {
   const { t } = useTranslation();
   const router = useRouter();
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, radius, typography } = useTheme();
+
+  const [tab, setTab] = useState<Tab>('active');
+  const [search, setSearch] = useState('');
+  const [actionTarget, setActionTarget] = useState<Conversation | null>(null);
 
   const {
     data: conversationsData,
@@ -40,13 +67,25 @@ export function CoachScreen(): React.ReactNode {
     isError,
     error,
     refetch,
-  } = useConversations({ limit: 50 });
+  } = useConversations({ limit: 50, archived: tab === 'archived' });
   const { data: billing } = useBillingOverview();
   const startConversation = useStartConversation();
+  const archiveMutation = useArchiveConversation();
+  const unarchiveMutation = useUnarchiveConversation();
+  const deleteMutation = useDeleteConversation();
 
-  const conversations = (conversationsData?.data ?? []).filter(
-    (conversation) => conversation.title.trim() || conversation.lastMessage.trim(),
-  );
+  const conversations = useMemo(() => {
+    const all = (conversationsData?.data ?? []).filter(
+      (conversation) => conversation.title.trim() || conversation.lastMessage.trim(),
+    );
+    const query = search.trim().toLowerCase();
+    if (!query) return all;
+    return all.filter(
+      (conversation) =>
+        conversation.title.toLowerCase().includes(query) ||
+        conversation.lastMessage.toLowerCase().includes(query),
+    );
+  }, [conversationsData, search]);
 
   const handleStartText = async () => {
     const conv = await startConversation.mutateAsync({ type: 'coach' });
@@ -61,6 +100,11 @@ export function CoachScreen(): React.ReactNode {
     router.push('/conversation/voice');
   };
 
+  const tabs = [
+    { id: 'active' as const, label: t('coach.tabActive') },
+    { id: 'archived' as const, label: t('coach.tabArchived') },
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <View
@@ -72,7 +116,11 @@ export function CoachScreen(): React.ReactNode {
       <FlashList
         data={conversations}
         renderItem={({ item }) => (
-          <ConversationRow conversation={item} onPress={handleOpenConversation} />
+          <ConversationRow
+            conversation={item}
+            onPress={handleOpenConversation}
+            onLongPress={setActionTarget}
+          />
         )}
         keyExtractor={(item) => item.id}
         refreshControl={
@@ -133,8 +181,54 @@ export function CoachScreen(): React.ReactNode {
               </Pressable>
             </View>
 
+            {/* Search + Active/Archived tabs */}
+            <View style={{ paddingHorizontal: spacing.xl, gap: spacing.sm }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: spacing.sm,
+                  backgroundColor: colors.surface,
+                  borderColor: colors.input,
+                  borderWidth: 1,
+                  borderRadius: radius.field,
+                  paddingHorizontal: spacing.md,
+                  minHeight: 48,
+                }}
+              >
+                <Search color={colors.mutedForeground} size={18} />
+                <TextInput
+                  value={search}
+                  onChangeText={setSearch}
+                  placeholder={t('coach.searchPlaceholder')}
+                  placeholderTextColor={colors.mutedForeground}
+                  accessibilityLabel={t('coach.searchLabel')}
+                  style={{
+                    flex: 1,
+                    color: colors.foreground,
+                    fontSize: typography.fontSize.md,
+                    paddingVertical: spacing.sm,
+                  }}
+                />
+                {search ? (
+                  <Pressable
+                    onPress={() => setSearch('')}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('coach.searchClear')}
+                    hitSlop={8}
+                  >
+                    <X color={colors.mutedForeground} size={18} />
+                  </Pressable>
+                ) : null}
+              </View>
+
+              <SegmentedTabs segments={tabs} value={tab} onChange={(id) => setTab(id as Tab)} />
+            </View>
+
             <View style={{ paddingHorizontal: spacing.xl }}>
-              <SectionLabel>{t('coach.recent')}</SectionLabel>
+              <SectionLabel>
+                {tab === 'archived' ? t('coach.archivedSection') : t('coach.recent')}
+              </SectionLabel>
             </View>
           </View>
         }
@@ -152,6 +246,10 @@ export function CoachScreen(): React.ReactNode {
                 <Skeleton key={i} style={{ height: 64 }} radius={12} />
               ))}
             </View>
+          ) : search ? (
+            <EmptyState title={t('coach.searchEmptyTitle')} subtitle={t('coach.searchEmptyBody')} />
+          ) : tab === 'archived' ? (
+            <EmptyState title={t('coach.noArchivedTitle')} subtitle={t('coach.noArchivedBody')} />
           ) : (
             <EmptyState
               title={t('coach.noConversationsTitle')}
@@ -160,6 +258,15 @@ export function CoachScreen(): React.ReactNode {
           )
         }
         contentContainerStyle={{ paddingBottom: spacing.xl }}
+      />
+
+      <ConversationActionsSheet
+        conversation={actionTarget}
+        open={actionTarget !== null}
+        onClose={() => setActionTarget(null)}
+        onArchive={(id) => archiveMutation.mutate(id)}
+        onUnarchive={(id) => unarchiveMutation.mutate(id)}
+        onDelete={(id) => deleteMutation.mutate(id)}
       />
     </SafeAreaView>
   );

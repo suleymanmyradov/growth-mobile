@@ -34,12 +34,7 @@ export type CoachingStreamPhase = 'idle' | 'thinking' | 'streaming' | 'complete'
  * card and calls the existing CRUD endpoint on accept.
  */
 export type ProposalAction =
-  | 'create_goal'
-  | 'update_goal'
-  | 'delete_goal'
-  | 'create_habit'
-  | 'update_habit'
-  | 'delete_habit';
+  'create_goal' | 'update_goal' | 'delete_goal' | 'create_habit' | 'update_habit' | 'delete_habit';
 
 export interface CoachingProposal {
   id: string;
