@@ -7,20 +7,29 @@
  * (rest/syncing/done/failed) is derived from the optimistic cache + mutation
  * status so the row never relies on color alone.
  *
- * Check-in details: a long-press on the row opens the full check-in sheet
- * (mood/energy/blocker/note/missed). When the habit is already done, tapping
- * the check-in circle undoes (deletes) the check-in.
+ * Check-in details: a visible "log details" button opens the full check-in
+ * sheet (mood/energy/blocker/note/missed). Long-press on the content area
+ * also opens it. When the habit is already done, tapping the check-in circle
+ * undoes (deletes) the check-in.
  *
  * Domain boundary: this is a presentation component owned by `features/home`.
  * It receives a `Habit` and check-in callbacks from the Today composition and
  * does not import `features/habits` or `features/check-ins` internals.
  */
+import { ClipboardList } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 import type { Habit } from '@/core/api/schemas';
-import { Badge, CheckInControl, StreakBar, ThemedText, type CheckInState } from '@/design-system';
+import {
+  Badge,
+  CheckInControl,
+  IconButton,
+  StreakBar,
+  ThemedText,
+  type CheckInState,
+} from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 
 export type TodayHabitRowProps = {
@@ -57,69 +66,79 @@ export function TodayHabitRow({
   const isDone = checkInState === 'done';
 
   return (
-    <Pressable
-      onLongPress={onLogDetails}
-      delayLongPress={400}
-      accessibilityRole="button"
-      accessibilityLabel={`${habit.name} — ${isDone ? t('habits.doneToday') : t('habits.checkIn')}`}
-      accessibilityHint={onLogDetails ? t('today.checkInDetailsHint') : undefined}
-      disabled={checkInState === 'syncing' || isUndoPending}
-    >
-      <View style={{ gap: spacing.xs }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-          <CheckInControl
-            state={isUndoPending ? 'syncing' : checkInState}
-            habitName={habit.name}
-            onPress={isDone ? onUndo : onCheckIn}
+    <View style={{ gap: spacing.xs }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+        <CheckInControl
+          state={isUndoPending ? 'syncing' : checkInState}
+          habitName={habit.name}
+          onPress={isDone ? onUndo : onCheckIn}
+        />
+        {/* Detailed check-in button — visible affordance for the full
+            check-in sheet (mood/energy/blocker/note). Long-press on the
+            content area also opens it. */}
+        {onLogDetails ? (
+          <IconButton
+            icon={<ClipboardList color={colors.accent} size={20} />}
+            onPress={onLogDetails}
+            accessibilityLabel={t('habits.detailedCheckIn')}
           />
-          <View style={{ flex: 1, gap: 2 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-              <ThemedText
-                variant="rowTitle"
-                numberOfLines={2}
-                style={{
-                  flexShrink: 1,
-                  textDecorationLine: isDone ? 'line-through' : 'none',
-                }}
-              >
-                {habit.name}
-              </ThemedText>
-              {habit.category ? <Badge>{habit.category}</Badge> : null}
-            </View>
-            {habit.description ? (
-              <Pressable
-                onPress={onToggleNote}
-                accessibilityRole="button"
-                accessibilityLabel={noteExpanded ? t('today.collapseNote') : t('today.expandNote')}
-                hitSlop={8}
-              >
-                <ThemedText
-                  variant="caption"
-                  numberOfLines={noteExpanded ? undefined : 1}
-                  style={{ color: colors.mutedForeground }}
-                >
-                  {habit.description}
-                </ThemedText>
-              </Pressable>
-            ) : null}
-          </View>
-          {isDone && onUndo ? (
-            <Pressable
-              onPress={onUndo}
-              accessibilityRole="button"
-              accessibilityLabel={t('today.undoCheckIn')}
-              hitSlop={8}
-              disabled={isUndoPending}
-              style={{ padding: 8, minHeight: 44, justifyContent: 'center' }}
+        ) : null}
+        {/* Content area — long-press opens the detailed check-in sheet */}
+        <Pressable
+          onLongPress={onLogDetails}
+          delayLongPress={400}
+          accessibilityRole="button"
+          accessibilityLabel={`${habit.name} — ${isDone ? t('habits.doneToday') : t('habits.checkIn')}`}
+          accessibilityHint={onLogDetails ? t('today.checkInDetailsHint') : undefined}
+          disabled={checkInState === 'syncing' || isUndoPending}
+          style={{ flex: 1, gap: 2 }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+            <ThemedText
+              variant="rowTitle"
+              numberOfLines={2}
+              style={{
+                flexShrink: 1,
+                textDecorationLine: isDone ? 'line-through' : 'none',
+              }}
             >
-              <ThemedText variant="label" style={{ color: colors.mutedForeground }}>
-                {t('common.back')}
+              {habit.name}
+            </ThemedText>
+            {habit.category ? <Badge>{habit.category}</Badge> : null}
+          </View>
+          {habit.description ? (
+            <Pressable
+              onPress={onToggleNote}
+              accessibilityRole="button"
+              accessibilityLabel={noteExpanded ? t('today.collapseNote') : t('today.expandNote')}
+              hitSlop={8}
+            >
+              <ThemedText
+                variant="caption"
+                numberOfLines={noteExpanded ? undefined : 1}
+                style={{ color: colors.mutedForeground }}
+              >
+                {habit.description}
               </ThemedText>
             </Pressable>
           ) : null}
-        </View>
-        <StreakBar history={history} summary={streakSummary} />
+        </Pressable>
+        {isDone && onUndo ? (
+          <Pressable
+            onPress={onUndo}
+            accessibilityRole="button"
+            accessibilityLabel={t('today.undoCheckIn')}
+            hitSlop={8}
+            disabled={isUndoPending}
+            style={{ padding: 8, minHeight: 44, justifyContent: 'center' }}
+          >
+            <ThemedText variant="label" style={{ color: colors.mutedForeground }}>
+              {t('today.undoCheckIn')}
+            </ThemedText>
+          </Pressable>
+        ) : null}
       </View>
-    </Pressable>
+      <StreakBar history={history} summary={streakSummary} />
+    </View>
   );
 }

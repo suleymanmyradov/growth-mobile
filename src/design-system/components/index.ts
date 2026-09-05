@@ -19,6 +19,8 @@ export { ErrorBoundary } from './ErrorBoundary';
 export type { ErrorBoundaryProps } from './ErrorBoundary';
 export { ErrorState } from './ErrorState';
 export type { ErrorStateProps } from './ErrorState';
+export { IconButton } from './IconButton';
+export type { IconButtonProps } from './IconButton';
 export { Input } from './Input';
 export type { InputProps } from './Input';
 export { ListRow } from './ListRow';
@@ -45,3 +47,4 @@ export { ThemedView } from './ThemedView';
 export type { ThemedViewProps } from './ThemedView';
 export { Toast } from './Toast';
 export type { ToastProps, ToastVariant } from './Toast';
+

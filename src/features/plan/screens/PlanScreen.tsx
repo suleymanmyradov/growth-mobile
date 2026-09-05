@@ -32,52 +32,59 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ApiError } from '@/core/api/errors';
 import type { Goal, Habit } from '@/core/api/schemas';
 import {
-    Button,
-    Card,
-    Chip,
-    EmptyState,
-    ErrorState,
-    SectionLabel,
-    SegmentedTabs,
-    Sheet,
-    Skeleton,
-    ThemedText,
-    type Segment
+  Button,
+  Card,
+  Chip,
+  EmptyState,
+  ErrorState,
+  SectionLabel,
+  SegmentedTabs,
+  Sheet,
+  Skeleton,
+  ThemedText,
+  type Segment
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useBillingOverview, useTrackUpgradeEvent } from '@/features/billing';
-import { useCreateCheckIn } from '@/features/check-ins';
 import {
-    GoalCard,
-    GoalForm,
-    useCreateGoal,
-    useDeleteGoal,
-    useGoals,
-    useToggleGoal,
-    useUpdateGoal,
-    type GoalFormValues,
+  CheckInSheet,
+  useCreateCheckIn,
+  useDeleteCheckIn,
+  useTodayCheckIns,
+  type CheckIn,
+  type CheckInSubmitData,
+} from '@/features/check-ins';
+import {
+  GoalCard,
+  GoalForm,
+  useCreateGoal,
+  useDeleteGoal,
+  useGoals,
+  useToggleGoal,
+  useUpdateGoal,
+  type GoalFormValues,
 } from '@/features/goals';
 import {
-    HabitCard,
-    HabitForm,
-    useCreateHabit,
-    useDeleteHabit,
-    useHabits,
-    useUpdateHabit,
-    type HabitFormValues,
+  deriveCheckInState,
+  HabitCard,
+  HabitForm,
+  useCreateHabit,
+  useDeleteHabit,
+  useHabits,
+  useUpdateHabit,
+  type HabitFormValues
 } from '@/features/habits';
 
 import { ArchiveSheet, type ArchiveMode } from '../components/ArchiveSheet';
 import { LimitUpgradePrompt, type LimitTrigger } from '../components/LimitUpgradePrompt';
-import { LinkGoalSheet } from '../components/LinkGoalSheet';
 import {
-    filterAndSortHabits,
-    filterGoalsByLifecycle,
-    getHabitCategories,
-    getHabitsForGoal,
-    getUntiedHabits,
-    type Filter,
-    type SortBy,
+  filterAndSortHabits,
+  filterGoalsByLifecycle,
+  getHabitCategories,
+  getHabitsForGoal,
+  getUntiedHabits,
+  type Filter,
+  type SortBy,
 } from '../grouping';
 
 type FormKind = 'habit' | 'goal';
@@ -121,6 +128,8 @@ export function PlanScreen(): React.ReactNode {
   const deleteGoal = useDeleteGoal();
   const toggleGoal = useToggleGoal();
   const createCheckIn = useCreateCheckIn();
+  const deleteCheckIn = useDeleteCheckIn();
+  const { data: todayCheckIns } = useTodayCheckIns();
 
   // Billing / entitlements — used to detect Free plan limits and gate creates
   // client-side before the server rejects with `plan_limit_reached`.
@@ -138,8 +147,16 @@ export function PlanScreen(): React.ReactNode {
   );
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
-  const [linkHabit, setLinkHabit] = useState<Habit | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Check-in failure tracking + note expansion + check-in sheet state.
+  // Mirrors the Today screen: per-habit failure set, expanded note set,
+  // and a CheckInSheet opened via long-press on a habit row.
+  const [failedHabitIds, setFailedHabitIds] = useState<Set<string>>(new Set());
+  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const [checkInSheetOpen, setCheckInSheetOpen] = useState(false);
+  const [checkInSheetHabit, setCheckInSheetHabit] = useState<Habit | null>(null);
+  const [checkInSheetKey, setCheckInSheetKey] = useState(0);
 
   // Limit-upgrade prompt + archive sheet state. The prompt is shown when the
   // user reaches a Free plan limit (detected client-side via entitlements or
@@ -287,8 +304,72 @@ export function PlanScreen(): React.ReactNode {
   };
 
   const handleCheckIn = (habit: Habit) => {
-    createCheckIn.mutate({ habitId: habit.id, status: 'completed' });
+    setFailedHabitIds((prev) => {
+      if (!prev.has(habit.id)) return prev;
+      const next = new Set(prev);
+      next.delete(habit.id);
+      return next;
+    });
+    createCheckIn.mutate(
+      { habitId: habit.id, status: 'completed' },
+      {
+        onError: () => {
+          setFailedHabitIds((prev) => new Set(prev).add(habit.id));
+        },
+      },
+    );
   };
+
+  const handleUndoCheckIn = (habit: Habit) => {
+    deleteCheckIn.mutate(habit.id);
+  };
+
+  const handleOpenCheckInSheet = (habit: Habit) => {
+    setCheckInSheetHabit(habit);
+    setCheckInSheetKey((k) => k + 1);
+    setCheckInSheetOpen(true);
+  };
+
+  const handleCloseCheckInSheet = () => {
+    setCheckInSheetOpen(false);
+    setCheckInSheetHabit(null);
+  };
+
+  const handleSubmitCheckIn = (data: CheckInSubmitData) => {
+    createCheckIn.mutate(data, { onSuccess: handleCloseCheckInSheet });
+  };
+
+  const toggleNote = (id: string) => {
+    setExpandedNotes((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleAnalyzeGoal = (goal: Goal) => {
+    const params = new URLSearchParams({ goalId: goal.id, goalTitle: goal.title });
+    router.push(`/(app)/(tabs)/coach?${params.toString()}`);
+  };
+
+  // Today's check-in for the sheet's habit (pre-fills mood/energy/note).
+  const existingCheckInForSheet: CheckIn | null = checkInSheetHabit
+    ? (todayCheckIns?.find((c) => c.habitId === checkInSheetHabit.id) ?? null)
+    : null;
+
+  // Set of habit IDs that have a note on today's check-in.
+  const noteHabitIds = useMemo(
+    () => new Set((todayCheckIns ?? []).filter((ci) => ci.note).map((ci) => ci.habitId)),
+    [todayCheckIns],
+  );
+
+  const checkInStateFor = (habit: Habit) =>
+    deriveCheckInState({
+      habit,
+      failedHabitIds,
+      checkInAllPending: false,
+    });
 
   const closeForm = () => {
     setFormKind(null);
@@ -447,12 +528,18 @@ export function PlanScreen(): React.ReactNode {
                 <View key={goal.id} style={{ gap: spacing.sm }}>
                   <GoalCard
                     goal={goal}
+                    habits={nestedHabits}
                     onToggle={() => toggleGoal.mutate(goal.id)}
                     onEdit={() => {
                       setEditingGoal(goal);
                       setFormKind('goal');
                     }}
                     onDelete={() => handleDeleteGoal(goal)}
+                    onAnalyzeGoal={() => handleAnalyzeGoal(goal)}
+                    onAddHabit={() => {
+                      setEditingHabit(null);
+                      setFormKind('habit');
+                    }}
                   />
                   {nestedHabits.length > 0 ? (
                     <View style={{ paddingLeft: spacing.md, gap: spacing.xs }}>
@@ -460,13 +547,19 @@ export function PlanScreen(): React.ReactNode {
                         <HabitCard
                           key={habit.id}
                           habit={habit}
+                          checkInState={checkInStateFor(habit)}
                           onCheckIn={() => handleCheckIn(habit)}
+                          onUndo={() => handleUndoCheckIn(habit)}
+                          onLogDetails={() => handleOpenCheckInSheet(habit)}
+                          isUndoPending={deleteCheckIn.isPending}
                           onEdit={() => {
                             setEditingHabit(habit);
                             setFormKind('habit');
                           }}
                           onDelete={() => handleDeleteHabit(habit)}
-                          checkInLoading={createCheckIn.isPending}
+                          hasNote={noteHabitIds.has(habit.id)}
+                          noteExpanded={expandedNotes.has(habit.id)}
+                          onToggleNote={() => toggleNote(habit.id)}
                         />
                       ))}
                     </View>
@@ -543,30 +636,20 @@ export function PlanScreen(): React.ReactNode {
               <View key={habit.id} style={{ gap: spacing.xs }}>
                 <HabitCard
                   habit={habit}
+                  checkInState={checkInStateFor(habit)}
                   onCheckIn={() => handleCheckIn(habit)}
+                  onUndo={() => handleUndoCheckIn(habit)}
+                  onLogDetails={() => handleOpenCheckInSheet(habit)}
+                  isUndoPending={deleteCheckIn.isPending}
                   onEdit={() => {
                     setEditingHabit(habit);
                     setFormKind('habit');
                   }}
                   onDelete={() => handleDeleteHabit(habit)}
-                  checkInLoading={createCheckIn.isPending}
+                  hasNote={noteHabitIds.has(habit.id)}
+                  noteExpanded={expandedNotes.has(habit.id)}
+                  onToggleNote={() => toggleNote(habit.id)}
                 />
-                <Pressable
-                  onPress={() => setLinkHabit(habit)}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('plan.linkGoal')}
-                  hitSlop={8}
-                  style={{
-                    alignSelf: 'flex-start',
-                    padding: 8,
-                    minHeight: 44,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <ThemedText variant="label" style={{ color: colors.accent }}>
-                    {t('plan.linkGoal')}
-                  </ThemedText>
-                </Pressable>
               </View>
             ))}
           </View>
@@ -649,12 +732,6 @@ export function PlanScreen(): React.ReactNode {
       </Sheet>
 
       {/* Link goal sheet */}
-      <LinkGoalSheet
-        open={linkHabit !== null}
-        onClose={() => setLinkHabit(null)}
-        habit={linkHabit}
-      />
-
       {/* Archive sheet (from the limit-upgrade prompt's "Archive" action) */}
       <ArchiveSheet
         open={archiveOpen}
@@ -664,6 +741,17 @@ export function PlanScreen(): React.ReactNode {
         goals={goals ?? []}
         onDeleteHabit={(id) => deleteHabit.mutate(id)}
         onDeleteGoal={(id) => deleteGoal.mutate(id)}
+      />
+
+      {/* Full check-in sheet — opened via long-press on a habit row */}
+      <CheckInSheet
+        key={checkInSheetKey}
+        open={checkInSheetOpen}
+        onClose={handleCloseCheckInSheet}
+        habit={checkInSheetHabit}
+        existingCheckIn={existingCheckInForSheet}
+        onSubmit={handleSubmitCheckIn}
+        isSubmitting={createCheckIn.isPending}
       />
     </SafeAreaView>
   );

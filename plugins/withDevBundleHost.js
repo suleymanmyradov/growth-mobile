@@ -1,4 +1,4 @@
-const { withAppDelegate } = require('@expo/config-plugins');
+const { withAppDelegate, withInfoPlist } = require('@expo/config-plugins');
 
 /**
  * Injects `RCTBundleURLProvider.sharedSettings().jsLocation = "<host>"` into
@@ -20,6 +20,12 @@ function withDevBundleHost(config, options = {}) {
   const host = options?.host;
   if (!host || isEasBuild) return config;
 
+  config = withInfoPlist(config, (config) => {
+    config.modResults.NSLocalNetworkUsageDescription ??=
+      'Allow Growth to connect to the local development server.';
+    return config;
+  });
+
   return withAppDelegate(config, (config) => {
     const swift = config.modResults;
     if (swift.language !== 'swift') return config;
@@ -31,7 +37,13 @@ function withDevBundleHost(config, options = {}) {
     const oldLine =
       '    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: ".expo/.virtual-metro-entry")';
     const newLines = `    RCTBundleURLProvider.sharedSettings().jsLocation = "${host}"
-${oldLine}`;
+    return RCTBundleURLProvider.jsBundleURL(
+      forBundleRoot: ".expo/.virtual-metro-entry",
+      packagerHost: "${host}",
+      enableDev: true,
+      enableMinification: false,
+      inlineSourceMap: false
+    )`;
 
     if (swift.contents.includes(oldLine)) {
       swift.contents = swift.contents.replace(oldLine, newLines);

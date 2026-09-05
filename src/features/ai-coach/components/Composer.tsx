@@ -13,6 +13,7 @@
  */
 import { ArrowUp, AtSign, Square } from 'lucide-react-native';
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
@@ -22,6 +23,9 @@ import type { ComposerAttachment } from '../attachments';
 import { AttachButton } from './AttachButton';
 import { AttachmentPreview } from './AttachmentPreview';
 import { DictateButton } from './DictateButton';
+
+const COMPOSER_MIN_HEIGHT = 44;
+const COMPOSER_MAX_HEIGHT = 120;
 
 export interface ComposerProps {
   value: string;
@@ -60,6 +64,14 @@ export function Composer({
   const canSend =
     (value.trim().length > 0 || (attachments?.length ?? 0) > 0) && !disabled && !isStreaming;
   const hasAttachments = (attachments?.length ?? 0) > 0;
+  const [contentHeight, setContentHeight] = useState(COMPOSER_MIN_HEIGHT);
+  // iOS never shrinks a grown multiline input back after its text is cleared
+  // (e.g. after sending), so the height is driven explicitly and reset while
+  // the draft is empty.
+  const inputHeight =
+    value.length === 0
+      ? COMPOSER_MIN_HEIGHT
+      : Math.min(Math.max(contentHeight, COMPOSER_MIN_HEIGHT), COMPOSER_MAX_HEIGHT);
 
   return (
     <View
@@ -82,58 +94,64 @@ export function Composer({
         style={{
           flexDirection: 'row',
           alignItems: 'flex-end',
-          gap: spacing.sm,
+          gap: spacing.xs,
           paddingHorizontal: spacing.xl,
           paddingVertical: spacing.sm,
         }}
       >
-        {onAttach ? <AttachButton onAttach={onAttach} disabled={disabled} /> : null}
-
-        {onReference ? (
-          <Pressable
-            onPress={onReference}
-            disabled={disabled}
-            accessibilityRole="button"
-            accessibilityLabel={t('coach.reference')}
-            hitSlop={8}
-            style={[
-              styles.action,
-              {
-                backgroundColor: colors.surface,
-                borderColor: colors.border,
-                borderWidth: 1,
-                borderRadius: radius.field,
-              },
-            ]}
-          >
-            <AtSign color={colors.mutedForeground} size={20} />
-          </Pressable>
-        ) : null}
-
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder ?? t('coach.composerPlaceholder')}
-          placeholderTextColor={colors.mutedForeground}
-          multiline
-          editable={!disabled}
-          accessibilityLabel={t('coach.composerLabel')}
+        <View
           style={{
             flex: 1,
-            color: colors.foreground,
+            flexDirection: 'row',
+            alignItems: 'flex-end',
             backgroundColor: colors.surface,
             borderColor: colors.input,
             borderWidth: 1,
-            borderRadius: radius.field,
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            fontSize: typography.fontSize.md,
-            minHeight: 48,
-            maxHeight: 120,
+            borderRadius: radius.pill,
+            paddingHorizontal: spacing.xs,
+            paddingVertical: 4,
+            gap: spacing.xs,
           }}
-        />
+        >
+          {onAttach ? <AttachButton onAttach={onAttach} disabled={disabled} /> : null}
 
-        <DictateButton onTranscript={onChangeText} disabled={disabled} />
+          {onReference ? (
+            <Pressable
+              onPress={onReference}
+              disabled={disabled}
+              accessibilityRole="button"
+              accessibilityLabel={t('coach.reference')}
+              hitSlop={8}
+              style={styles.inlineAction}
+            >
+              <AtSign color={colors.mutedForeground} size={22} />
+            </Pressable>
+          ) : null}
+
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={placeholder ?? t('coach.composerPlaceholder')}
+            placeholderTextColor={colors.mutedForeground}
+            multiline
+            editable={!disabled}
+            accessibilityLabel={t('coach.composerLabel')}
+            onContentSizeChange={(e) => {
+              const next = e.nativeEvent.contentSize.height;
+              if (next > 0) setContentHeight(next);
+            }}
+            style={{
+              flex: 1,
+              color: colors.foreground,
+              paddingHorizontal: spacing.xs,
+              paddingVertical: spacing.sm,
+              fontSize: typography.fontSize.md,
+              height: inputHeight,
+            }}
+          />
+
+          <DictateButton onTranscript={onChangeText} disabled={disabled} />
+        </View>
 
         {isStreaming ? (
           <Pressable
@@ -142,11 +160,11 @@ export function Composer({
             accessibilityLabel={t('coach.stop')}
             hitSlop={8}
             style={[
-              styles.action,
-              { backgroundColor: colors.mutedForeground, borderRadius: radius.field },
+              styles.send,
+              { backgroundColor: colors.mutedForeground },
             ]}
           >
-            <Square color={colors.background} size={20} />
+            <Square color={colors.background} size={18} />
           </Pressable>
         ) : (
           <Pressable
@@ -156,10 +174,10 @@ export function Composer({
             accessibilityLabel={t('coach.send')}
             hitSlop={8}
             style={[
-              styles.action,
+              styles.send,
               {
                 backgroundColor: canSend ? colors.accent : colors.input,
-                borderRadius: radius.field,
+                opacity: disabled ? 0.5 : 1,
               },
             ]}
           >
@@ -172,10 +190,21 @@ export function Composer({
 }
 
 const styles = StyleSheet.create({
-  action: {
-    width: 48,
-    height: 48,
+  inlineAction: {
+    width: 40,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  send: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Bottom-aligns with the pill's content edge (paddingVertical: 4), so the
+    // button is vertically centered on the single-line input and stays aligned
+    // with the last line when the input grows multiline.
+    marginBottom: 4,
   },
 });

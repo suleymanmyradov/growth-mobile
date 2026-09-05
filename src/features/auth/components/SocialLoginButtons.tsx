@@ -33,16 +33,24 @@ type SocialLoginButtonsProps = {
   onError?: (message: string) => void;
 };
 
-export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
+/**
+ * Google login button. Extracted into its own component so the
+ * `Google.useAuthRequest` hook is only called when Google OAuth is configured
+ * — the hook throws if `iosClientId` is undefined on iOS.
+ */
+function GoogleLoginButton({
+  onError,
+  busy,
+  setBusy,
+}: {
+  onError?: (message: string) => void;
+  busy: 'google' | 'apple' | null;
+  setBusy: (b: 'google' | 'apple' | null) => void;
+}) {
   const { t } = useTranslation();
-  const { colors } = useTheme();
   const env = getEnv();
-
   const googleLogin = useGoogleLogin();
-  const appleLogin = useAppleLogin();
-  const [busy, setBusy] = useState<'google' | 'apple' | null>(null);
 
-  // Google OAuth config — platform-specific client IDs.
   const googleClientId =
     Platform.OS === 'ios'
       ? env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
@@ -55,6 +63,11 @@ export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
     iosClientId: env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || undefined,
+    // The backend exchanges the code server-side (it holds the client secret).
+    // Without this, expo-auth-session tries to auto-exchange the code on the
+    // client, fails (no client secret for a web client type), and leaves the
+    // response as null — so the code never reaches the backend.
+    shouldAutoExchangeCode: false,
   });
 
   // Handle the Google auth response — exchange the code via the backend.
@@ -80,7 +93,7 @@ export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
     } else if (response?.type === 'dismiss') {
       setBusy(null);
     }
-  }, [response, request, googleLogin, onError, t]);
+  }, [response, request, googleLogin, onError, t, setBusy]);
 
   const handleGoogleLogin = async () => {
     if (!googleClientId || !request) {
@@ -95,6 +108,37 @@ export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
       onError?.(t('auth.errors.googleFailed'));
     }
   };
+
+  return (
+    <Button
+      variant="outline"
+      fullWidth
+      loading={busy === 'google'}
+      disabled={busy !== null}
+      onPress={handleGoogleLogin}
+      accessibilityLabel={t('auth.continueWithGoogle')}
+    >
+      {t('auth.continueWithGoogle')}
+    </Button>
+  );
+}
+
+export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const env = getEnv();
+  const appleLogin = useAppleLogin();
+  const [busy, setBusy] = useState<'google' | 'apple' | null>(null);
+
+  const googleClientId =
+    Platform.OS === 'ios'
+      ? env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
+      : Platform.OS === 'android'
+        ? env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID
+        : env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+  const showGoogle = Boolean(googleClientId);
+  const showApple = Platform.OS === 'ios';
+  if (!showGoogle && !showApple) return null;
 
   const handleAppleLogin = async () => {
     if (Platform.OS !== 'ios') return;
@@ -139,10 +183,6 @@ export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
     }
   };
 
-  const showGoogle = Boolean(googleClientId);
-  const showApple = Platform.OS === 'ios';
-  if (!showGoogle && !showApple) return null;
-
   return (
     <View style={styles.container}>
       <View style={styles.divider}>
@@ -154,16 +194,7 @@ export function SocialLoginButtons({ onError }: SocialLoginButtonsProps) {
       </View>
 
       {showGoogle ? (
-        <Button
-          variant="outline"
-          fullWidth
-          loading={busy === 'google'}
-          disabled={busy !== null}
-          onPress={handleGoogleLogin}
-          accessibilityLabel={t('auth.continueWithGoogle')}
-        >
-          {t('auth.continueWithGoogle')}
-        </Button>
+        <GoogleLoginButton onError={onError} busy={busy} setBusy={setBusy} />
       ) : null}
 
       {showApple ? (

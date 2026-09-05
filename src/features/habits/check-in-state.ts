@@ -1,9 +1,10 @@
 /**
- * Pure check-in state derivation for the Today composition.
+ * Pure check-in state derivation for habit rows.
  *
  * Maps a habit's optimistic cache state + per-habit failure tracking + the
  * bulk "check in all" pending flag to a `CheckInState` for the `CheckInControl`.
- * Extracted from the screen so the state machine is unit-testable.
+ * Extracted as a pure function so the state machine is unit-testable and
+ * shareable between the Today and Plan compositions.
  */
 import type { Habit } from '@/core/api/schemas';
 import type { CheckInState } from '@/design-system';

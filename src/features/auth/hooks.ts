@@ -16,25 +16,25 @@ import { NoopAnalytics, type Analytics } from '@/core/telemetry/analytics';
 import { setSentryUser } from '@/core/telemetry/sentry';
 
 import {
-    appleLogin,
-    forgotPassword,
-    googleLogin,
-    login,
-    logout,
-    register,
-    resendVerification,
-    resetPassword,
-    verifyEmail,
+  appleLogin,
+  forgotPassword,
+  googleLogin,
+  login,
+  logout,
+  register,
+  resendVerification,
+  resetPassword,
+  verifyEmail,
 } from './api';
 import type {
-    AppleLoginRequest,
-    ForgotPasswordRequest,
-    GoogleLoginRequest,
-    LoginRequest,
-    RegisterRequest,
-    ResendVerificationRequest,
-    ResetPasswordRequest,
-    VerifyEmailRequest,
+  AppleLoginRequest,
+  ForgotPasswordRequest,
+  GoogleLoginRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResendVerificationRequest,
+  ResetPasswordRequest,
+  VerifyEmailRequest,
 } from './schemas';
 
 // Analytics instance — replaced with a real implementation when consent is wired.
@@ -48,6 +48,7 @@ export function authErrorKey(code: string): string | null {
   switch (code) {
     case 'invalid_credentials':
     case 'unauthenticated':
+    case 'unauthorized':
       return 'auth.errors.invalidCredentials';
     case 'email_taken':
     case 'email_already_exists':

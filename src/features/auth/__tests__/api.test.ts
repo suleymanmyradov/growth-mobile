@@ -30,13 +30,11 @@ import {
 
 // --- Mocks ---
 
-const mockPost = jest.fn();
+const mockBareRequest = jest.fn();
 const mockApiRequest = jest.fn();
 
 jest.mock('@/core/api/client', () => ({
-  getBareClient: () => ({
-    post: (...args: unknown[]) => mockPost(...args),
-  }),
+  bareRequest: (...args: unknown[]) => mockBareRequest(...args),
   apiRequest: (...args: unknown[]) => mockApiRequest(...args),
   setInstallationId: jest.fn(),
 }));
@@ -126,19 +124,23 @@ describe('applyAuthResponse', () => {
 
 describe('login', () => {
   it('posts to /auth/login with validated data', async () => {
-    mockPost.mockResolvedValue({ data: VALID_AUTH_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_AUTH_RESPONSE);
 
     const result = await login({ email: 'test@example.com', password: 'Password1!' });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/login', {
-      email: 'test@example.com',
-      password: 'Password1!',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/login',
+      data: {
+        email: 'test@example.com',
+        password: 'Password1!',
+      },
     });
     expect(result.accessToken).toBe('access-token-123');
   });
 
   it('applies the auth response (sets tokens)', async () => {
-    mockPost.mockResolvedValue({ data: VALID_AUTH_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_AUTH_RESPONSE);
 
     await login({ email: 'test@example.com', password: 'Password1!' });
 
@@ -147,23 +149,21 @@ describe('login', () => {
 
   it('throws on invalid email format', async () => {
     await expect(login({ email: 'not-an-email', password: 'Password1!' })).rejects.toThrow();
-    expect(mockPost).not.toHaveBeenCalled();
+    expect(mockBareRequest).not.toHaveBeenCalled();
   });
 
   it('throws on short password', async () => {
     await expect(login({ email: 'test@example.com', password: 'short' })).rejects.toThrow();
-    expect(mockPost).not.toHaveBeenCalled();
+    expect(mockBareRequest).not.toHaveBeenCalled();
   });
 
   it('throws on invalid response shape (missing accessToken)', async () => {
-    mockPost.mockResolvedValue({
-      data: { ...VALID_AUTH_RESPONSE, accessToken: undefined },
-    });
+    mockBareRequest.mockResolvedValue({ ...VALID_AUTH_RESPONSE, accessToken: undefined });
     await expect(login({ email: 'test@example.com', password: 'Password1!' })).rejects.toThrow();
   });
 
   it('propagates network errors', async () => {
-    mockPost.mockRejectedValue(new Error('Network error'));
+    mockBareRequest.mockRejectedValue(new Error('Network error'));
     await expect(login({ email: 'test@example.com', password: 'Password1!' })).rejects.toThrow(
       'Network error',
     );
@@ -176,7 +176,7 @@ describe('login', () => {
 
 describe('register', () => {
   it('posts to /auth/register with validated data', async () => {
-    mockPost.mockResolvedValue({ data: VALID_REGISTER_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_REGISTER_RESPONSE);
 
     const result = await register({
       username: 'johndoe',
@@ -185,17 +185,21 @@ describe('register', () => {
       fullName: 'John Doe',
     });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/register', {
-      username: 'johndoe',
-      email: 'john@example.com',
-      password: 'Password1!',
-      fullName: 'John Doe',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/register',
+      data: {
+        username: 'johndoe',
+        email: 'john@example.com',
+        password: 'Password1!',
+        fullName: 'John Doe',
+      },
     });
     expect(result.requiresVerification).toBe(true);
   });
 
   it('does NOT set tokens (register with verification returns no tokens)', async () => {
-    mockPost.mockResolvedValue({ data: VALID_REGISTER_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_REGISTER_RESPONSE);
 
     await register({
       username: 'johndoe',
@@ -216,7 +220,7 @@ describe('register', () => {
         fullName: 'John Doe',
       }),
     ).rejects.toThrow();
-    expect(mockPost).not.toHaveBeenCalled();
+    expect(mockBareRequest).not.toHaveBeenCalled();
   });
 
   it('throws on weak password', async () => {
@@ -248,18 +252,22 @@ describe('register', () => {
 
 describe('verifyEmail', () => {
   it('posts to /auth/verify-email with the token', async () => {
-    mockPost.mockResolvedValue({ data: VALID_AUTH_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_AUTH_RESPONSE);
 
     const result = await verifyEmail({ token: 'verify-token-123' });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/verify-email', {
-      token: 'verify-token-123',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/verify-email',
+      data: {
+        token: 'verify-token-123',
+      },
     });
     expect(result.accessToken).toBe('access-token-123');
   });
 
   it('applies the auth response (sets tokens after verification)', async () => {
-    mockPost.mockResolvedValue({ data: VALID_AUTH_RESPONSE });
+    mockBareRequest.mockResolvedValue(VALID_AUTH_RESPONSE);
 
     await verifyEmail({ token: 'verify-token-123' });
 
@@ -268,7 +276,7 @@ describe('verifyEmail', () => {
 
   it('throws on empty token', async () => {
     await expect(verifyEmail({ token: '' })).rejects.toThrow();
-    expect(mockPost).not.toHaveBeenCalled();
+    expect(mockBareRequest).not.toHaveBeenCalled();
   });
 });
 
@@ -278,18 +286,22 @@ describe('verifyEmail', () => {
 
 describe('resendVerification', () => {
   it('posts to /auth/resend-verification with the email', async () => {
-    mockPost.mockResolvedValue({ data: {} });
+    mockBareRequest.mockResolvedValue({});
 
     await resendVerification({ email: 'test@example.com' });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/resend-verification', {
-      email: 'test@example.com',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/resend-verification',
+      data: {
+        email: 'test@example.com',
+      },
     });
   });
 
   it('throws on invalid email', async () => {
     await expect(resendVerification({ email: 'bad' })).rejects.toThrow();
-    expect(mockPost).not.toHaveBeenCalled();
+    expect(mockBareRequest).not.toHaveBeenCalled();
   });
 });
 
@@ -299,12 +311,16 @@ describe('resendVerification', () => {
 
 describe('forgotPassword', () => {
   it('posts to /auth/forgot-password with the email', async () => {
-    mockPost.mockResolvedValue({ data: {} });
+    mockBareRequest.mockResolvedValue({});
 
     await forgotPassword({ email: 'test@example.com' });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/forgot-password', {
-      email: 'test@example.com',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/forgot-password',
+      data: {
+        email: 'test@example.com',
+      },
     });
   });
 
@@ -319,13 +335,17 @@ describe('forgotPassword', () => {
 
 describe('resetPassword', () => {
   it('posts to /auth/reset-password with token and new password', async () => {
-    mockPost.mockResolvedValue({ data: {} });
+    mockBareRequest.mockResolvedValue({});
 
     await resetPassword({ token: 'reset-token', newPassword: 'NewPassword1!' });
 
-    expect(mockPost).toHaveBeenCalledWith('/auth/reset-password', {
-      token: 'reset-token',
-      newPassword: 'NewPassword1!',
+    expect(mockBareRequest).toHaveBeenCalledWith({
+      method: 'POST',
+      url: '/auth/reset-password',
+      data: {
+        token: 'reset-token',
+        newPassword: 'NewPassword1!',
+      },
     });
   });
 

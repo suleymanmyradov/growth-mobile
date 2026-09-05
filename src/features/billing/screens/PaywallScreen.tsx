@@ -26,17 +26,18 @@ import { Button, ErrorState, Screen, Skeleton, ThemedText } from '@/design-syste
 import { useTheme } from '@/design-system/theme';
 
 import {
-  initialPaywallState,
-  isPaywallBusy,
-  reducePaywall,
-  shouldDismissPaywall,
+    initialPaywallState,
+    isPaywallBusy,
+    reducePaywall,
+    shouldDismissPaywall,
 } from '../entitlement-reconciliation';
 import {
-  useOfferings,
-  usePurchasePackage,
-  useReconcileEntitlement,
-  useRestorePurchases,
-  useTrackUpgradeEvent,
+    useBillingOverview,
+    useOfferings,
+    usePurchasePackage,
+    useReconcileEntitlement,
+    useRestorePurchases,
+    useTrackUpgradeEvent,
 } from '../hooks';
 
 /** Validated limit reasons — the only values accepted via the `reason` param. */
@@ -61,10 +62,17 @@ export function PaywallScreen(): React.ReactNode {
   const reason = reasonKey(typeof params.reason === 'string' ? params.reason : undefined);
 
   const { data: offerings, isLoading, refetch: refetchOfferings } = useOfferings();
+  const { data: billing } = useBillingOverview();
   const purchase = usePurchasePackage();
   const restore = useRestorePurchases();
   const reconcile = useReconcileEntitlement();
   const trackEvent = useTrackUpgradeEvent();
+
+  // The backend is authoritative for entitlements: a subscription purchased on
+  // the web (Stripe) or reconciled from RevenueCat arrives here. An existing
+  // Pro subscription replaces the upgrade pitch with a current-plan state.
+  const subscription = billing?.subscription;
+  const isPro = subscription?.planCode === 'pro';
 
   const [state, dispatch] = useReducer(reducePaywall, initialPaywallState);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -148,6 +156,59 @@ export function PaywallScreen(): React.ReactNode {
 
   const eyebrow = useMemo(() => t(`paywall.reason.${reason}`), [reason, t]);
 
+  // Already Pro (web Stripe subscription or reconciled native purchase):
+  // show the current-plan state instead of the upgrade pitch. The backend
+  // remains authoritative; native manage actions follow store policy, so the
+  // card points web subscriptions to the web app instead of a portal link.
+  if (isPro) {
+    const periodEnd = subscription?.currentPeriodEnd
+      ? new Date(subscription.currentPeriodEnd).toLocaleDateString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : null;
+    const renewalLine = periodEnd
+      ? subscription?.cancelAtPeriodEnd
+        ? t('paywall.expiresOn', { date: periodEnd })
+        : t('paywall.renewsOn', { date: periodEnd })
+      : null;
+
+    return (
+      <Screen title={t('paywall.currentTitle')} onBack={() => router.dismiss()}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl }}>
+          <View
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: colors.accent + '1A',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: spacing.lg,
+            }}
+          >
+            <Check color={colors.accent} size={28} />
+          </View>
+          <ThemedText variant="screenTitle" style={{ textAlign: 'center' }}>
+            {t('paywall.currentTitle')}
+          </ThemedText>
+          <ThemedText
+            variant="body"
+            style={{ color: colors.mutedForeground, textAlign: 'center', marginTop: spacing.sm }}
+          >
+            {t('paywall.currentBody')}
+          </ThemedText>
+          {renewalLine ? (
+            <ThemedText variant="caption" style={{ color: colors.mutedForeground, marginTop: spacing.sm }}>
+              {renewalLine}
+            </ThemedText>
+          ) : null}
+        </View>
+      </Screen>
+    );
+  }
+
   return (
     <Screen title={t('screens.paywall.title')} onBack={() => router.dismiss()}>
       <ScrollView contentContainerStyle={{ padding: spacing.xl, gap: spacing.lg }}>
@@ -202,7 +263,13 @@ export function PaywallScreen(): React.ReactNode {
             ))}
           </View>
         ) : packages.length === 0 ? (
-          <ErrorState message={t('paywall.unavailable')} onRetry={() => refetchOfferings()} />
+          <ErrorState
+            title={t('paywall.unavailableTitle')}
+            message={t('paywall.unavailable')}
+            icon={<Lock color={colors.mutedForeground} size={48} />}
+            tone="neutral"
+            onRetry={() => refetchOfferings()}
+          />
         ) : (
           <View style={{ gap: spacing.sm }}>
             {packages.map((pkg) => {

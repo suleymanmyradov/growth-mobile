@@ -21,7 +21,8 @@ export type StreakBarProps = {
 
 export function StreakBar({ history, summary }: StreakBarProps): ReactNode {
   const { colors, spacing } = useTheme();
-  const bars = history.slice(-14);
+  // Render most-recent-first so the streak fills from the left.
+  const bars = history.slice(-14).reverse();
 
   return (
     <View style={[styles.container, { gap: spacing.xs }]}>

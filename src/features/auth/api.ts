@@ -12,35 +12,35 @@
  * - `X-Device-Id` is attached on login/register after creating a random
  *   installation ID.
  */
-import { apiRequest, getBareClient } from '@/core/api/client';
+import { apiRequest, bareRequest } from '@/core/api/client';
 import { authEndpoints, profileEndpoints } from '@/core/api/endpoints';
 import {
-    AuthResponseSchema,
-    ProfileResponseSchema,
-    RegisterResponseSchema,
-    type AuthResponse,
-    type ProfileResponse,
-    type RegisterResponse,
+  AuthResponseSchema,
+  ProfileResponseSchema,
+  RegisterResponseSchema,
+  type AuthResponse,
+  type ProfileResponse,
+  type RegisterResponse,
 } from '@/core/api/schemas';
 import { tokenManager } from '@/core/auth/token-manager';
 
 import {
-    AppleLoginRequestSchema,
-    ForgotPasswordRequestSchema,
-    GoogleLoginRequestSchema,
-    LoginRequestSchema,
-    RegisterRequestSchema,
-    ResendVerificationRequestSchema,
-    ResetPasswordRequestSchema,
-    VerifyEmailRequestSchema,
-    type AppleLoginRequest,
-    type ForgotPasswordRequest,
-    type GoogleLoginRequest,
-    type LoginRequest,
-    type RegisterRequest,
-    type ResendVerificationRequest,
-    type ResetPasswordRequest,
-    type VerifyEmailRequest,
+  AppleLoginRequestSchema,
+  ForgotPasswordRequestSchema,
+  GoogleLoginRequestSchema,
+  LoginRequestSchema,
+  RegisterRequestSchema,
+  ResendVerificationRequestSchema,
+  ResetPasswordRequestSchema,
+  VerifyEmailRequestSchema,
+  type AppleLoginRequest,
+  type ForgotPasswordRequest,
+  type GoogleLoginRequest,
+  type LoginRequest,
+  type RegisterRequest,
+  type ResendVerificationRequest,
+  type ResetPasswordRequest,
+  type VerifyEmailRequest,
 } from './schemas';
 
 /**
@@ -62,8 +62,12 @@ export async function applyAuthResponse(data: AuthResponse): Promise<void> {
  */
 export async function login(data: LoginRequest): Promise<AuthResponse> {
   const validated = LoginRequestSchema.parse(data);
-  const response = await getBareClient().post<unknown>(authEndpoints.login, validated);
-  const parsed = AuthResponseSchema.parse(response.data);
+  const response = await bareRequest<unknown>({
+    method: 'POST',
+    url: authEndpoints.login,
+    data: validated,
+  });
+  const parsed = AuthResponseSchema.parse(response);
   await applyAuthResponse(parsed);
   return parsed;
 }
@@ -75,8 +79,12 @@ export async function login(data: LoginRequest): Promise<AuthResponse> {
  */
 export async function register(data: RegisterRequest): Promise<RegisterResponse> {
   const validated = RegisterRequestSchema.parse(data);
-  const response = await getBareClient().post<unknown>(authEndpoints.register, validated);
-  return RegisterResponseSchema.parse(response.data);
+  const response = await bareRequest<unknown>({
+    method: 'POST',
+    url: authEndpoints.register,
+    data: validated,
+  });
+  return RegisterResponseSchema.parse(response);
 }
 
 /**
@@ -85,8 +93,12 @@ export async function register(data: RegisterRequest): Promise<RegisterResponse>
  */
 export async function verifyEmail(data: VerifyEmailRequest): Promise<AuthResponse> {
   const validated = VerifyEmailRequestSchema.parse(data);
-  const response = await getBareClient().post<unknown>(authEndpoints.verifyEmail, validated);
-  const parsed = AuthResponseSchema.parse(response.data);
+  const response = await bareRequest<unknown>({
+    method: 'POST',
+    url: authEndpoints.verifyEmail,
+    data: validated,
+  });
+  const parsed = AuthResponseSchema.parse(response);
   await applyAuthResponse(parsed);
   return parsed;
 }
@@ -96,7 +108,7 @@ export async function verifyEmail(data: VerifyEmailRequest): Promise<AuthRespons
  */
 export async function resendVerification(data: ResendVerificationRequest): Promise<void> {
   const validated = ResendVerificationRequestSchema.parse(data);
-  await getBareClient().post(authEndpoints.resendVerification, validated);
+  await bareRequest({ method: 'POST', url: authEndpoints.resendVerification, data: validated });
 }
 
 /**
@@ -105,7 +117,7 @@ export async function resendVerification(data: ResendVerificationRequest): Promi
  */
 export async function forgotPassword(data: ForgotPasswordRequest): Promise<void> {
   const validated = ForgotPasswordRequestSchema.parse(data);
-  await getBareClient().post(authEndpoints.forgotPassword, validated);
+  await bareRequest({ method: 'POST', url: authEndpoints.forgotPassword, data: validated });
 }
 
 /**
@@ -113,7 +125,7 @@ export async function forgotPassword(data: ForgotPasswordRequest): Promise<void>
  */
 export async function resetPassword(data: ResetPasswordRequest): Promise<void> {
   const validated = ResetPasswordRequestSchema.parse(data);
-  await getBareClient().post(authEndpoints.resetPassword, validated);
+  await bareRequest({ method: 'POST', url: authEndpoints.resetPassword, data: validated });
 }
 
 /**
@@ -153,8 +165,12 @@ export async function getCurrentUser(): Promise<ProfileResponse> {
  */
 export async function googleLogin(data: GoogleLoginRequest): Promise<AuthResponse> {
   const validated = GoogleLoginRequestSchema.parse(data);
-  const response = await getBareClient().post<unknown>(authEndpoints.googleLogin, validated);
-  const parsed = AuthResponseSchema.parse(response.data);
+  const response = await bareRequest<unknown>({
+    method: 'POST',
+    url: authEndpoints.googleLogin,
+    data: validated,
+  });
+  const parsed = AuthResponseSchema.parse(response);
   await applyAuthResponse(parsed);
   return parsed;
 }
@@ -166,8 +182,12 @@ export async function googleLogin(data: GoogleLoginRequest): Promise<AuthRespons
  */
 export async function appleLogin(data: AppleLoginRequest): Promise<AuthResponse> {
   const validated = AppleLoginRequestSchema.parse(data);
-  const response = await getBareClient().post<unknown>(authEndpoints.appleLogin, validated);
-  const parsed = AuthResponseSchema.parse(response.data);
+  const response = await bareRequest<unknown>({
+    method: 'POST',
+    url: authEndpoints.appleLogin,
+    data: validated,
+  });
+  const parsed = AuthResponseSchema.parse(response);
   await applyAuthResponse(parsed);
   return parsed;
 }

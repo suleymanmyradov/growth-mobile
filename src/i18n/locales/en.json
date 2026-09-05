@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "Growth",
-    "tagline": "Build better habits, one day at a time.",
+    "tagline": "Grow Yourself, one day at a time",
     "loading": "Loading…",
     "saving": "Saving…",
     "retry": "Retry",
@@ -427,7 +427,9 @@
     "checkInAllSuccess": "Checked in {{count}} habits successfully",
     "empty": "No habits yet. Create your first habit to get started.",
     "uncategorized": "Uncategorized",
-    "recentHistory": "Recent history"
+    "recentHistory": "Recent history",
+    "hasNote": "Has a note",
+    "detailedCheckIn": "Detailed check-in"
   },
   "checkIns": {
     "title": "Check in",
@@ -505,7 +507,10 @@
     "addMilestone": "Add step",
     "deleteMilestoneConfirm": "Delete this milestone? This cannot be undone.",
     "moveUp": "Move up",
-    "moveDown": "Move down"
+    "moveDown": "Move down",
+    "analyzeWithCoach": "Analyze with Coach",
+    "addHabitToGoal": "Add a habit to this goal",
+    "todayCount": "{{done}} / {{total}} done today · {{percent}}%"
   },
   "profile": {
     "title": "Profile",
@@ -711,7 +716,12 @@
     "pending": "Purchase is pending. We'll update your access once it completes.",
     "failed": "Purchase could not be completed. Please try again.",
     "reconciling": "Confirming your access…",
+    "unavailableTitle": "Subscriptions unavailable",
     "unavailable": "Subscriptions aren't available right now. Please try again later.",
+    "currentTitle": "You're on Growth Pro",
+    "currentBody": "Your subscription is managed on the web. Your Pro access works here automatically.",
+    "renewsOn": "Renews {{date}}.",
+    "expiresOn": "Access ends {{date}}.",
     "reason": {
       "ai_coach_limit": "You've reached the personalized AI coaching limit",
       "goal_limit": "You've reached the active goal limit",

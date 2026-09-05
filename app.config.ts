@@ -13,8 +13,8 @@ type ConfigPlugin = [string, Record<string, unknown>];
  * installs don't collide and push credentials are scoped correctly.
  */
 
-const PLACEHOLDER_BUNDLE_ID_IOS = 'com.growth.app';
-const PLACEHOLDER_BUNDLE_ID_ANDROID = 'com.growth.app';
+const PLACEHOLDER_BUNDLE_ID_IOS = 'com.suleymanmyradov.growth';
+const PLACEHOLDER_BUNDLE_ID_ANDROID = 'com.suleymanmyradov.growth';
 const PLACEHOLDER_SCHEME = 'growth';
 
 type EasProfile = 'development' | 'preview' | 'production';
@@ -66,13 +66,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
   },
-  web: {
-    output: 'static',
-    favicon: './assets/images/favicon.png',
-  },
+  // Web platform disabled — this is a mobile-only app (iOS + Android).
+  // expo-sqlite's web worker chunk crashes Metro's web serializer on SDK 57,
+  // which kills Metro and cascades into "No script URL provided" on device.
+  platforms: ['ios', 'android'],
   plugins: [
     'expo-router',
     'expo-asset',
+    'expo-font',
+    'expo-image',
+    'expo-secure-store',
+    'expo-sqlite',
     [
       'expo-audio',
       {

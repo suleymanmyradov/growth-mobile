@@ -5,11 +5,13 @@
  * per-habit failure tracking + the bulk "check in all" pending flag to a
  * `CheckInState` for the `CheckInControl`.
  */
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 import type { Habit } from '@/core/api/schemas';
 
 import { deriveCheckInState } from '../check-in-state';
+
+
 
 function makeHabit(overrides: Partial<Habit> = {}): Habit {
   return {

@@ -1,8 +1,8 @@
 import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    InternalAxiosRequestConfig,
 } from 'axios';
 import { tokenManager } from '../auth/token-manager';
 import { apiBaseUrl, apiBaseUrlAi, isAiGatewayPath } from '../config/env';
@@ -101,6 +101,10 @@ function createClient(): AxiosInstance {
     timeout: 15_000, // 15s default for JSON requests
     headers: {
       'Content-Type': 'application/json',
+      // API responses are cached by React Query, not by URLCache. Without this,
+      // iOS URLSession may serve stale cached 401/200 bodies for identical GETs
+      // (observed as `cache_hit=true` 401s after a token change).
+      'Cache-Control': 'no-cache',
     },
   });
 
@@ -174,6 +178,7 @@ export function getBareClient(): AxiosInstance {
     timeout: 15_000,
     headers: {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   });
 }
@@ -184,6 +189,21 @@ export function getBareClient(): AxiosInstance {
 export async function apiRequest<T>(config: AxiosRequestConfig): Promise<T> {
   try {
     const response = await getApiClient().request<T>(config);
+    return response.data;
+  } catch (error) {
+    throw fromAxiosError(error);
+  }
+}
+
+/**
+ * Convenience wrapper for unauthenticated API calls (auth endpoints). Mirrors
+ * `apiRequest` but never attaches the bearer token and never triggers the
+ * refresh interceptor, while still converting errors to ApiError so callers
+ * see stable codes (e.g. `unauthorized`) instead of raw Axios errors.
+ */
+export async function bareRequest<T>(config: AxiosRequestConfig): Promise<T> {
+  try {
+    const response = await getBareClient().request<T>(config);
     return response.data;
   } catch (error) {
     throw fromAxiosError(error);

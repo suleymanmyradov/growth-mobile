@@ -5,30 +5,45 @@
  * - numeric: shows current/target with unit + a "log value" button
  * - milestone: shows milestone steps with toggle + delete
  * - binary/habit/manual: shows the standard progress bar + toggle
+ *
+ * For habit-type goals, shows a "today" completion count (X / Y done today)
+ * and an "Add a habit to this goal" affordance.
+ *
+ * Includes an "Analyze with Coach" action that navigates to the coach screen
+ * with the goal as context, mirroring the web frontend's behavior.
  */
-import { CheckCircle, Circle, Pencil, Plus, Trash2 } from 'lucide-react-native';
+import { CheckCircle, Circle, Pencil, Plus, Sparkles, Trash2 } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
-import type { Goal, GoalMilestone } from '@/core/api/schemas';
+import type { Goal, GoalMilestone, Habit } from '@/core/api/schemas';
 import { Badge, Button, Card, Input, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 
 export function GoalCard({
   goal,
+  habits,
   onToggle,
   onEdit,
   onDelete,
+  onAnalyzeGoal,
+  onAddHabit,
   onToggleMilestone,
   onDeleteMilestone,
   onAddMilestone,
   onLogValue,
 }: {
   goal: Goal;
+  /** Habits linked to this goal (for habit-type "today" count). */
+  habits?: Habit[];
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  /** Navigate to the coach screen with this goal as context. */
+  onAnalyzeGoal?: () => void;
+  /** Open the habit creation flow (for habit-type goals). */
+  onAddHabit?: () => void;
   onToggleMilestone?: (milestoneId: string) => void;
   onDeleteMilestone?: (milestoneId: string) => void;
   onAddMilestone?: (title: string) => void;
@@ -43,6 +58,15 @@ export function GoalCard({
 
   const measurement = goal.measurement ?? 'manual';
   const milestones = goal.milestones ?? [];
+  const linkedHabits = habits ?? [];
+  const showHabitSection = measurement === 'habit';
+  const showAddHabitCta = showHabitSection && !!onAddHabit;
+
+  // "Today" completion count for habit-type goals
+  const todayDone = linkedHabits.filter((h) => h.completed).length;
+  const todayTotal = linkedHabits.length;
+  const todayPct =
+    todayTotal > 0 ? Math.round((todayDone / todayTotal) * 100) : 0;
 
   const handleLogValueSubmit = () => {
     const value = Number(logValueInput);
@@ -281,35 +305,43 @@ export function GoalCard({
             )}
           </View>
         ) : (
-          /* Default: progress bar */
-          <View>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}
-            >
-              <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
-                {t('goals.progress')}
-              </ThemedText>
-              <ThemedText variant="caption" style={{ color: colors.primary, fontWeight: '600' }}>
-                {t('goals.progressPercent', { percent: Math.round(goal.progress) })}
-              </ThemedText>
-            </View>
-            <View
-              style={[
-                styles.progressTrack,
-                { backgroundColor: colors.border, borderRadius: radius.full },
-              ]}
-            >
+          /* Default: progress bar (binary/habit/manual) */
+          <View style={{ gap: spacing.xs }}>
+            <View>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}
+              >
+                <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                  {t('goals.progress')}
+                </ThemedText>
+                <ThemedText variant="caption" style={{ color: colors.primary, fontWeight: '600' }}>
+                  {t('goals.progressPercent', { percent: Math.round(goal.progress) })}
+                </ThemedText>
+              </View>
               <View
                 style={[
-                  styles.progressFill,
-                  {
-                    width: `${Math.min(100, Math.max(0, goal.progress))}%`,
-                    backgroundColor: goal.completed ? colors.success : colors.primary,
-                    borderRadius: radius.full,
-                  },
+                  styles.progressTrack,
+                  { backgroundColor: colors.border, borderRadius: radius.full },
                 ]}
-              />
+              >
+                <View
+                  style={[
+                    styles.progressFill,
+                    {
+                      width: `${Math.min(100, Math.max(0, goal.progress))}%`,
+                      backgroundColor: goal.completed ? colors.success : colors.primary,
+                      borderRadius: radius.full,
+                    },
+                  ]}
+                />
+              </View>
             </View>
+            {/* "Today" completion count for habit-type goals with linked habits */}
+            {showHabitSection && todayTotal > 0 ? (
+              <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+                {t('goals.todayCount', { done: todayDone, total: todayTotal, percent: todayPct })}
+              </ThemedText>
+            ) : null}
           </View>
         )}
 
@@ -357,6 +389,18 @@ export function GoalCard({
             </ThemedText>
           </Pressable>
 
+          {/* Analyze with Coach */}
+          {onAnalyzeGoal ? (
+            <Pressable
+              onPress={onAnalyzeGoal}
+              accessibilityRole="button"
+              accessibilityLabel={t('goals.analyzeWithCoach')}
+              hitSlop={8}
+              style={{ padding: 10, minHeight: 44, justifyContent: 'center' }}
+            >
+              <Sparkles color={colors.accent} size={18} />
+            </Pressable>
+          ) : null}
           <Pressable
             onPress={onEdit}
             accessibilityRole="button"
@@ -376,6 +420,41 @@ export function GoalCard({
             <Trash2 color={colors.destructive} size={18} />
           </Pressable>
         </View>
+
+        {/* Add a habit to this goal — only for habit-type goals */}
+        {showAddHabitCta ? (
+          <Pressable
+            onPress={onAddHabit}
+            accessibilityRole="button"
+            accessibilityLabel={t('goals.addHabitToGoal')}
+            hitSlop={8}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              paddingVertical: 10,
+              minHeight: 44,
+            }}
+          >
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+                borderWidth: 1,
+                borderStyle: 'dashed',
+                borderColor: colors.mutedForeground,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Plus color={colors.mutedForeground} size={14} />
+            </View>
+            <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
+              {t('goals.addHabitToGoal')}
+            </ThemedText>
+          </Pressable>
+        ) : null}
       </View>
     </Card>
   );

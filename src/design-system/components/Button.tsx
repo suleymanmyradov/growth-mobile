@@ -11,12 +11,12 @@
  */
 import type { ReactNode } from 'react';
 import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  StyleSheet,
-  type TextProps,
-  type ViewProps,
+    ActivityIndicator,
+    Platform,
+    Pressable,
+    StyleSheet,
+    type TextProps,
+    type ViewProps,
 } from 'react-native';
 
 import { useTheme } from '../theme/theme';
@@ -83,6 +83,11 @@ export function Button({
 
   return (
     <Pressable
+      // Spread external props (e.g. from expo-router's `Link asChild` Slot,
+      // which passes `style: undefined`) before the computed style so the
+      // button's own styling can never be wiped by an undefined override.
+      {...rest}
+      {...ripple}
       onPress={isDisabled ? undefined : onPress}
       disabled={isDisabled}
       accessibilityRole="button"
@@ -103,8 +108,6 @@ export function Button({
           alignSelf: fullWidth ? 'stretch' : 'auto',
         },
       ]}
-      {...ripple}
-      {...rest}
     >
       {loading ? (
         <ActivityIndicator color={vs.text} size="small" />

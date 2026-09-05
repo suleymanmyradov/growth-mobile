@@ -60,11 +60,10 @@ import {
     usePlanAdjustments,
 } from '@/features/coaching';
 import { useGoals } from '@/features/goals';
-import { useHabits } from '@/features/habits';
+import { deriveCheckInState, useHabits } from '@/features/habits';
 import { useUnreadNotificationCount } from '@/features/notifications';
 import { useProfile } from '@/features/profile';
 
-import { deriveCheckInState } from '../check-in-state';
 import { ArticlesSection } from '../components/ArticlesSection';
 import { CoachInsightCard } from '../components/CoachInsightCard';
 import { TodayGoalCard } from '../components/TodayGoalCard';

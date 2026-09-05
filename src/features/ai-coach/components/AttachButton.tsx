@@ -29,7 +29,7 @@ export interface AttachButtonProps {
 }
 
 export function AttachButton({ onAttach, disabled }: AttachButtonProps): ReactNode {
-  const { colors, radius } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const [picking, setPicking] = useState(false);
 
@@ -54,27 +54,18 @@ export function AttachButton({ onAttach, disabled }: AttachButtonProps): ReactNo
       accessibilityLabel={t('coach.attach')}
       accessibilityState={{ disabled: picking || disabled, busy: picking }}
       hitSlop={8}
-      style={[
-        styles.button,
-        {
-          borderColor: colors.border,
-          borderRadius: radius.field,
-          backgroundColor: colors.surface,
-          opacity: picking || disabled ? 0.5 : 1,
-        },
-      ]}
+      style={[styles.button, { opacity: picking || disabled ? 0.5 : 1 }]}
     >
-      <Paperclip color={colors.foreground} size={20} />
+      <Paperclip color={colors.foreground} size={22} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
   },
 });

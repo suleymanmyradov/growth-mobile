@@ -53,7 +53,11 @@ export const Sheet = forwardRef<BottomSheetMethods, SheetProps>(function Sheet(
           if (typeof ref === 'function') ref(r);
           else if (ref) ref.current = r;
         }}
-        index={-1}
+        // Reactive index: when a sheet is remounted already open (e.g. the
+        // check-in sheet remounts via `key`), the library animates to this
+        // index on mount. Relying on the effect below alone misses the mount
+        // because `snapToIndex` silently no-ops before layout is calculated.
+        index={open ? 0 : -1}
         snapPoints={snapPoints}
         enablePanDownToClose
         enableDynamicSizing={snapPoints.length === 0}

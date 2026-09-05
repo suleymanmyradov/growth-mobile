@@ -12,17 +12,18 @@ import { Alert, Pressable, View } from 'react-native';
 import { ApiError } from '@/core/api/errors';
 import { Button, EmptyState, ErrorState, Screen, Spinner, ThemedText } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
-import { useCheckInAll, useCreateCheckIn } from '@/features/check-ins';
+import { useCheckInAll, useCreateCheckIn, useDeleteCheckIn } from '@/features/check-ins';
 
 import type { Habit } from '@/core/api/schemas';
+import { deriveCheckInState } from '../check-in-state';
 import { HabitCard } from '../components/HabitCard';
 import { HabitForm, type HabitFormValues } from '../components/HabitForm';
 import {
-  useCreateHabit,
-  useDeleteHabit,
-  useHabits,
-  useResetTodayHabits,
-  useUpdateHabit,
+    useCreateHabit,
+    useDeleteHabit,
+    useHabits,
+    useResetTodayHabits,
+    useUpdateHabit,
 } from '../hooks';
 
 export function HabitsScreen() {
@@ -36,9 +37,11 @@ export function HabitsScreen() {
   const resetToday = useResetTodayHabits();
   const createCheckIn = useCreateCheckIn();
   const checkInAll = useCheckInAll();
+  const deleteCheckIn = useDeleteCheckIn();
 
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+  const [failedHabitIds, setFailedHabitIds] = useState<Set<string>>(new Set());
 
   const handleCreate = (values: HabitFormValues) => {
     createHabit.mutate(values, {
@@ -71,7 +74,24 @@ export function HabitsScreen() {
   };
 
   const handleCheckIn = (habit: Habit) => {
-    createCheckIn.mutate({ habitId: habit.id, status: 'completed' });
+    setFailedHabitIds((prev) => {
+      if (!prev.has(habit.id)) return prev;
+      const next = new Set(prev);
+      next.delete(habit.id);
+      return next;
+    });
+    createCheckIn.mutate(
+      { habitId: habit.id, status: 'completed' },
+      {
+        onError: () => {
+          setFailedHabitIds((prev) => new Set(prev).add(habit.id));
+        },
+      },
+    );
+  };
+
+  const handleUndoCheckIn = (habit: Habit) => {
+    deleteCheckIn.mutate(habit.id);
   };
 
   const handleCheckInAll = () => {
@@ -183,13 +203,19 @@ export function HabitsScreen() {
             <HabitCard
               key={habit.id}
               habit={habit}
+              checkInState={deriveCheckInState({
+                habit,
+                failedHabitIds,
+                checkInAllPending: checkInAll.isPending,
+              })}
               onCheckIn={() => handleCheckIn(habit)}
+              onUndo={() => handleUndoCheckIn(habit)}
+              isUndoPending={deleteCheckIn.isPending}
               onEdit={() => {
                 setEditingHabit(habit);
                 setShowForm(true);
               }}
               onDelete={() => handleDelete(habit)}
-              checkInLoading={createCheckIn.isPending}
             />
           ))
         )}

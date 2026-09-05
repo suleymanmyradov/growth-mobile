@@ -12,7 +12,7 @@
  * Per AGENTS.md: voice capture uses expo-audio and uploads a file URI. Stop and
  * release recorder resources on interruption/navigation/cancellation/error.
  */
-import { LoaderCircle, Mic, Square } from 'lucide-react-native';
+import { LoaderCircle, Mic } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ export interface DictateButtonProps {
 }
 
 export function DictateButton({ onTranscript, disabled }: DictateButtonProps): ReactNode {
-  const { colors, radius } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const recorder = useVoiceRecorder();
   const transcribe = useTranscribeAudio();
@@ -97,22 +97,12 @@ export function DictateButton({ onTranscript, disabled }: DictateButtonProps): R
         busy: phase === 'transcribing',
       }}
       hitSlop={8}
-      style={[
-        styles.button,
-        {
-          borderColor: isRecording ? colors.destructive : colors.border,
-          borderRadius: radius.field,
-          backgroundColor: isRecording ? colors.destructive : colors.surface,
-          opacity: phase === 'transcribing' || disabled ? 0.5 : 1,
-        },
-      ]}
+      style={[styles.button, { opacity: phase === 'transcribing' || disabled ? 0.5 : 1 }]}
     >
       {phase === 'transcribing' ? (
-        <LoaderCircle color={colors.foreground} size={20} />
-      ) : phase === 'recording' ? (
-        <Square color={colors.background} size={20} />
+        <LoaderCircle color={colors.foreground} size={22} />
       ) : (
-        <Mic color={colors.foreground} size={20} />
+        <Mic color={isRecording ? colors.destructive : colors.foreground} size={22} />
       )}
     </Pressable>
   );
@@ -120,10 +110,9 @@ export function DictateButton({ onTranscript, disabled }: DictateButtonProps): R
 
 const styles = StyleSheet.create({
   button: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
   },
 });
