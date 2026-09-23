@@ -5,15 +5,12 @@
  * paywall surface (Phase I), and the entitlement reconciliation state machine.
  */
 export {
-    createCheckoutSession,
     createCustomerPortalSession,
     getBillingOverview,
     trackUpgradeEvent
 } from './api';
 export type {
     BillingOverviewResponse,
-    CreateCheckoutSessionRequest,
-    CreateCheckoutSessionResponse,
     CreateCustomerPortalSessionResponse,
     Entitlements,
     Plan,

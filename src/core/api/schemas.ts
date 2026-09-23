@@ -1057,8 +1057,6 @@ export const UserSubscriptionSchema = z.object({
   currentPeriodEnd: z.string().optional(),
   trialEnd: z.string().optional(),
   cancelAtPeriodEnd: z.boolean(),
-  stripeCustomerId: z.string().optional(),
-  stripeSubscriptionId: z.string().optional(),
 });
 
 export type UserSubscription = z.infer<typeof UserSubscriptionSchema>;
@@ -1092,21 +1090,7 @@ export const BillingOverviewResponseSchema = z.object({
 
 export type BillingOverviewResponse = z.infer<typeof BillingOverviewResponseSchema>;
 
-// ─── Billing checkout / portal / upgrade events ───────────────────────────────
-
-export const CreateCheckoutSessionRequestSchema = z.object({
-  planCode: z.string().min(1),
-  billingInterval: z.string().min(1),
-});
-
-export type CreateCheckoutSessionRequest = z.infer<typeof CreateCheckoutSessionRequestSchema>;
-
-export const CreateCheckoutSessionResponseSchema = z.object({
-  checkoutUrl: z.string().url().optional(),
-  sessionId: z.string().optional(),
-});
-
-export type CreateCheckoutSessionResponse = z.infer<typeof CreateCheckoutSessionResponseSchema>;
+// ─── Billing portal / upgrade events ──────────────────────────────────────────
 
 export const CreateCustomerPortalSessionResponseSchema = z.object({
   portalUrl: z.string().url().optional(),

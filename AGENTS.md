@@ -64,7 +64,7 @@ Do not replace these choices without an approved architecture change recorded in
 | Localization           | `i18next`, `react-i18next`, `expo-localization`                                  | No new user-facing string may be hardcoded after i18n foundation lands.                                                                                           |
 | Errors                 | `@sentry/react-native`                                                           | Scrub request bodies, tokens, message content, and personal data.                                                                                                 |
 | Product analytics      | PostHog behind a local `Analytics` interface                                     | Consent-aware, typed event names, no sensitive payloads. Do not call vendor APIs from features.                                                                   |
-| Subscriptions          | `react-native-purchases` (RevenueCat)                                            | Native digital subscriptions use StoreKit/Google Play Billing, not Stripe Checkout in a WebView.                                                                  |
+| Subscriptions          | `react-native-purchases` (RevenueCat)                                            | Native digital subscriptions use StoreKit/Google Play Billing, not web checkout in a WebView.                                                                  |
 | Unit/component tests   | `jest-expo`, React Native Testing Library                                        | Test behavior and accessibility, not component internals.                                                                                                         |
 | API mocking            | MSW where React Native support is verified; otherwise a shared transport adapter | Never mock feature hooks directly in integration tests.                                                                                                           |
 | E2E                    | Maestro                                                                          | Cover critical user journeys on iOS and Android.                                                                                                                  |
@@ -100,7 +100,7 @@ Growth gateway `/api/v1`
 Existing backend microservices through gateway only
 ```
 
-The mobile app talks only to the public gateway. It never talks directly to gRPC services, databases, Kafka, MinIO, Meilisearch, Stripe, or AI providers.
+The mobile app talks only to the public gateway. It never talks directly to gRPC services, databases, Kafka, MinIO, Meilisearch, Paddle, or AI providers.
 
 ### Dependency direction
 
@@ -258,7 +258,7 @@ Reuse concepts and platform-neutral logic deliberately; do not mechanically copy
 - `next/link`, `next/navigation`, `next/image`, and `next/font` usage.
 - `MediaRecorder`, Blob-centric audio capture, browser file inputs, and object URLs.
 - `@assistant-ui/*`; implement native chat primitives around the backend protocol.
-- Stripe Checkout/portal navigation for native digital subscriptions.
+- Web checkout/portal navigation for native digital subscriptions.
 
 Do not claim a web UI component is reusable merely because its behavior is similar. Only pure logic without DOM, Next.js, CSS, or browser dependencies is directly portable.
 
@@ -363,15 +363,15 @@ Ask for notification permission contextually after the user enables reminders, n
 
 ## Billing and entitlements
 
-The web app's Stripe Checkout and customer portal endpoints are not the default native purchase path for digital premium features.
+The web app's Paddle checkout and customer portal endpoints are not the default native purchase path for digital premium features.
 
 - Use RevenueCat (`react-native-purchases`) as the client abstraction over StoreKit and Google Play Billing.
 - The backend remains authoritative for Growth entitlements.
 - Add backend receipt/webhook reconciliation that maps App Store/Play purchases to the existing subscription/entitlement model.
 - Restore purchases and account switching must be tested.
 - Never unlock a feature solely from a client purchase callback or cached RevenueCat state; refresh backend billing overview after reconciliation.
-- Existing Stripe web subscriptions must remain visible to the same account, but native upgrade/manage actions must follow store policy.
-- Do not open Stripe Checkout inside a WebView for digital subscriptions.
+- Existing Paddle web subscriptions must remain visible to the same account, but native upgrade/manage actions must follow store policy.
+- Do not open web checkout (Paddle) inside a WebView for digital subscriptions.
 
 Billing is a release blocker until product IDs, RevenueCat project configuration, backend reconciliation, and store-policy review are complete.
 
@@ -407,7 +407,7 @@ Implement the approved native Paper design in `Mobile Redesign (standalone).html
 - Validate environment variables at startup with Zod.
 - Only variables prefixed `EXPO_PUBLIC_` may enter the client bundle, and none may be secrets.
 - Public config may include API origin, OAuth client IDs, Sentry DSN, PostHog host/key, RevenueCat public platform keys, and EAS project ID.
-- Secrets, service-auth keys, OAuth client secrets, Stripe secrets, private Sentry tokens, and backend credentials never belong in this repository or EAS public environment variables.
+- Secrets, service-auth keys, OAuth client secrets, Paddle secrets, private Sentry tokens, and backend credentials never belong in this repository or EAS public environment variables.
 - Maintain development, preview, and production EAS profiles with distinct bundle IDs/package names, schemes, API origins, and service files.
 - Production traffic must use HTTPS. Cleartext HTTP is development-only and must not be broadly enabled.
 - Redact Authorization, refresh tokens, passwords, email verification/reset tokens, OAuth codes, audio, AI messages, and PII from logs.
@@ -506,7 +506,7 @@ Exit: text AI flows are stable under interruption, auth refresh, cancellation, m
 
 - Microphone permission education, recording, upload, transcript, streamed response, TTS playback, interruptions, and cleanup.
 - Backend device registration plus Expo/APNs/FCM push delivery, token rotation, notification deep links, and preferences.
-- RevenueCat paywall, purchase, restore, account switching, backend entitlement reconciliation, and existing Stripe entitlement display.
+- RevenueCat paywall, purchase, restore, account switching, backend entitlement reconciliation, and existing web (Paddle) entitlement display.
 
 Exit: real-device tests pass; sandbox purchase and push delivery work on iOS and Android; privacy/store requirements are met.
 
@@ -539,7 +539,7 @@ A feature is not complete until all applicable items are true:
 
 ## Hard prohibitions
 
-- No direct database, gRPC, Kafka, MinIO, AI provider, Stripe secret API, FCM server API, or APNs server API access from mobile.
+- No direct database, gRPC, Kafka, MinIO, AI provider, Paddle secret API, FCM server API, or APNs server API access from mobile.
 - No browser cookie/BFF emulation in native.
 - No tokens in ordinary persistence, Zustand, query cache, logs, analytics, URLs, or error reports.
 - No manually edited generated files.
@@ -549,7 +549,7 @@ A feature is not complete until all applicable items are true:
 - No arbitrary HTML/WebView rendering for articles or AI output.
 - No automatic retry of non-idempotent writes or POST streams.
 - No fake offline-write support without backend idempotency/conflict design.
-- No WebView Stripe Checkout for native digital subscriptions.
+- No WebView checkout for native digital subscriptions.
 - No social login on iOS release without reviewing Sign in with Apple requirements.
 - No permission prompt at first launch without user context.
 - No new dependency or architecture pattern merely for one feature when an approved abstraction already exists.

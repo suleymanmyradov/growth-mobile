@@ -3,8 +3,8 @@
  *
  * Paper (`mobile.md` §8.9): presented from the limit the user reached; the
  * eyebrow identifies the real limit reason. Uses RevenueCat offerings and
- * localized store prices — never the illustrative HTML prices, never Stripe
- * Checkout, never a WebView. Shows a feature list, selectable packages,
+ * localized store prices — never the illustrative HTML prices, never web
+ * checkout, never a WebView. Shows a feature list, selectable packages,
  * Continue, Restore purchase, Terms, and Privacy. A purchase callback alone
  * does not unlock access: the entitlement is reconciled with the backend
  * (via the billing overview) before the paywall dismisses. Covers loading,
@@ -69,7 +69,7 @@ export function PaywallScreen(): React.ReactNode {
   const trackEvent = useTrackUpgradeEvent();
 
   // The backend is authoritative for entitlements: a subscription purchased on
-  // the web (Stripe) or reconciled from RevenueCat arrives here. An existing
+  // the web (Paddle) or reconciled from RevenueCat arrives here. An existing
   // Pro subscription replaces the upgrade pitch with a current-plan state.
   const subscription = billing?.subscription;
   const isPro = subscription?.planCode === 'pro';
@@ -156,7 +156,7 @@ export function PaywallScreen(): React.ReactNode {
 
   const eyebrow = useMemo(() => t(`paywall.reason.${reason}`), [reason, t]);
 
-  // Already Pro (web Stripe subscription or reconciled native purchase):
+  // Already Pro (web Paddle subscription or reconciled native purchase):
   // show the current-plan state instead of the upgrade pitch. The backend
   // remains authoritative; native manage actions follow store policy, so the
   // card points web subscriptions to the web app instead of a portal link.

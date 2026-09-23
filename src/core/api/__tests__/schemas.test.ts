@@ -15,7 +15,6 @@ import {
   ConversationMessageSchema,
   ConversationSchema,
   CreateCheckInRequestSchema,
-  CreateCheckoutSessionResponseSchema,
   CreateCustomerPortalSessionResponseSchema,
   CreateHabitRequestSchema,
   GenerateOnboardingHabitsRequestSchema,
@@ -811,33 +810,12 @@ describe('BillingOverviewResponseSchema', () => {
   });
 });
 
-describe('CreateCheckoutSessionResponseSchema', () => {
-  it('parses a checkout url + session id', () => {
-    const parsed = CreateCheckoutSessionResponseSchema.parse({
-      checkoutUrl: 'https://checkout.stripe.com/c/test_123',
-      sessionId: 'cs_test_123',
-    });
-    expect(parsed.checkoutUrl).toBe('https://checkout.stripe.com/c/test_123');
-    expect(parsed.sessionId).toBe('cs_test_123');
-  });
-
-  it('parses when optional fields are absent', () => {
-    const parsed = CreateCheckoutSessionResponseSchema.parse({});
-    expect(parsed.checkoutUrl).toBeUndefined();
-    expect(parsed.sessionId).toBeUndefined();
-  });
-
-  it('rejects a non-url checkoutUrl', () => {
-    expect(() => CreateCheckoutSessionResponseSchema.parse({ checkoutUrl: 'not-a-url' })).toThrow();
-  });
-});
-
 describe('CreateCustomerPortalSessionResponseSchema', () => {
   it('parses a portal url', () => {
     const parsed = CreateCustomerPortalSessionResponseSchema.parse({
-      portalUrl: 'https://billing.stripe.com/portal',
+      portalUrl: 'https://customer-portal.paddle.com/portal/session/test_123',
     });
-    expect(parsed.portalUrl).toBe('https://billing.stripe.com/portal');
+    expect(parsed.portalUrl).toBe('https://customer-portal.paddle.com/portal/session/test_123');
   });
 
   it('parses when portal url is absent', () => {

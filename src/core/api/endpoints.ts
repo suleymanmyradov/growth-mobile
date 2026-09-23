@@ -129,7 +129,6 @@ export const conversationEndpoints = {
 
 export const billingEndpoints = {
   overview: '/billing/overview',
-  checkout: '/billing/checkout',
   portal: '/billing/portal',
   upgradeEvents: '/billing/upgrade-events',
 } as const;

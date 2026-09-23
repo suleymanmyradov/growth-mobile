@@ -357,7 +357,7 @@ Header actions are Back, Save, native Share, and reading size. All are 44-unit t
 - Present from the limit the user reached; the eyebrow identifies the real limit reason.
 - Use RevenueCat offerings and localized store prices. Never use the illustrative Turkish prices from the HTML.
 - Show feature list, selectable packages, period equivalent where valid, Continue, Restore purchase, Terms, Privacy, and plain billing/cancellation copy.
-- No Stripe checkout and no WebView for native digital subscriptions.
+- No web checkout and no WebView for native digital subscriptions.
 - A purchase callback alone does not unlock access. Reconcile entitlement with the backend before updating gated behavior.
 - Cover loading, unavailable offerings, purchase pending, canceled, failed, restored, and backend-reconciliation states.
 

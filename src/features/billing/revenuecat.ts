@@ -2,7 +2,7 @@
  * RevenueCat adapter — a thin typed wrapper over `react-native-purchases`.
  *
  * Per `mobile.md` §8.9: native digital subscriptions use RevenueCat offerings and
- * localized store prices (StoreKit/Google Play Billing), never Stripe Checkout
+ * localized store prices (StoreKit/Google Play Billing), never web checkout
  * or a WebView. A purchase callback alone does not unlock access — the backend
  * reconciles entitlement via the RevenueCat webhook, and the client refetches
  * the billing overview before treating the user as entitled.
