@@ -12,13 +12,15 @@ jest.mock('@react-native-community/netinfo', () => ({
   fetch: jest.fn(() => Promise.resolve({ isConnected: true, isInternetReachable: true })),
 }));
 
-jest.mock('expo-constants', () => ({
-  expoConfig: {
-    name: 'Growth',
-    slug: 'growth-mobile',
-    extra: {},
-  },
-}));
+jest.mock('expo-constants', () => {
+  const expoConfig = {
+    name: 'Evolella Dev',
+    slug: 'evolella',
+    extra: { appEnv: 'development' },
+  };
+  // Mirror the real module: expoConfig lives on the default export.
+  return { __esModule: true, default: { expoConfig }, expoConfig };
+});
 
 jest.mock('expo-localization', () => ({
   getLocales: jest.fn(() => [{ languageCode: 'en', languageTag: 'en-US' }]),

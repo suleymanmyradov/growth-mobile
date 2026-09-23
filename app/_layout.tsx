@@ -1,3 +1,4 @@
+import * as Constants from 'expo-constants';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -64,7 +65,17 @@ export default function RootLayout() {
   // Initialize i18n, Sentry (no-op if DSN is empty), and React Query native integrations.
   const env = getEnv();
   useEffect(() => {
-    initSentry(env.EXPO_PUBLIC_SENTRY_DSN, __DEV__ ? 'development' : 'production');
+    // Sentry environment = build profile (production/preview/development) per
+    // docs/app-identity-environment-matrix.md §3, baked into extra.appEnv by
+    // app.config.ts. Falls back to the __DEV__ heuristic outside Expo config.
+    const configuredEnv = Constants.default.expoConfig?.extra?.appEnv;
+    const sentryEnvironment =
+      typeof configuredEnv === 'string' && configuredEnv
+        ? configuredEnv
+        : __DEV__
+          ? 'development'
+          : 'production';
+    initSentry(env.EXPO_PUBLIC_SENTRY_DSN, sentryEnvironment);
     setupReactNativeIntegrations();
   }, [env.EXPO_PUBLIC_SENTRY_DSN]);
 

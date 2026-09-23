@@ -6,14 +6,21 @@ import { z } from 'zod';
  * Only `EXPO_PUBLIC_*` variables are available in the client bundle.
  * No secrets may enter this file or the client bundle.
  *
- * PLACEHOLDER values: OAuth client IDs, Sentry DSN, PostHog keys, and API
- * origin for non-development environments are pending organizational decisions
- * in `docs/app-identity-environment-matrix.md`.
+ * Decided values live in `docs/app-identity-environment-matrix.md`. Values
+ * still marked PENDING there (native OAuth client IDs, Sentry DSN, PostHog
+ * key, RevenueCat keys, EAS project ID) default to empty/placeholder here so
+ * the corresponding features stay disabled until the accounts exist.
  */
 
 const envSchema = z.object({
   // API origin — absolute HTTPS origin in non-development builds.
+  // eas.json sets https://api.evolella.com for preview/production builds.
   EXPO_PUBLIC_API_ORIGIN: z.string().url().default('http://localhost:8888'),
+
+  // Web app origin — fallback for email links that open outside the app
+  // (verify-email, reset-password, OAuth web callback). Decided value:
+  // https://app.evolella.com (matrix §2).
+  EXPO_PUBLIC_WEB_APP_ORIGIN: z.string().url().default('https://app.evolella.com'),
 
   // AI-gateway origin — separate API service for AI/streaming routes (coaching,
   // weekly reviews, conversations, voice). In production both services share a
@@ -21,7 +28,7 @@ const envSchema = z.object({
   // Empty = same as EXPO_PUBLIC_API_ORIGIN (production / single-origin).
   EXPO_PUBLIC_AI_GATEWAY_ORIGIN: z.string().default(''),
 
-  // OAuth client IDs (PLACEHOLDER — pending organizational decisions).
+  // OAuth client IDs (PENDING native IDs in matrix §3 — web client ID decided).
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: z.string().default(''),
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: z.string().default(''),
   EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID: z.string().default(''),
@@ -49,7 +56,9 @@ const envSchema = z.object({
     .default('')
     .refine((v) => v === '' || z.string().url().safeParse(v).success, 'Invalid URL'),
 
-  // EAS project ID (PLACEHOLDER — pending organizational decisions).
+  // EAS project ID (PENDING matrix §4 — `eas init` once the `evolella` Expo
+  // account exists). Placeholder value is also read by app.config.ts and
+  // treated as unset by src/core/auth/installation.ts.
   EXPO_PUBLIC_EAS_PROJECT_ID: z.string().default('PLACEHOLDER_EAS_PROJECT_ID'),
 });
 

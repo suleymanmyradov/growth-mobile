@@ -22,7 +22,7 @@ function withDevBundleHost(config, options = {}) {
 
   config = withInfoPlist(config, (config) => {
     config.modResults.NSLocalNetworkUsageDescription ??=
-      'Allow Growth to connect to the local development server.';
+      'Allow Evolella to connect to the local development server.';
     return config;
   });
 
