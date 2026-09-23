@@ -54,10 +54,13 @@ const identity = APP_IDENTITIES[appEnv];
 // (EXPO_PUBLIC_WEB_APP_ORIGIN in src/core/config/env.ts).
 const DEEP_LINK_HOST = 'link.evolella.com';
 
-// PENDING (matrix §4): `eas init` once the `evolella` Expo account exists.
-// Until then the project ID is read from EXPO_PUBLIC_EAS_PROJECT_ID and falls
-// back to a placeholder that src/core/auth/installation.ts treats as unset.
-const easProjectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID || 'PLACEHOLDER_EAS_PROJECT_ID';
+// EAS project `@m_suleyman_02/evolella` — created 2026-09-23 via `eas init`.
+// The ID is baked as the fallback (not a secret) so it resolves during remote
+// builds; EXPO_PUBLIC_EAS_PROJECT_ID remains a local override. The literal
+// 'PLACEHOLDER_EAS_PROJECT_ID' is what src/core/auth/installation.ts treats
+// as unset — the real ID enables push registration.
+const easProjectId =
+  process.env.EXPO_PUBLIC_EAS_PROJECT_ID || '9f30e184-4e4c-42d4-9199-041e4b5c3f2b';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,

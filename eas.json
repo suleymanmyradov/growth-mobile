@@ -9,7 +9,10 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "EAS_PROFILE": "development"
+        "EAS_PROFILE": "development",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://f8c31e540d5d826ba711d106b248b402@o4512111932342272.ingest.us.sentry.io/4512134859653120",
+        "EXPO_PUBLIC_REVENUECAT_APPLE_KEY": "test_uYMWazikXgtMhLJvfnwvYQoxqYR",
+        "EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY": "test_uYMWazikXgtMhLJvfnwvYQoxqYR"
       }
     },
     "preview": {
@@ -18,7 +21,10 @@
       "env": {
         "EAS_PROFILE": "preview",
         "EXPO_PUBLIC_API_ORIGIN": "https://api.evolella.com",
-        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://f8c31e540d5d826ba711d106b248b402@o4512111932342272.ingest.us.sentry.io/4512134859653120",
+        "EXPO_PUBLIC_REVENUECAT_APPLE_KEY": "test_uYMWazikXgtMhLJvfnwvYQoxqYR",
+        "EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY": "test_uYMWazikXgtMhLJvfnwvYQoxqYR"
       }
     },
     "production": {
@@ -27,7 +33,11 @@
       "env": {
         "EAS_PROFILE": "production",
         "EXPO_PUBLIC_API_ORIGIN": "https://api.evolella.com",
-        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "874343812843-k9235ttvebor9mrlq8ie8vrnmreraq79.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "874343812843-5k4aog5i8ufm5uuab20qfl6121fpp9qf.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "874343812843-5ibmtn2esrmjgeadq0cammo1cjlse1p8.apps.googleusercontent.com",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://f8c31e540d5d826ba711d106b248b402@o4512111932342272.ingest.us.sentry.io/4512134859653120"
       }
     }
   },
