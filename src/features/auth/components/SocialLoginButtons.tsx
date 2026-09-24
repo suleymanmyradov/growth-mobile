@@ -6,15 +6,18 @@
  *   `expo-apple-authentication` (Apple). Never embed an OAuth client secret.
  * - Apple Sign-In is required before an iOS release if another social login
  *   is offered; it is only available on iOS.
- * - The backend exchanges the authorization code / identity token server-side.
+ * - Google native sign-in exchanges the PKCE code client-side (native OAuth
+ *   clients are public) and sends the resulting id_token to the backend,
+ *   which verifies it by signature and audience.
  *
  * Both buttons render nothing when the respective OAuth config is missing, so
  * auth screens degrade gracefully in local dev without OAuth set up.
  */
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Google from 'expo-auth-session/providers/google';
+import { exchangeCodeAsync } from 'expo-auth-session';
 import { maybeCompleteAuthSession } from 'expo-web-browser';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 
@@ -63,37 +66,64 @@ function GoogleLoginButton({
     iosClientId: env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || undefined,
     androidClientId: env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || undefined,
     webClientId: env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || undefined,
-    // The backend exchanges the code server-side (it holds the client secret).
-    // Without this, expo-auth-session tries to auto-exchange the code on the
-    // client, fails (no client secret for a web client type), and leaves the
-    // response as null — so the code never reaches the backend.
+    // We exchange the code ourselves below so failures surface to the user —
+    // the provider's auto-exchange swallows errors and leaves the response
+    // stuck with an unexchanged code.
     shouldAutoExchangeCode: false,
   });
 
-  // Handle the Google auth response — exchange the code via the backend.
+  // Guard against the effect re-running for the same code (codes are
+  // single-use — a second exchange would fail with invalid_grant).
+  const exchangedCodeRef = useRef<string | null>(null);
+
+  // Handle the Google auth response: exchange the PKCE code client-side
+  // (native OAuth clients are public — no secret needed), then send the
+  // resulting id_token to the backend, which verifies it by signature.
   useEffect(() => {
     if (response?.type === 'success' && response.params.code) {
       const code = response.params.code;
+      const codeVerifier = request?.codeVerifier;
       const redirectUri = request?.redirectUri;
+      if (exchangedCodeRef.current === code) return;
+      exchangedCodeRef.current = code;
+
+      if (!googleClientId || !codeVerifier || !redirectUri) {
+        setBusy(null);
+        onError?.(t('auth.errors.googleFailed'));
+        return;
+      }
+
       setBusy('google');
-      googleLogin.mutate(
-        { authorizationCode: code, redirectUri },
+      const fail = (err?: unknown) => {
+        setBusy(null);
+        const msg = err instanceof ApiError ? err.message : t('auth.errors.googleFailed');
+        onError?.(msg);
+      };
+      exchangeCodeAsync(
         {
-          onSuccess: () => setBusy(null),
-          onError: (err) => {
-            setBusy(null);
-            const msg = err instanceof ApiError ? err.message : t('auth.errors.googleFailed');
-            onError?.(msg);
-          },
+          clientId: googleClientId,
+          redirectUri,
+          code,
+          extraParams: { code_verifier: codeVerifier },
         },
-      );
+        Google.discovery,
+      )
+        .then((tokenResponse) => {
+          const idToken = tokenResponse.idToken;
+          if (!idToken) {
+            fail();
+            return;
+          }
+          googleLogin.mutate({ idToken }, { onSuccess: () => setBusy(null), onError: fail });
+        })
+        .catch(() => fail());
     } else if (response?.type === 'error') {
       setBusy(null);
       onError?.(t('auth.errors.googleFailed'));
     } else if (response?.type === 'dismiss') {
       setBusy(null);
     }
-  }, [response, request, googleLogin, onError, t, setBusy]);
+  }, [response, request, googleClientId, googleLogin, onError, t, setBusy]);
 
   const handleGoogleLogin = async () => {
     if (!googleClientId || !request) {

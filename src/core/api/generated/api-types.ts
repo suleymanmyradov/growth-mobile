@@ -2191,7 +2191,9 @@ export interface operations {
             content: {
                 "application/json": {
                     /** @example 4/0AX4Xf... */
-                    authorizationCode: string;
+                    authorizationCode?: string;
+                    /** @example eyJhbGciOi... */
+                    idToken?: string;
                     /** @example https://app.example.com/auth/callback/google */
                     redirectUri?: string;
                 };

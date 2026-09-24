@@ -68,10 +68,18 @@ export const ResetPasswordRequestSchema = z.object({
 
 export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>;
 
-export const GoogleLoginRequestSchema = z.object({
-  authorizationCode: z.string().min(1, 'Authorization code is required'),
-  redirectUri: z.string().optional(),
-});
+export const GoogleLoginRequestSchema = z
+  .object({
+    // Native flow: ID token from the client-side PKCE exchange, verified
+    // server-side by signature + audience.
+    idToken: z.string().optional(),
+    // Web flow: authorization code exchanged server-side.
+    authorizationCode: z.string().optional(),
+    redirectUri: z.string().optional(),
+  })
+  .refine((data) => Boolean(data.idToken || data.authorizationCode), {
+    message: 'Either idToken or authorizationCode is required',
+  });
 
 export type GoogleLoginRequest = z.infer<typeof GoogleLoginRequestSchema>;
 

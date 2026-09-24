@@ -159,9 +159,10 @@ export async function getCurrentUser(): Promise<ProfileResponse> {
 }
 
 /**
- * Exchange a Google authorization code for app tokens. The code is obtained
- * via expo-auth-session's Google sign-in flow; the backend exchanges it with
- * Google server-side (no client secret in the app).
+ * Sign in with Google. Native flow: send the `idToken` obtained from
+ * expo-auth-session's client-side PKCE exchange — the backend verifies its
+ * signature and audience. Web flow: send `authorizationCode` + `redirectUri`
+ * for a server-side exchange (no client secret in the app).
  */
 export async function googleLogin(data: GoogleLoginRequest): Promise<AuthResponse> {
   const validated = GoogleLoginRequestSchema.parse(data);
