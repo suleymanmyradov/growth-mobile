@@ -76,6 +76,46 @@ export function configureRevenueCat(): void {
   }
 }
 
+// The RevenueCat app user ID currently linked to this device install.
+// Purchases.logIn must only fire once per identity — repeated calls churn
+// anonymous IDs and confuse webhook attribution.
+let linkedUserId: string | null = null;
+
+/**
+ * Links the RevenueCat SDK to our backend user ID. Without this, purchases
+ * land on an anonymous $RCAnonymousID and the backend webhook cannot
+ * attribute them — the user pays and never unlocks Pro. Called by the app
+ * layer whenever an authenticated session is established (login, register,
+ * session restore). No-ops when the SDK is unconfigured; never throws —
+ * entitlement state is reconciled server-side regardless.
+ */
+export async function linkRevenueCatUser(userId: string): Promise<void> {
+  if (!userId || linkedUserId === userId) return;
+  configureRevenueCat();
+  if (!configured) return;
+  try {
+    await Purchases.logIn(userId);
+    linkedUserId = userId;
+  } catch {
+    // Best-effort — the webhook + entitlement re-fetch reconcile regardless.
+  }
+}
+
+/**
+ * Detaches the RevenueCat SDK from the current user on logout, reverting to
+ * an anonymous ID so the next session can't see the previous user's
+ * entitlements. Never throws.
+ */
+export async function unlinkRevenueCatUser(): Promise<void> {
+  if (!configured || linkedUserId === null) return;
+  try {
+    await Purchases.logOut();
+  } catch {
+    // Best-effort.
+  }
+  linkedUserId = null;
+}
+
 function toPaywallPackage(pkg: PurchasesPackage): PaywallPackage {
   return {
     identifier: pkg.identifier,

@@ -26,12 +26,15 @@ interface RetryableConfig extends InternalAxiosRequestConfig {
   _retried?: boolean;
 }
 
-// Refresh token response from the backend.
+// Refresh token response from the backend's /auth/refresh. The backend
+// returns the user object (same as login) — NOT top-level sessionId/userId,
+// which a previous version of this type assumed; reading those fields made
+// SecureStore persist undefined values and wiped the session on every refresh.
 interface RefreshResponse {
   accessToken: string;
   refreshToken: string;
-  sessionId: string;
-  userId: string;
+  expiresIn?: number;
+  user?: { id: string };
 }
 
 // The refresh endpoint path.
@@ -69,19 +72,39 @@ async function performRefresh(): Promise<string> {
 
       const data = resp.data as RefreshResponse;
 
-      // Persist the new token pair atomically before replaying.
+      // Reject malformed responses without wiping the session — a bad body
+      // is a transient server problem, not proof the token is revoked.
+      if (!data?.accessToken || !data?.refreshToken) {
+        throw new ApiError({
+          status: 0,
+          code: 'MALFORMED_REFRESH_RESPONSE',
+          message: 'Unexpected response while refreshing the session.',
+        });
+      }
+
+      // Persist the new token pair before replaying. The backend's session
+      // identifier is the user ID (same convention as applyAuthResponse in
+      // features/auth/api.ts); if the refresh response omits the user object,
+      // keep the previously persisted metadata rather than writing empty
+      // strings that would poison loadSession().
+      const prior = await tokenManager.loadSession();
       tokenManager.setAccessToken(data.accessToken);
       await tokenManager.persistSession({
         refreshToken: data.refreshToken,
-        sessionId: data.sessionId,
-        userId: data.userId,
+        sessionId: data.user?.id ?? prior?.sessionId ?? '',
+        userId: data.user?.id ?? prior?.userId ?? '',
       });
 
       return data.accessToken;
     } catch (error) {
-      // Refresh failed — clear all local state.
-      await tokenManager.clearAll();
-      throw fromAxiosError(error);
+      const apiError = fromAxiosError(error);
+      // Clear local auth state ONLY when the server explicitly rejected the
+      // refresh token (4xx — expired/revoked). Network errors and 5xx leave
+      // the persisted session intact so the next attempt can still refresh.
+      if (apiError.status >= 400 && apiError.status < 500) {
+        await tokenManager.clearAll();
+      }
+      throw apiError;
     } finally {
       // Clear the single-flight promise so future 401s can attempt refresh.
       refreshPromise = null;

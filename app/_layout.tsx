@@ -14,6 +14,7 @@ import { initSentry } from '@/core/telemetry/sentry';
 import { ThemeProvider } from '@/design-system/theme';
 import { usePaperFonts } from '@/design-system/theme/fonts';
 import { getCurrentUser } from '@/features/auth';
+import { linkRevenueCatUser, unlinkRevenueCatUser } from '@/features/billing';
 import { getSettings } from '@/features/settings';
 import { initI18n } from '@/i18n';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -36,6 +37,18 @@ function AppBootstrap({ fontsReady }: { fontsReady: boolean }) {
 
   // Restore session from SecureStore — validates with /profile/me.
   useSessionRestore(sessionRestoreCallbacks);
+
+  // Keep the RevenueCat app user ID in lockstep with the authenticated
+  // session: purchases made under an anonymous ID can never be attributed to
+  // the user by the backend webhook, so Pro would never unlock. Login,
+  // register-verify, social sign-in, and session restore all funnel through
+  // useSessionStore — watching it covers every entry point in one place.
+  const sessionUserId = useSessionStore((s) => s.user?.id ?? null);
+  useEffect(() => {
+    void (sessionUserId
+      ? linkRevenueCatUser(sessionUserId)
+      : unlinkRevenueCatUser());
+  }, [sessionUserId]);
 
   // Hide splash screen once fonts are loaded and the session is hydrated.
   const isHydrated = useSessionStore((s) => s.isHydrated);

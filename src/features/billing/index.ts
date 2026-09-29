@@ -37,5 +37,6 @@ export {
     useRestorePurchases,
     useTrackUpgradeEvent
 } from './hooks';
+export { linkRevenueCatUser, unlinkRevenueCatUser } from './revenuecat';
 export type { PaywallOfferings, PaywallPackage } from './revenuecat';
 
