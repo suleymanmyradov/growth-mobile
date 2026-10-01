@@ -294,7 +294,7 @@
     "resending": "Sending…",
     "backToSignIn": "Back to sign in",
     "verifyEmail": "Verifying your email…",
-    "verifyEmailSuccess": "Email verified! Welcome to Growth.",
+    "verifyEmailSuccess": "Email verified! Welcome to Evolella.",
     "verifyEmailFailed": "Verification failed",
     "verifyEmailRedirecting": "Redirecting you to your dashboard…",
     "verifyEmailNoToken": "No verification token was provided in the link.",
@@ -348,7 +348,7 @@
   },
   "onboarding": {
     "stepOf": "Step {{step}} of {{total}}",
-    "welcome": "Welcome to Growth",
+    "welcome": "Welcome to Evolella",
     "step1Title": "What do you want to work on?",
     "step1Subtitle": "Start with one clear goal. You can add more later.",
     "goalLabel": "Your goal",
@@ -600,7 +600,13 @@
     "goalReminders": "Goal reminders",
     "timezone": "Timezone",
     "timezoneHint": "Enter your IANA timezone (e.g. Europe/London)",
+    "timezoneInvalid": "Enter a valid IANA timezone (e.g. Europe/London)",
+    "timezoneSyncTitle": "Update time zone?",
+    "timezoneSyncBody": "Your device is in {{timezone}}. Update from {{current}} so reminders and streaks use the right local time?",
+    "timezoneSyncUpdate": "Update",
+    "timezoneSyncKeep": "Keep current",
     "checkInTimeHint": "Enter time as HH:MM (24-hour)",
+    "checkInTimeInvalid": "Enter a valid time as HH:MM (24-hour)",
     "planBilling": "Plan & billing",
     "planBillingBody": "Manage your subscription.",
     "exportData": "Export data",
@@ -704,8 +710,11 @@
     "emptyTitle": "You're all caught up",
     "emptyBody": "New reminders and updates will appear here."
   },
+  "billing": {
+    "upgrade": "Upgrade"
+  },
   "paywall": {
-    "title": "Upgrade to Growth Pro",
+    "title": "Upgrade to Evolella Pro",
     "subtitle": "Unlock the full coaching experience.",
     "continue": "Continue",
     "restore": "Restore purchase",
@@ -718,7 +727,7 @@
     "reconciling": "Confirming your access…",
     "unavailableTitle": "Subscriptions unavailable",
     "unavailable": "Subscriptions aren't available right now. Please try again later.",
-    "currentTitle": "You're on Growth Pro",
+    "currentTitle": "You're on Evolella Pro",
     "currentBody": "Your subscription is managed on the web. Your Pro access works here automatically.",
     "renewsOn": "Renews {{date}}.",
     "expiresOn": "Access ends {{date}}.",
@@ -762,7 +771,7 @@
   "help": {
     "title": "Help & guide",
     "heading": "Help & guide",
-    "subtitle": "Everything you can do in Growth — from your first check-in to voice coaching, weekly reviews, and tuning how your AI coach talks to you.",
+    "subtitle": "Everything you can do in Evolella — from your first check-in to voice coaching, weekly reviews, and tuning how your AI coach talks to you.",
     "stuckPrefix": "Still stuck?",
     "reportLink": "Report a problem",
     "stuckSuffix": "or send feedback and we'll take a look."

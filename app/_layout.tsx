@@ -10,12 +10,13 @@ import { useSessionRestore } from '@/core/auth';
 import { useSessionStore } from '@/core/auth/session';
 import { getEnv } from '@/core/config/env';
 import { getQueryClient, setupReactNativeIntegrations } from '@/core/query';
-import { initSentry } from '@/core/telemetry/sentry';
+import { captureException, initSentry } from '@/core/telemetry/sentry';
+import { ErrorBoundary } from '@/design-system';
 import { ThemeProvider } from '@/design-system/theme';
 import { usePaperFonts } from '@/design-system/theme/fonts';
 import { getCurrentUser } from '@/features/auth';
 import { linkRevenueCatUser, unlinkRevenueCatUser } from '@/features/billing';
-import { getSettings } from '@/features/settings';
+import { getSettings, useDeviceTimezoneSync } from '@/features/settings';
 import { initI18n } from '@/i18n';
 import { QueryClientProvider } from '@tanstack/react-query';
 
@@ -38,6 +39,10 @@ function AppBootstrap({ fontsReady }: { fontsReady: boolean }) {
   // Restore session from SecureStore — validates with /profile/me.
   useSessionRestore(sessionRestoreCallbacks);
 
+  // Offer to sync settings.timezone with the device zone on boot (once per
+  // zone; inert until authenticated with settings loaded).
+  useDeviceTimezoneSync();
+
   // Keep the RevenueCat app user ID in lockstep with the authenticated
   // session: purchases made under an anonymous ID can never be attributed to
   // the user by the backend webhook, so Pro would never unlock. Login,
@@ -45,9 +50,7 @@ function AppBootstrap({ fontsReady }: { fontsReady: boolean }) {
   // useSessionStore — watching it covers every entry point in one place.
   const sessionUserId = useSessionStore((s) => s.user?.id ?? null);
   useEffect(() => {
-    void (sessionUserId
-      ? linkRevenueCatUser(sessionUserId)
-      : unlinkRevenueCatUser());
+    void (sessionUserId ? linkRevenueCatUser(sessionUserId) : unlinkRevenueCatUser());
   }, [sessionUserId]);
 
   // Hide splash screen once fonts are loaded and the session is hydrated.
@@ -99,7 +102,12 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemeProvider fontsLoaded={fontsLoaded}>
           <QueryClientProvider client={queryClient}>
-            <AppBootstrap fontsReady={fontsLoaded} />
+            {/* Catches render crashes anywhere in the app — a broken screen
+                shows the themed fallback + Reload instead of a white screen,
+                and reports to Sentry via onError. */}
+            <ErrorBoundary onError={captureException}>
+              <AppBootstrap fontsReady={fontsLoaded} />
+            </ErrorBoundary>
             <StatusBar style="auto" />
           </QueryClientProvider>
         </ThemeProvider>

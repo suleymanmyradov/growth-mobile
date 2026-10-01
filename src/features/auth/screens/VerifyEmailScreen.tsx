@@ -10,7 +10,7 @@
  */
 import { Link, useLocalSearchParams } from 'expo-router';
 import { CheckCircle2, MailWarning, XCircle } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
@@ -38,8 +38,14 @@ export function VerifyEmailScreen() {
   );
   const [resendEmail, setResendEmail] = useState('');
 
+  // The verification token is single-use. `verifyEmail` is a new mutation
+  // object on every render (pending → settled triggers a re-render), so the
+  // effect would re-fire and POST in a loop without this one-shot guard.
+  const attemptedRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!token) return;
+    if (!token || attemptedRef.current === token) return;
+    attemptedRef.current = token;
     verifyEmail.mutate(
       { token },
       {

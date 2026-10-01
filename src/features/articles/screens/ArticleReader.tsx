@@ -401,7 +401,7 @@ export function ArticleReader({ id }: ArticleReaderProps): React.ReactNode {
             <Avatar name={article.author} size={30} />
             <View style={{ flex: 1, gap: 1 }}>
               <ThemedText variant="label" style={{ color: colors.foreground }}>
-                {article.author || 'Growth'}
+                {article.author || 'Evolella'}
               </ThemedText>
               <ThemedText variant="caption" style={{ color: colors.mutedForeground }}>
                 {publishedDate ? `${publishedDate} · ` : ''}

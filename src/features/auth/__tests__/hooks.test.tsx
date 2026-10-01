@@ -17,6 +17,8 @@ import React from 'react';
 
 // --- Import after mocks ---
 
+import type { apiRequest } from '@/core/api/client';
+import type * as api from '../api';
 import { useSessionStore } from '@/core/auth/session';
 import { tokenManager } from '@/core/auth/token-manager';
 import {
@@ -50,29 +52,34 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
 }));
 
-const mockLogin = jest.fn();
-const mockRegister = jest.fn();
-const mockVerifyEmail = jest.fn();
-const mockResendVerification = jest.fn();
-const mockForgotPassword = jest.fn();
-const mockResetPassword = jest.fn();
-const mockLogout = jest.fn();
+// Typed as the real API functions so mockResolvedValue/mockRejectedValue
+// accept real response shapes — bare jest.fn() types them as `never`.
+const mockLogin = jest.fn<typeof api.login>();
+const mockRegister = jest.fn<typeof api.register>();
+const mockVerifyEmail = jest.fn<typeof api.verifyEmail>();
+const mockResendVerification = jest.fn<typeof api.resendVerification>();
+const mockForgotPassword = jest.fn<typeof api.forgotPassword>();
+const mockResetPassword = jest.fn<typeof api.resetPassword>();
+const mockLogout = jest.fn<typeof api.logout>();
 
+// Keep the lazy wrappers: the jest.mock factory executes before the const
+// initializers above run, so `login: mockLogin` would bind undefined.
 jest.mock('../api', () => ({
-  login: (...a: unknown[]) => mockLogin(...a),
-  register: (...a: unknown[]) => mockRegister(...a),
-  verifyEmail: (...a: unknown[]) => mockVerifyEmail(...a),
-  resendVerification: (...a: unknown[]) => mockResendVerification(...a),
-  forgotPassword: (...a: unknown[]) => mockForgotPassword(...a),
-  resetPassword: (...a: unknown[]) => mockResetPassword(...a),
-  logout: (...a: unknown[]) => mockLogout(...a),
+  login: (...a: Parameters<typeof api.login>) => mockLogin(...a),
+  register: (...a: Parameters<typeof api.register>) => mockRegister(...a),
+  verifyEmail: (...a: Parameters<typeof api.verifyEmail>) => mockVerifyEmail(...a),
+  resendVerification: (...a: Parameters<typeof api.resendVerification>) =>
+    mockResendVerification(...a),
+  forgotPassword: (...a: Parameters<typeof api.forgotPassword>) => mockForgotPassword(...a),
+  resetPassword: (...a: Parameters<typeof api.resetPassword>) => mockResetPassword(...a),
+  logout: (...a: Parameters<typeof api.logout>) => mockLogout(...a),
 }));
 
-const mockApiRequest = jest.fn();
+const mockApiRequest = jest.fn<typeof apiRequest>();
 
 jest.mock('@/core/api/client', () => ({
   getBareClient: () => ({ post: jest.fn() }),
-  apiRequest: (...a: unknown[]) => mockApiRequest(...a),
+  apiRequest: (...a: Parameters<typeof apiRequest>) => mockApiRequest(...a),
   setInstallationId: jest.fn(),
 }));
 

@@ -8,12 +8,13 @@ import { settingsKeys } from '@/core/query/query-keys';
 
 import { getSettings, updateSettings } from './api';
 
-export function useSettings() {
+export function useSettings(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: settingsKeys.get(),
     queryFn: () => getSettings(),
     select: (data) => data.data,
     staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true,
   });
 }
 

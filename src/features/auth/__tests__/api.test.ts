@@ -15,6 +15,7 @@ import * as SecureStore from 'expo-secure-store';
 
 // --- Import after mocks are set up ---
 
+import type { apiRequest, bareRequest } from '@/core/api/client';
 import { tokenManager } from '@/core/auth/token-manager';
 import {
   applyAuthResponse,
@@ -30,12 +31,14 @@ import {
 
 // --- Mocks ---
 
-const mockBareRequest = jest.fn();
-const mockApiRequest = jest.fn();
+// Typed as the real client functions so mockResolvedValue/mockRejectedValue
+// accept real response shapes — bare jest.fn() types them as `never`.
+const mockBareRequest = jest.fn<typeof bareRequest>();
+const mockApiRequest = jest.fn<typeof apiRequest>();
 
 jest.mock('@/core/api/client', () => ({
-  bareRequest: (...args: unknown[]) => mockBareRequest(...args),
-  apiRequest: (...args: unknown[]) => mockApiRequest(...args),
+  bareRequest: (...args: Parameters<typeof bareRequest>) => mockBareRequest(...args),
+  apiRequest: (...args: Parameters<typeof apiRequest>) => mockApiRequest(...args),
   setInstallationId: jest.fn(),
 }));
 

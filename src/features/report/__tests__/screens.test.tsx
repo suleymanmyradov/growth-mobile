@@ -16,6 +16,7 @@ import React from 'react';
 
 import { renderWithTheme } from '@/design-system/test-utils/render';
 
+import type { submitReport } from '../api';
 import { ReportScreen } from '../screens/ReportScreen';
 
 // --- Mocks ---
@@ -47,10 +48,14 @@ jest.mock('expo-router', () => ({
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
 }));
 
-const mockSubmitReport = jest.fn();
+// Typed as the real API function so mockResolvedValue accepts its return
+// type — bare jest.fn() types the resolved value as `never`.
+const mockSubmitReport = jest.fn<typeof submitReport>();
 
+// Keep the lazy wrapper: the jest.mock factory executes before the const
+// initializer above runs, so `submitReport: mockSubmitReport` would bind undefined.
 jest.mock('../api', () => ({
-  submitReport: (...a: unknown[]) => mockSubmitReport(...a),
+  submitReport: (...a: Parameters<typeof submitReport>) => mockSubmitReport(...a),
 }));
 
 jest.mock('@/core/api/client', () => ({

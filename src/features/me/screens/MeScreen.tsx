@@ -56,6 +56,7 @@ import {
   ThemedText,
 } from '@/design-system';
 import { useTheme, type ThemeMode } from '@/design-system/theme';
+import { getDeviceTimezone, isValidTimezone } from '@/core/timezone';
 import { useLogout } from '@/features/auth';
 import { useCoachingProfile, useUpdateCoachingProfilePreferences } from '@/features/coaching';
 import { useGoals } from '@/features/goals';
@@ -76,6 +77,7 @@ import {
 import { useSettings, useUpdateSettings } from '@/features/settings';
 
 import { MemorySection } from '../components/MemorySection';
+import { TextPromptDialog } from '../components/TextPromptDialog';
 import { deriveMeSummary } from '../summary';
 
 type NotificationPreferenceUpdate = Partial<{
@@ -111,6 +113,8 @@ export function MeScreen(): React.ReactNode {
   const [editing, setEditing] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatarUrl ?? '');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  // Android: Alert.prompt is iOS-only, so single-field edits use a dialog.
+  const [prompt, setPrompt] = useState<'timezone' | 'checkInTime' | null>(null);
 
   const displayName = profile?.fullName ?? sessionUser?.fullName ?? '';
   const summary = deriveMeSummary(habits, goals);
@@ -212,46 +216,50 @@ export function MeScreen(): React.ReactNode {
 
   const handleEditCheckInTime = () => {
     const current = settings?.checkInTime ?? '09:00';
-    if (Platform.OS === 'ios') {
-      Alert.prompt(
-        t('me.checkInTime'),
-        t('me.checkInTimeHint'),
-        (value) => {
-          if (value && /^\d{2}:\d{2}$/.test(value)) {
-            updateSettings.mutate({ checkInTime: value });
-          }
-        },
-        'plain-text',
-        current,
-        'default',
-      );
-    } else {
-      Alert.alert(t('me.checkInTime'), `${t('me.checkInTimeHint')} (${current})`, [
-        { text: t('common.cancel'), style: 'cancel' },
-      ]);
+    if (Platform.OS !== 'ios') {
+      setPrompt('checkInTime');
+      return;
     }
+    Alert.prompt(
+      t('me.checkInTime'),
+      t('me.checkInTimeHint'),
+      (value) => {
+        const trimmed = value?.trim();
+        if (!trimmed) return;
+        if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(trimmed)) {
+          Alert.alert(t('me.checkInTime'), t('me.checkInTimeInvalid'));
+          return;
+        }
+        updateSettings.mutate({ checkInTime: trimmed });
+      },
+      'plain-text',
+      current,
+      'default',
+    );
   };
 
   const handleEditTimezone = () => {
-    const current = settings?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (Platform.OS === 'ios') {
-      Alert.prompt(
-        t('me.timezone'),
-        t('me.timezoneHint'),
-        (value) => {
-          if (value && value.trim()) {
-            updateSettings.mutate({ timezone: value.trim() });
-          }
-        },
-        'plain-text',
-        current,
-        'default',
-      );
-    } else {
-      Alert.alert(t('me.timezone'), `${t('me.timezoneHint')} (${current})`, [
-        { text: t('common.cancel'), style: 'cancel' },
-      ]);
+    const current = settings?.timezone ?? getDeviceTimezone() ?? 'UTC';
+    if (Platform.OS !== 'ios') {
+      setPrompt('timezone');
+      return;
     }
+    Alert.prompt(
+      t('me.timezone'),
+      t('me.timezoneHint'),
+      (value) => {
+        const trimmed = value?.trim();
+        if (!trimmed) return;
+        if (!isValidTimezone(trimmed)) {
+          Alert.alert(t('me.timezone'), t('me.timezoneInvalid'));
+          return;
+        }
+        updateSettings.mutate({ timezone: trimmed });
+      },
+      'plain-text',
+      current,
+      'default',
+    );
   };
 
   const updateNotificationPreference = (partial: NotificationPreferenceUpdate) => {
@@ -689,7 +697,7 @@ export function MeScreen(): React.ReactNode {
                     style={{ color: colors.mutedForeground }}
                     numberOfLines={1}
                   >
-                    {settings?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone}
+                    {settings?.timezone ?? getDeviceTimezone() ?? '—'}
                   </ThemedText>
                 </View>
               </ListRow>
@@ -791,6 +799,29 @@ export function MeScreen(): React.ReactNode {
           </ThemedText>
         ) : null}
       </ScrollView>
+
+      {prompt === 'timezone' ? (
+        <TextPromptDialog
+          title={t('me.timezone')}
+          hint={t('me.timezoneHint')}
+          initialValue={settings?.timezone ?? getDeviceTimezone() ?? ''}
+          validate={(v) => (isValidTimezone(v) ? null : t('me.timezoneInvalid'))}
+          onSubmit={(v) => updateSettings.mutate({ timezone: v })}
+          onClose={() => setPrompt(null)}
+        />
+      ) : null}
+      {prompt === 'checkInTime' ? (
+        <TextPromptDialog
+          title={t('me.checkInTime')}
+          hint={t('me.checkInTimeHint')}
+          initialValue={settings?.checkInTime ?? '09:00'}
+          validate={(v) =>
+            /^([01]\d|2[0-3]):[0-5]\d$/.test(v) ? null : t('me.checkInTimeInvalid')
+          }
+          onSubmit={(v) => updateSettings.mutate({ checkInTime: v })}
+          onClose={() => setPrompt(null)}
+        />
+      ) : null}
     </Screen>
   );
 }

@@ -17,8 +17,10 @@ import * as SecureStore from 'expo-secure-store';
 
 // --- Import after mocks ---
 
+import type { getOrCreateInstallationId } from '../installation';
 import { useSessionStore } from '../session';
 import { tokenManager } from '../token-manager';
+import type { SessionRestoreCallbacks } from '../use-session-restore';
 import { useSessionRestore } from '../use-session-restore';
 
 // --- Mocks ---
@@ -38,13 +40,21 @@ jest.mock('@/core/api/client', () => ({
   setInstallationId: jest.fn(),
 }));
 
-const { setInstallationId } = jest.requireMock('@/core/api/client');
+const { setInstallationId } = jest.requireMock('@/core/api/client') as {
+  setInstallationId: jest.Mock;
+};
 
 jest.mock('../installation', () => ({
-  getOrCreateInstallationId: jest.fn().mockResolvedValue('install-id-123'),
+  // Typed as the real function so mockResolvedValue accepts a string —
+  // bare jest.fn() types the resolved value as `never`.
+  getOrCreateInstallationId: jest
+    .fn<typeof getOrCreateInstallationId>()
+    .mockResolvedValue('install-id-123'),
 }));
 
-const installationMock = jest.requireMock('../installation');
+const installationMock = jest.requireMock('../installation') as {
+  getOrCreateInstallationId: jest.MockedFunction<typeof getOrCreateInstallationId>;
+};
 
 // --- Fixtures ---
 
@@ -67,14 +77,14 @@ const PROFILE_RESPONSE = {
 const SETTINGS_RESPONSE = {
   data: {
     id: 'settings-1',
-    theme: 'system',
+    theme: 'system' as const,
     language: 'en',
     timezone: 'UTC',
     emailNotifications: true,
     pushNotifications: true,
     habitReminders: true,
     goalReminders: true,
-    accountabilityStyle: 'balanced',
+    accountabilityStyle: 'balanced' as const,
     checkInTime: '09:00',
     onboardingCompleted: true,
     userId: 'user-1',
@@ -108,8 +118,8 @@ describe('useSessionRestore', () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
 
     const callbacks = {
-      fetchProfile: jest.fn(),
-      fetchSettings: jest.fn(),
+      fetchProfile: jest.fn<SessionRestoreCallbacks['fetchProfile']>(),
+      fetchSettings: jest.fn<SessionRestoreCallbacks['fetchSettings']>(),
     };
 
     await renderHook(() => useSessionRestore(callbacks), { wrapper: createWrapper() });
@@ -120,8 +130,12 @@ describe('useSessionRestore', () => {
 
   it('fetches profile and settings, then sets session on success', async () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue('rt-value');
-    const fetchProfile = jest.fn().mockResolvedValue(PROFILE_RESPONSE);
-    const fetchSettings = jest.fn().mockResolvedValue(SETTINGS_RESPONSE);
+    const fetchProfile = jest
+      .fn<SessionRestoreCallbacks['fetchProfile']>()
+      .mockResolvedValue(PROFILE_RESPONSE);
+    const fetchSettings = jest
+      .fn<SessionRestoreCallbacks['fetchSettings']>()
+      .mockResolvedValue(SETTINGS_RESPONSE);
 
     const callbacks = { fetchProfile, fetchSettings };
 
@@ -138,8 +152,12 @@ describe('useSessionRestore', () => {
 
   it('keeps onboardingCompleted null when settings fetch fails', async () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue('rt-value');
-    const fetchProfile = jest.fn().mockResolvedValue(PROFILE_RESPONSE);
-    const fetchSettings = jest.fn().mockRejectedValue(new Error('settings down'));
+    const fetchProfile = jest
+      .fn<SessionRestoreCallbacks['fetchProfile']>()
+      .mockResolvedValue(PROFILE_RESPONSE);
+    const fetchSettings = jest
+      .fn<SessionRestoreCallbacks['fetchSettings']>()
+      .mockRejectedValue(new Error('settings down'));
 
     const callbacks = { fetchProfile, fetchSettings };
 
@@ -155,8 +173,10 @@ describe('useSessionRestore', () => {
 
   it('clears all state when profile validation fails', async () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue('rt-value');
-    const fetchProfile = jest.fn().mockRejectedValue(new Error('401'));
-    const fetchSettings = jest.fn();
+    const fetchProfile = jest
+      .fn<SessionRestoreCallbacks['fetchProfile']>()
+      .mockRejectedValue(new Error('401'));
+    const fetchSettings = jest.fn<SessionRestoreCallbacks['fetchSettings']>();
 
     const callbacks = { fetchProfile, fetchSettings };
 
@@ -179,8 +199,10 @@ describe('useSessionRestore', () => {
 
   it('does not call fetchSettings when profile fetch fails', async () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue('rt-value');
-    const fetchProfile = jest.fn().mockRejectedValue(new Error('401'));
-    const fetchSettings = jest.fn();
+    const fetchProfile = jest
+      .fn<SessionRestoreCallbacks['fetchProfile']>()
+      .mockRejectedValue(new Error('401'));
+    const fetchSettings = jest.fn<SessionRestoreCallbacks['fetchSettings']>();
 
     const callbacks = { fetchProfile, fetchSettings };
 
@@ -194,8 +216,8 @@ describe('useSessionRestore', () => {
     jest.mocked(SecureStore.getItemAsync).mockResolvedValue(null);
 
     const callbacks = {
-      fetchProfile: jest.fn(),
-      fetchSettings: jest.fn(),
+      fetchProfile: jest.fn<SessionRestoreCallbacks['fetchProfile']>(),
+      fetchSettings: jest.fn<SessionRestoreCallbacks['fetchSettings']>(),
     };
 
     await renderHook(() => useSessionRestore(callbacks), { wrapper: createWrapper() });
@@ -209,8 +231,8 @@ describe('useSessionRestore', () => {
     installationMock.getOrCreateInstallationId.mockRejectedValueOnce(new Error('fail'));
 
     const callbacks = {
-      fetchProfile: jest.fn(),
-      fetchSettings: jest.fn(),
+      fetchProfile: jest.fn<SessionRestoreCallbacks['fetchProfile']>(),
+      fetchSettings: jest.fn<SessionRestoreCallbacks['fetchSettings']>(),
     };
 
     await renderHook(() => useSessionRestore(callbacks), { wrapper: createWrapper() });

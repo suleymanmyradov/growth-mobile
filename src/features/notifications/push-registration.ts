@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { getExpoProjectId, getOrCreateInstallationId } from '@/core/auth/installation';
+import { getDeviceTimezone } from '@/core/timezone';
 
 import { registerDevice, unregisterDevice } from './api';
 
@@ -17,7 +18,7 @@ export interface RegisterPushTokenResult {
 export async function ensureNotificationChannel(): Promise<void> {
   if (Platform.OS !== 'android') return;
   await Notifications.setNotificationChannelAsync('default', {
-    name: 'Growth reminders',
+    name: 'Evolella reminders',
     importance: Notifications.AndroidImportance.HIGH,
     vibrationPattern: [0, 250, 250, 250],
   });
@@ -85,7 +86,7 @@ async function performPushRegistration(options?: {
       appVersion: Application.nativeApplicationVersion ?? undefined,
       osVersion: Device.osVersion ?? undefined,
       locale: Localization.getLocales()[0]?.languageTag ?? undefined,
-      timezone: Localization.getCalendars()[0]?.timeZone ?? undefined,
+      timezone: getDeviceTimezone() ?? undefined,
     });
     return { registered: true, permissionGranted: true, installationId };
   } catch {

@@ -854,7 +854,7 @@ export const helpSections: HelpSection[] = [
     title: 'Plans & billing',
     icon: CreditCard,
     intro:
-      'Growth has a Free plan and a Pro plan. Here is what each includes and how to upgrade or manage your subscription.',
+      'Evolella has a Free plan and a Pro plan. Here is what each includes and how to upgrade or manage your subscription.',
     subsections: [
       {
         id: 'free-vs-pro',

@@ -11,6 +11,15 @@
  */
 import { z } from 'zod';
 
+import { isValidTimezone } from '@/core/timezone';
+
+// Optional IANA timezone field — rejects invalid names before they reach the
+// backend, where they would fail `AT TIME ZONE` queries with a 500.
+const timezoneField = z
+  .string()
+  .refine((v) => isValidTimezone(v), 'Invalid IANA timezone')
+  .optional();
+
 // ─── Pagination ───────────────────────────────────────────────────────────────
 
 export const PageResponseSchema = z.object({
@@ -374,7 +383,7 @@ export type SettingsResponse = z.infer<typeof SettingsResponseSchema>;
 export const UpdateSettingsRequestSchema = z.object({
   theme: z.enum(['light', 'dark', 'system']).optional(),
   language: z.string().optional(),
-  timezone: z.string().optional(),
+  timezone: timezoneField,
   accountabilityStyle: z.enum(['gentle', 'balanced', 'strict']).optional(),
   checkInTime: z.string().optional(),
   onboardingCompleted: z.boolean().optional(),
@@ -1130,7 +1139,7 @@ export const RegisterDeviceRequestSchema = z.object({
   appVersion: z.string().optional(),
   osVersion: z.string().optional(),
   locale: z.string().optional(),
-  timezone: z.string().optional(),
+  timezone: timezoneField,
 });
 
 export type RegisterDeviceRequest = z.infer<typeof RegisterDeviceRequestSchema>;

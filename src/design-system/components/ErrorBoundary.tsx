@@ -14,6 +14,12 @@ export type ErrorBoundaryProps = {
   children: ReactNode;
   /** Optional custom fallback rendered when an error is caught. */
   fallback?: (error: Error, reset: () => void) => ReactNode;
+  /**
+   * Called with the error + component stack after the boundary catches.
+   * Design-system components must not import core telemetry (dependency
+   * direction), so the app layer injects Sentry capture here.
+   */
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
 };
 
 type ErrorBoundaryState = {
@@ -94,6 +100,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
+    this.props.onError?.(error, errorInfo);
   }
 
   reset = (): void => {

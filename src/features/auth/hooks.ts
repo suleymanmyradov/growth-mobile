@@ -11,7 +11,9 @@ import { useRouter } from 'expo-router';
 import { apiRequest } from '@/core/api/client';
 import { settingsEndpoints } from '@/core/api/endpoints';
 import { SettingsResponseSchema } from '@/core/api/schemas';
+import { clearSessionState } from '@/core/auth/use-session-restore';
 import { routeForOnboardingStatus, useSessionStore } from '@/core/auth/session';
+import * as kvStore from '@/core/storage/kv';
 import { NoopAnalytics, type Analytics } from '@/core/telemetry/analytics';
 import { setSentryUser } from '@/core/telemetry/sentry';
 
@@ -226,7 +228,6 @@ export function useResetPassword() {
 }
 
 export function useLogout(options?: { beforeLogout?: () => Promise<void> }) {
-  const clear = useSessionStore((s) => s.clear);
   const router = useRouter();
 
   return useMutation({
@@ -238,9 +239,17 @@ export function useLogout(options?: { beforeLogout?: () => Promise<void> }) {
       }
       return logout();
     },
-    onSettled: () => {
-      clear();
-      setSentryUser(null);
+    onSettled: async () => {
+      // Full purge, not just the session store: the React Query cache and
+      // the SQLite kv-store still hold the previous user's data otherwise,
+      // and it would rehydrate for the next account on this device. Best
+      // effort — a storage failure must not block the navigation to sign-in.
+      try {
+        await clearSessionState();
+        await kvStore.clearAll();
+      } catch {
+        // Swallow — logout UX must proceed even if local purge partially fails.
+      }
       analytics.reset();
       analytics.track('auth_logout');
       router.replace('/(public)');
