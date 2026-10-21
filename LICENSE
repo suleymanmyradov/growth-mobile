@@ -1,0 +1,37 @@
+Evolella Proprietary License. All Rights Reserved.
+
+Copyright (c) 2026 Suleyman Myradov. All rights reserved.
+
+This repository and everything in it (source code, documentation, designs,
+prompts, configuration, assets and history, together the "Software") is the
+proprietary property of Suleyman Myradov ("Owner"). The Software is made
+visible only so that it can be viewed for personal evaluation, for example by
+prospective employers or collaborators.
+
+No licence or other right is granted, expressly or by implication, except the
+right to view the Software in a web browser. Without the prior written
+permission of the Owner, you may NOT:
+
+  1. use, run, deploy or host the Software or any part of it;
+  2. copy, clone for any purpose other than viewing, reproduce or mirror it;
+  3. modify, adapt, translate or create derivative works from it;
+  4. distribute, publish, sublicense, sell, rent or otherwise make it
+     available to any third party;
+  5. use it, its design, prompts or data models to train, fine-tune or
+     evaluate machine-learning models, or to build a competing product or
+     service;
+  6. remove or alter this notice or any proprietary markings.
+
+The names "Evolella" and "Growth" and any associated logos are not licensed
+for any use.
+
+Nothing in this notice limits rights that applicable law grants to you and
+that cannot be waived by agreement, nor the permissions that the GitHub Terms
+of Service give to users of the GitHub platform for repositories that are
+public on GitHub.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE OWNER SHALL NOT BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+Licensing enquiries: suleymanmyradov.tkm@gmail.com
