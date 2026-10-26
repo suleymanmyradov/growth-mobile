@@ -42,7 +42,7 @@ import {
   Sheet,
   Skeleton,
   ThemedText,
-  type Segment
+  type Segment,
 } from '@/design-system';
 import { useTheme } from '@/design-system/theme';
 import { useBillingOverview, useTrackUpgradeEvent } from '@/features/billing';
@@ -72,7 +72,7 @@ import {
   useDeleteHabit,
   useHabits,
   useUpdateHabit,
-  type HabitFormValues
+  type HabitFormValues,
 } from '@/features/habits';
 
 import { ArchiveSheet, type ArchiveMode } from '../components/ArchiveSheet';
@@ -544,23 +544,24 @@ export function PlanScreen(): React.ReactNode {
                   {nestedHabits.length > 0 ? (
                     <View style={{ paddingLeft: spacing.md, gap: spacing.xs }}>
                       {nestedHabits.map((habit) => (
-                        <HabitCard
-                          key={habit.id}
-                          habit={habit}
-                          checkInState={checkInStateFor(habit)}
-                          onCheckIn={() => handleCheckIn(habit)}
-                          onUndo={() => handleUndoCheckIn(habit)}
-                          onLogDetails={() => handleOpenCheckInSheet(habit)}
-                          isUndoPending={deleteCheckIn.isPending}
-                          onEdit={() => {
-                            setEditingHabit(habit);
-                            setFormKind('habit');
-                          }}
-                          onDelete={() => handleDeleteHabit(habit)}
-                          hasNote={noteHabitIds.has(habit.id)}
-                          noteExpanded={expandedNotes.has(habit.id)}
-                          onToggleNote={() => toggleNote(habit.id)}
-                        />
+                        <Card key={habit.id}>
+                          <HabitCard
+                            habit={habit}
+                            checkInState={checkInStateFor(habit)}
+                            onCheckIn={() => handleCheckIn(habit)}
+                            onUndo={() => handleUndoCheckIn(habit)}
+                            onLogDetails={() => handleOpenCheckInSheet(habit)}
+                            isUndoPending={deleteCheckIn.isPending}
+                            onEdit={() => {
+                              setEditingHabit(habit);
+                              setFormKind('habit');
+                            }}
+                            onDelete={() => handleDeleteHabit(habit)}
+                            hasNote={noteHabitIds.has(habit.id)}
+                            noteExpanded={expandedNotes.has(habit.id)}
+                            onToggleNote={() => toggleNote(habit.id)}
+                          />
+                        </Card>
                       ))}
                     </View>
                   ) : null}
@@ -605,10 +606,7 @@ export function PlanScreen(): React.ReactNode {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ gap: spacing.xs, paddingVertical: 2 }}
               >
-                <Chip
-                  selected={categoryFilter === 'all'}
-                  onPress={() => setCategoryFilter('all')}
-                >
+                <Chip selected={categoryFilter === 'all'} onPress={() => setCategoryFilter('all')}>
                   {t('plan.filterAll')}
                 </Chip>
                 {habitCategories.map((cat) => (
@@ -633,7 +631,7 @@ export function PlanScreen(): React.ReactNode {
               />
             </View>
             {filteredUntied.map((habit) => (
-              <View key={habit.id} style={{ gap: spacing.xs }}>
+              <Card key={habit.id}>
                 <HabitCard
                   habit={habit}
                   checkInState={checkInStateFor(habit)}
@@ -650,7 +648,7 @@ export function PlanScreen(): React.ReactNode {
                   noteExpanded={expandedNotes.has(habit.id)}
                   onToggleNote={() => toggleNote(habit.id)}
                 />
-              </View>
+              </Card>
             ))}
           </View>
         ) : null}
